@@ -7,6 +7,12 @@
 DEFAULT_MODEL = "llama-3.3-70b-versatile"
 DEFAULT_PROVIDER = "Groq"
 
+# Modelos disponíveis para seleção na UI de configurações
+MODEL_OPTIONS = [
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+]
+
 # System prompt do agente
 SYSTEM_PROMPT = (
     "Você é um assistente especializado em análise de anomalias em reclamações (MCP).\n"
@@ -15,7 +21,7 @@ SYSTEM_PROMPT = (
     "1. NUNCA simule ou invente chamadas de ferramentas. NUNCA escreva texto como "
     "`carregar_arquivo(...)`, `filtrar_registros(...)` ou qualquer outro nome de função. "
     "Ferramentas só podem ser chamadas pelo mecanismo real de function calling.\n"
-    "2. Use EXCLUSIVAMENTE as ferramentas disponíveis: carregar_arquivo, filtrar_registros, exportar_dataframe, normalizar_nlp, lematizar_nlp, filtrar_por_palavras. "
+    "2. Use EXCLUSIVAMENTE as ferramentas disponíveis: carregar_arquivo, filtrar_registros, exportar_dataframe, normalizar_nlp, lematizar_nlp, filtrar_por_palavras, analisar_serie_temporal. "
     "NÃO invente outras funções como filtrar_data, salvar_arquivo, exportar_csv, etc.\n"
     "3. Para filtrar dados, use SEMPRE filtrar_registros com a lista de filtros correta.\n"
     "4. Para exportar dados em CSV, use SEMPRE exportar_dataframe.\n"
@@ -23,6 +29,7 @@ SYSTEM_PROMPT = (
     "chame exportar_dataframe imediatamente — não peça confirmação.\n"
     "6. Lembre-se do contexto: se um arquivo já foi carregado nessa conversa, use o mesmo caminho.\n"
     "7. Para pipeline de NLP, prefira: normalizar_nlp -> lematizar_nlp -> filtrar_por_palavras.\n"
+    "8. Se o usuário pedir gráfico de série temporal, use analisar_serie_temporal e apresente o gráfico inline na resposta; não exporte/baixe arquivo a menos que solicitado explicitamente.\n"
     "\n"
     "Seja conciso, claro e amigável. Responda sempre em português."
 )
@@ -139,6 +146,30 @@ TOOLS = [
                     },
                 },
                 "required": ["caminho", "coluna", "palavras"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "analisar_serie_temporal",
+            "description": (
+                "Realiza análise de série temporal em uma coluna de data. "
+                "Permite agrupar por Dia (D), Mês (MS) ou Ano (YS). "
+                "Calcula métricas como contagem (count), soma (sum) ou média (mean). "
+                "Retorna os pontos da série para exibição de gráfico inline."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "caminho": {"type": "string", "description": "Caminho do arquivo já carregado"},
+                    "coluna_data": {"type": "string", "description": "Nome da coluna de data"},
+                    "frequencia": {"type": "string", "description": "Frequência: D (dia), MS (mês), YS (ano)", "default": "MS"},
+                    "metrica": {"type": "string", "description": "Métrica: count, sum, mean", "default": "count"},
+                    "coluna_valor": {"type": "string", "description": "Coluna numérica para sum/mean (opcional)"},
+                    "usar_cache_filtrado": {"type": "boolean", "description": "Se true, usa cache filtrado", "default": False},
+                },
+                "required": ["caminho", "coluna_data"],
             },
         },
     },

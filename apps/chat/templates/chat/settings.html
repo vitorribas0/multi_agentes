@@ -588,6 +588,46 @@
       gap: 16px;
     }
 
+    .model-picker-card {
+      margin-bottom: 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .model-picker-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .model-picker-select {
+      min-width: 280px;
+      max-width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: monospace;
+      outline: none;
+    }
+    .model-picker-select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(16,163,127,.15);
+    }
+    .model-picker-note {
+      width: 100%;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
     .model-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -743,7 +783,7 @@
     const data = await res.json();
     renderTools(data.tools);
     renderAgents(data.agents);
-    renderModels(data.agents);
+    renderModels(data.agents, data.model_options || [], data.default_model);
   }
 
   // ── Tools ─────────────────────────────────────────────────
@@ -984,10 +1024,19 @@
   }
 
   // ── Models ────────────────────────────────────────────────
-  function renderModels(agents) {
+  function renderModels(agents, modelOptions = [], defaultModel = '') {
     const container = document.getElementById('models-list');
     document.getElementById('models-loading').style.display = 'none';
     container.style.display = 'block';
+
+    const savedModel = localStorage.getItem('mcp_selected_model') || '';
+    const selectedModel = modelOptions.includes(savedModel)
+      ? savedModel
+      : (modelOptions.includes(defaultModel) ? defaultModel : (modelOptions[0] || defaultModel || ''));
+
+    if (selectedModel) {
+      localStorage.setItem('mcp_selected_model', selectedModel);
+    }
 
     // Agrupa agentes por modelo
     const byModel = {};
@@ -998,7 +1047,15 @@
     });
 
     const models = Object.values(byModel);
-    container.innerHTML = `<p class="section-title">${models.length} modelo${models.length !== 1 ? 's' : ''} em uso</p>
+    container.innerHTML = `
+      <div class="model-picker-card">
+        <div class="model-picker-label">Modelo ativo no chat</div>
+        <select class="model-picker-select" id="model-picker-select">
+          ${modelOptions.map(m => `<option value="${m}" ${m === selectedModel ? 'selected' : ''}>${m}</option>`).join('')}
+        </select>
+        <div class="model-picker-note">A seleção é aplicada às próximas mensagens no chat.</div>
+      </div>
+      <p class="section-title">${models.length} modelo${models.length !== 1 ? 's' : ''} em uso</p>
       <div class="model-grid">`;
 
     models.forEach(m => {
@@ -1015,6 +1072,13 @@
     });
 
     container.innerHTML += '</div>';
+
+    const picker = document.getElementById('model-picker-select');
+    if (picker) {
+      picker.addEventListener('change', () => {
+        localStorage.setItem('mcp_selected_model', picker.value);
+      });
+    }
   }
 
   function escapeHtml(str) {

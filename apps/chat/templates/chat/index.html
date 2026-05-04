@@ -671,6 +671,74 @@
       word-break: break-word;
     }
 
+    .timeseries-card {
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: linear-gradient(180deg, #272727, #202020);
+      overflow: hidden;
+    }
+
+    .timeseries-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .timeseries-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #e9f8f3;
+    }
+
+    .timeseries-body {
+      padding: 10px 12px 12px;
+    }
+
+    .timeseries-svg {
+      width: 100%;
+      height: 220px;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #171717;
+    }
+
+    .timeseries-axis {
+      stroke: #4a4a4a;
+      stroke-width: 1;
+    }
+
+    .timeseries-line {
+      fill: none;
+      stroke: #10a37f;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .timeseries-dot {
+      fill: #10a37f;
+      stroke: #d8fff4;
+      stroke-width: 1;
+    }
+
+    .timeseries-label {
+      fill: #9da3af;
+      font-size: 10px;
+      font-family: var(--font);
+    }
+
+    .timeseries-summary {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
     /* Typing indicator */
     .typing-row {
       max-width: 760px;
@@ -928,6 +996,7 @@
       <div class="tool-badge"><span class="dot"></span> normalizar_nlp</div>
       <div class="tool-badge"><span class="dot"></span> lematizar_nlp</div>
       <div class="tool-badge"><span class="dot"></span> filtrar_por_palavras</div>
+      <div class="tool-badge"><span class="dot"></span> analisar_serie_temporal</div>
     </div>
 
     <div class="sidebar-footer">
@@ -947,7 +1016,7 @@
       <span class="chat-header-title" id="chat-title">Novo chat</span>
       <div class="model-badge">
         <span class="dot"></span>
-        llama-3.3-70b-versatile
+        <span id="active-model-label">llama-3.3-70b-versatile</span>
       </div>
     </header>
 
@@ -1036,6 +1105,7 @@
   const sendBtn         = document.getElementById('send-btn');
   const historyList     = document.getElementById('history-list');
   const chatTitle       = document.getElementById('chat-title');
+  const activeModelLabel= document.getElementById('active-model-label');
   const uploadBtn       = document.getElementById('upload-btn');
   const fileInput       = document.getElementById('file-input');
   const imgPreviewWrap  = document.getElementById('img-preview-wrap');
@@ -1047,6 +1117,18 @@
   let pendingImageName    = null;
   let pendingFilePath     = null;   // caminho server-side do arquivo Excel/CSV
   let pendingFileOrigName = null;
+
+  function getSelectedModel() {
+    return localStorage.getItem('mcp_selected_model') || 'llama-3.3-70b-versatile';
+  }
+
+  function refreshModelBadge() {
+    if (activeModelLabel) {
+      activeModelLabel.textContent = getSelectedModel();
+    }
+  }
+
+  refreshModelBadge();
 
   // ── Marked.js config ──────────────────────────────────────
   marked.setOptions({
@@ -1216,6 +1298,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: text,
+          model: getSelectedModel(),
           history: conversationHistory.slice(0, -1),  // sem a última (já incluída)
         }),
       });
@@ -1333,6 +1416,138 @@
     return null;
   }
 
+  function buildTimeSeriesCards(toolsCalled = []) {
+    const cards = [];
+    for (let i = toolsCalled.length - 1; i >= 0; i--) {
+      const tc = toolsCalled[i];
+      if (tc?.tool !== 'analisar_serie_temporal') continue;
+
+      let parsed = tc?.result;
+      if (typeof parsed === 'string') {
+        try { parsed = JSON.parse(parsed); } catch { parsed = null; }
+      }
+      if (!parsed || !Array.isArray(parsed.dados) || parsed.dados.length < 2) continue;
+
+      const dados = parsed.dados;
+      const dateKey = Object.keys(dados[0]).find(k => /data|date/i.test(k)) || Object.keys(dados[0])[0];
+      const valueKey = Object.keys(dados[0]).find(k => k !== dateKey && typeof dados[0][k] !== 'object');
+      if (!dateKey || !valueKey) continue;
+
+      const pontos = dados
+        .map((d, idx) => ({
+          xLabel: String(d[dateKey]),
+          yValue: Number(d[valueKey]),
+          idx,
+        }))
+        .filter(p => Number.isFinite(p.yValue));
+
+      if (pontos.length < 2) continue;
+
+      const card = document.createElement('div');
+      card.className = 'timeseries-card';
+
+      const head = document.createElement('div');
+      head.className = 'timeseries-head';
+      head.innerHTML = `
+        <div class="timeseries-title">Série temporal</div>
+        <div class="data-preview-meta">
+          <span class="data-chip">tool: ${tc.tool}</span>
+          <span class="data-chip">freq: ${parsed.frequencia || 'MS'}</span>
+          <span class="data-chip">métrica: ${parsed.metrica || valueKey}</span>
+        </div>`;
+      card.appendChild(head);
+
+      const body = document.createElement('div');
+      body.className = 'timeseries-body';
+
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'timeseries-svg');
+      svg.setAttribute('viewBox', '0 0 640 220');
+
+      const W = 640;
+      const H = 220;
+      const pad = { left: 46, right: 16, top: 16, bottom: 34 };
+      const xMin = 0;
+      const xMax = Math.max(1, pontos.length - 1);
+      const ys = pontos.map(p => p.yValue);
+      const yMin = Math.min(...ys);
+      const yMax = Math.max(...ys);
+      const ySpan = yMax - yMin || 1;
+
+      const xToPx = (x) => pad.left + (x - xMin) * (W - pad.left - pad.right) / (xMax - xMin || 1);
+      const yToPx = (y) => H - pad.bottom - ((y - yMin) / ySpan) * (H - pad.top - pad.bottom);
+
+      const axisX = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      axisX.setAttribute('class', 'timeseries-axis');
+      axisX.setAttribute('x1', String(pad.left));
+      axisX.setAttribute('y1', String(H - pad.bottom));
+      axisX.setAttribute('x2', String(W - pad.right));
+      axisX.setAttribute('y2', String(H - pad.bottom));
+      svg.appendChild(axisX);
+
+      const axisY = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      axisY.setAttribute('class', 'timeseries-axis');
+      axisY.setAttribute('x1', String(pad.left));
+      axisY.setAttribute('y1', String(pad.top));
+      axisY.setAttribute('x2', String(pad.left));
+      axisY.setAttribute('y2', String(H - pad.bottom));
+      svg.appendChild(axisY);
+
+      const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+      polyline.setAttribute('class', 'timeseries-line');
+      polyline.setAttribute('points', pontos.map(p => `${xToPx(p.idx)},${yToPx(p.yValue)}`).join(' '));
+      svg.appendChild(polyline);
+
+      pontos.forEach((p, idx) => {
+        const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        dot.setAttribute('class', 'timeseries-dot');
+        dot.setAttribute('cx', String(xToPx(p.idx)));
+        dot.setAttribute('cy', String(yToPx(p.yValue)));
+        dot.setAttribute('r', '3.2');
+        dot.setAttribute('title', `${p.xLabel}: ${p.yValue}`);
+        svg.appendChild(dot);
+
+        if (idx === 0 || idx === pontos.length - 1 || idx === Math.floor(pontos.length / 2)) {
+          const lblX = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          lblX.setAttribute('class', 'timeseries-label');
+          lblX.setAttribute('x', String(xToPx(p.idx)));
+          lblX.setAttribute('y', String(H - 12));
+          lblX.setAttribute('text-anchor', idx === 0 ? 'start' : (idx === pontos.length - 1 ? 'end' : 'middle'));
+          lblX.textContent = p.xLabel;
+          svg.appendChild(lblX);
+        }
+      });
+
+      const lblYMin = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lblYMin.setAttribute('class', 'timeseries-label');
+      lblYMin.setAttribute('x', '8');
+      lblYMin.setAttribute('y', String(H - pad.bottom + 4));
+      lblYMin.textContent = String(yMin);
+      svg.appendChild(lblYMin);
+
+      const lblYMax = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      lblYMax.setAttribute('class', 'timeseries-label');
+      lblYMax.setAttribute('x', '8');
+      lblYMax.setAttribute('y', String(pad.top + 4));
+      lblYMax.textContent = String(yMax);
+      svg.appendChild(lblYMax);
+
+      body.appendChild(svg);
+
+      if (parsed.resumo) {
+        const summary = document.createElement('div');
+        summary.className = 'timeseries-summary';
+        summary.textContent = parsed.resumo;
+        body.appendChild(summary);
+      }
+
+      card.appendChild(body);
+      cards.push(card);
+    }
+
+    return cards;
+  }
+
   function appendMessage(role, content, toolsCalled = [], imageDataUrl = null, exportedFile = null) {
     const row = document.createElement('div');
     row.className = 'message-row';
@@ -1412,6 +1627,9 @@
       if (dataPreview) {
         wrap.appendChild(dataPreview);
       }
+
+      const tsCards = buildTimeSeriesCards(toolsCalled);
+      tsCards.forEach((card) => wrap.appendChild(card));
     }
 
     const msgText = document.createElement('div');

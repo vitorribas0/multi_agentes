@@ -98,6 +98,18 @@ def carregar_arquivo(caminho: str) -> str:
     )
 
 
+def _get_from_cache(caminho: str, usar_filtrado: bool = False) -> tuple[list[dict] | None, str]:
+    """Recupera dados do cache tratando variações de caminho (barras/aspas)."""
+    import os
+    base = _CACHE_FILTRADO if usar_filtrado else _CACHE
+    norm = os.path.normpath(caminho.strip("'\"")).replace("\\", "/")
+    
+    for k, v in base.items():
+        if os.path.normpath(k).replace("\\", "/") == norm:
+            return v, k
+    return None, ""
+
+
 @mcp.tool(
     description="Normaliza texto (lowercase, remove pontuação e acentos) para uma coluna do dataframe em cache."
 )
@@ -106,10 +118,11 @@ def normalizar_nlp(caminho: str, coluna: str) -> str:
     import unicodedata
     import re
 
-    if caminho not in _CACHE:
-        return json.dumps({"erro": "Arquivo nao em cache"})
+    dados, path_real = _get_from_cache(caminho)
+    if dados is None:
+        return json.dumps({"erro": f"Arquivo '{caminho}' nao esta no cache."})
 
-    df = pd.DataFrame(_CACHE[caminho])
+    df = pd.DataFrame(dados)
     coluna_real, sugestoes = _resolver_coluna(df, coluna)
     if not coluna_real:
         return json.dumps(
@@ -139,9 +152,10 @@ def normalizar_nlp(caminho: str, coluna: str) -> str:
 )
 def filtrar_por_palavras(caminho: str, coluna: str, palavras: list[str]) -> str:
     import pandas as pd
-    if caminho not in _CACHE: return json.dumps({"erro": "Cache vazio"})
+    dados, path_real = _get_from_cache(caminho)
+    if dados is None: return json.dumps({"erro": "Arquivo nao em cache"})
 
-    df = pd.DataFrame(_CACHE[caminho])
+    df = pd.DataFrame(dados)
     coluna_real, sugestoes = _resolver_coluna(df, coluna)
     if not coluna_real:
         return json.dumps(
@@ -174,7 +188,8 @@ def lematizar_nlp(caminho: str, coluna: str) -> str:
     import pandas as pd
     import spacy
 
-    if caminho not in _CACHE:
+    dados, path_real = _get_from_cache(caminho)
+    if dados is None:
         return json.dumps({"erro": "Arquivo nao em cache"})
 
     # Carrega o modelo (o download ja foi feito no passo anterior)
@@ -183,7 +198,7 @@ def lematizar_nlp(caminho: str, coluna: str) -> str:
     except Exception:
         return json.dumps({"erro": "Modelo spaCy 'pt_core_news_sm' nao encontrado. Execute 'python -m spacy download pt_core_news_sm'"})
 
-    df = pd.DataFrame(_CACHE[caminho])
+    df = pd.DataFrame(dados)
 
     coluna_informada = str(coluna or "").strip()
     coluna_base_pedida = coluna_informada
@@ -298,6 +313,83 @@ def filtrar_registros(caminho: str, filtros_json: str) -> str:
             return json.dumps({"erro": f"Operador '{operador}' nao suportado."})
 
     _CACHE_FILTRADO[caminho] = df.to_dict(orient="records")
+    return json.dumps(
+        {
+            "total_original": total_original,
+            "total_filtrado": len(df),
+            "colunas": list(df.columns),
+        },
+        ensure_ascii=False,
+    )
+
+
+@mcp.tool(
+    description=(
+        "Realiza análise de série temporal em uma coluna de data. "
+        "Permite agrupar por Dia (D), Mês (MS) ou Ano (YS). "
+        "Calcula métricas como contagem (count), soma (sum) ou média (mean) de uma coluna de valor. "
+        "Se 'metrica' for 'sum' ou 'mean', a 'coluna_valor' é OBRIGATÓRIA. "
+        "Se 'coluna_valor' não for informada, realize apenas a contagem (count)."
+    )
+)
+def analisar_serie_temporal(
+    caminho: str,
+    coluna_data: str,
+    frequencia: str = "MS",
+    metrica: str = "count",
+    coluna_valor: str | None = None,
+    usar_cache_filtrado: bool = False,
+) -> str:
+    """Gera dados de série temporal para análise de tendências."""
+    import pandas as pd
+
+    dados, path_real = _get_from_cache(caminho, usar_cache_filtrado)
+    if dados is None:
+        return json.dumps({
+            "erro": f"Dados não encontrados para o caminho: {caminho}",
+            "dica": "Certifique-se de carregar o arquivo primeiro."
+        })
+
+    df = pd.DataFrame(dados)
+
+    # Resolve coluna de data
+    col_dt, sug_dt = _resolver_coluna(df, coluna_data)
+    if not col_dt:
+        return json.dumps({"erro": f"Coluna de data '{coluna_data}' não encontrada.", "sugestoes": sug_dt})
+
+    try:
+        # Converte para datetime garantindo que seja data (suporta dia/mes/ano ou ano-mes-dia)
+        df[col_dt] = pd.to_datetime(df[col_dt], errors="coerce", dayfirst=True)
+        df = df.dropna(subset=[col_dt])
+    except Exception as e:
+        return json.dumps({"erro": f"Erro ao converter coluna '{col_dt}' para data: {str(e)}"})
+
+    # Se metrica for soma ou media, precisamos de uma coluna de valor
+    if metrica in ["sum", "mean"]:
+        col_val, sug_val = _resolver_coluna(df, coluna_valor) if coluna_valor else (None, [])
+        if not col_val:
+            return json.dumps({"erro": f"Métrica '{metrica}' requer uma 'coluna_valor' numérica válida."})
+        
+        # Garante que a coluna de valor é numérica
+        df[col_val] = pd.to_numeric(df[col_val], errors="coerce")
+        res = df.resample(frequencia, on=col_dt)[col_val].agg(metrica).reset_index()
+    else:
+        # Default: contagem de registros
+        res = df.resample(frequencia, on=col_dt).size().reset_index(name="quantidade")
+
+    # Formata a data para leitura fácil no JSON
+    res[col_dt] = res[col_dt].dt.strftime("%Y-%m-%d")
+
+    return json.dumps(
+        {
+            "frequencia": frequencia,
+            "metrica": metrica,
+            "dados": res.to_dict(orient="records"),
+            "resumo": f"Análise temporal de {len(res)} períodos concluída.",
+        },
+        ensure_ascii=False,
+    )
+
 
     return json.dumps(
         {
