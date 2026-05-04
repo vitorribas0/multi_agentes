@@ -1,0 +1,387 @@
+﻿id,transcricao,confidence,duracao_segundos,atendente_id,data,transcricao_limpo
+1,"Bom dia, como posso ajudar?",0.9104683137055096,175,AT027,2024-11-19,bom dia como posso ajudar
+5,"Bom dia, como posso ajudar?",0.7388140449398947,139,AT044,2024-11-12,bom dia como posso ajudar
+7,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9737497466594468,108,AT013,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+9,"Bom dia, como posso ajudar?",0.6647278994489824,72,AT019,2024-11-01,bom dia como posso ajudar
+11,"Bom dia, como posso ajudar?",0.7898513962164421,102,AT003,2024-11-21,bom dia como posso ajudar
+12,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9536372982561452,135,AT023,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+14,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6860677876398971,68,AT019,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+15,"Bom dia, como posso ajudar?",0.7088478215776929,467,AT044,2024-11-01,bom dia como posso ajudar
+16,"Bom dia, como posso ajudar?",0.7057240716667678,457,AT034,2024-11-08,bom dia como posso ajudar
+20,"Bom dia, como posso ajudar?",0.751650220032069,542,AT025,2024-11-21,bom dia como posso ajudar
+21,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6892597368966623,408,AT025,2024-11-17,fico feliz em poder ajudar tenha um otimo dia
+23,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.766987640758982,320,AT016,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+25,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8352177728129249,226,AT033,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+28,"Bom dia, como posso ajudar?",0.866306930751712,459,AT028,2024-11-29,bom dia como posso ajudar
+29,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8755440618620765,110,AT023,2024-11-17,fico feliz em poder ajudar tenha um otimo dia
+31,"Bom dia, como posso ajudar?",0.87009157746751,321,AT020,2024-11-30,bom dia como posso ajudar
+33,"Bom dia, como posso ajudar?",0.7136115935371105,100,AT037,2024-11-27,bom dia como posso ajudar
+35,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8044444250355021,419,AT018,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+37,"Bom dia, como posso ajudar?",0.9466990604645812,184,AT020,2024-11-29,bom dia como posso ajudar
+38,"Bom dia, como posso ajudar?",0.7072689145446963,396,AT027,2024-11-26,bom dia como posso ajudar
+41,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6240794387172027,512,AT038,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+42,"Bom dia, como posso ajudar?",0.8404911729075698,132,AT044,2024-11-29,bom dia como posso ajudar
+46,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8507317940712465,437,AT017,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+47,"Bom dia, como posso ajudar?",0.7314121357535963,465,AT032,2024-11-03,bom dia como posso ajudar
+49,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8213260279082508,67,AT022,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+53,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8540815432929343,352,AT032,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+55,"Bom dia, como posso ajudar?",0.7058071113686533,454,AT011,2024-11-21,bom dia como posso ajudar
+56,"Bom dia, como posso ajudar?",0.6161806868082887,80,AT026,2024-11-27,bom dia como posso ajudar
+57,"Bom dia, como posso ajudar?",0.7632062253477083,187,AT020,2024-11-06,bom dia como posso ajudar
+58,"Bom dia, como posso ajudar?",0.6431828495622398,534,AT046,2024-11-28,bom dia como posso ajudar
+63,"Bom dia, como posso ajudar?",0.7752616634014787,309,AT041,2024-11-01,bom dia como posso ajudar
+64,"Bom dia, como posso ajudar?",0.6277611893379501,390,AT014,2024-11-05,bom dia como posso ajudar
+66,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6292390629374405,36,AT037,2024-11-22,fico feliz em poder ajudar tenha um otimo dia
+70,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.788413847549195,183,AT017,2024-11-05,fico feliz em poder ajudar tenha um otimo dia
+71,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8653740638532386,263,AT049,2024-11-03,fico feliz em poder ajudar tenha um otimo dia
+74,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9424505325695262,208,AT012,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+77,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6211109880140023,106,AT043,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+78,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.826464610991998,278,AT048,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+81,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6541966681460064,338,AT046,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+84,"Bom dia, como posso ajudar?",0.9519023190644276,290,AT007,2024-11-08,bom dia como posso ajudar
+89,"Bom dia, como posso ajudar?",0.8781505163305703,125,AT028,2024-11-08,bom dia como posso ajudar
+90,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.76305681551334,376,AT002,2024-11-05,fico feliz em poder ajudar tenha um otimo dia
+91,"Bom dia, como posso ajudar?",0.6619775373334298,172,AT009,2024-11-13,bom dia como posso ajudar
+94,"Bom dia, como posso ajudar?",0.9214565861365064,250,AT045,2024-11-09,bom dia como posso ajudar
+97,"Bom dia, como posso ajudar?",0.7358991081962286,176,AT042,2024-11-08,bom dia como posso ajudar
+100,"Bom dia, como posso ajudar?",0.665919523812467,386,AT025,2024-11-14,bom dia como posso ajudar
+102,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8106370514529884,455,AT022,2024-11-28,fico feliz em poder ajudar tenha um otimo dia
+107,"Bom dia, como posso ajudar?",0.9175860568181052,169,AT033,2024-11-28,bom dia como posso ajudar
+112,"Bom dia, como posso ajudar?",0.9798420070090734,376,AT022,2024-11-13,bom dia como posso ajudar
+113,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6177274323228252,457,AT048,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+115,"Bom dia, como posso ajudar?",0.7414796703108515,274,AT031,2024-11-26,bom dia como posso ajudar
+116,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6624310385592544,354,AT008,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+119,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.970262601131852,145,AT030,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+121,"Bom dia, como posso ajudar?",0.8274285679120456,429,AT026,2024-11-25,bom dia como posso ajudar
+122,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8910630716067909,81,AT019,2024-11-15,fico feliz em poder ajudar tenha um otimo dia
+123,"Bom dia, como posso ajudar?",0.9080145266600192,390,AT012,2024-11-29,bom dia como posso ajudar
+126,"Bom dia, como posso ajudar?",0.6257243777591623,123,AT002,2024-11-05,bom dia como posso ajudar
+130,"Bom dia, como posso ajudar?",0.6219652176501376,290,AT010,2024-11-10,bom dia como posso ajudar
+131,"Bom dia, como posso ajudar?",0.6211999881845051,529,AT042,2024-11-26,bom dia como posso ajudar
+132,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6339870637079916,474,AT038,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+133,"Bom dia, como posso ajudar?",0.9522516541391584,219,AT032,2024-11-29,bom dia como posso ajudar
+135,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7804205068828896,367,AT015,2024-11-18,fico feliz em poder ajudar tenha um otimo dia
+139,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.77750749684158,499,AT047,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+141,"Bom dia, como posso ajudar?",0.9012052090241692,101,AT011,2024-11-20,bom dia como posso ajudar
+142,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8606180280924227,415,AT001,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+143,"Bom dia, como posso ajudar?",0.8690226319507407,592,AT016,2024-11-27,bom dia como posso ajudar
+151,"Bom dia, como posso ajudar?",0.8346366408878172,547,AT002,2024-11-06,bom dia como posso ajudar
+156,"Bom dia, como posso ajudar?",0.6069208751283484,79,AT025,2024-11-11,bom dia como posso ajudar
+160,"Bom dia, como posso ajudar?",0.9898872434342708,486,AT047,2024-11-07,bom dia como posso ajudar
+161,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7144163703530622,461,AT028,2024-11-25,fico feliz em poder ajudar tenha um otimo dia
+162,"Bom dia, como posso ajudar?",0.705634579506296,350,AT035,2024-11-03,bom dia como posso ajudar
+165,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8404517678567323,93,AT046,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+169,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8289133818336547,188,AT030,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+172,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9476600502204318,355,AT049,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+174,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9135414236219755,294,AT028,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+176,"Bom dia, como posso ajudar?",0.7378620513629134,453,AT009,2024-11-19,bom dia como posso ajudar
+181,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7233701309882858,223,AT039,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+184,"Bom dia, como posso ajudar?",0.7462414628025349,481,AT047,2024-11-22,bom dia como posso ajudar
+187,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8539875642219842,226,AT016,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+188,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8626207337800791,261,AT023,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+189,"Bom dia, como posso ajudar?",0.9320708835821018,295,AT041,2024-11-15,bom dia como posso ajudar
+190,"Bom dia, como posso ajudar?",0.7331382483207098,482,AT015,2024-11-08,bom dia como posso ajudar
+194,"Bom dia, como posso ajudar?",0.6669282351450861,460,AT010,2024-11-10,bom dia como posso ajudar
+196,"Bom dia, como posso ajudar?",0.7838271356788792,265,AT006,2024-11-16,bom dia como posso ajudar
+200,"Bom dia, como posso ajudar?",0.6102553157284967,296,AT034,2024-11-02,bom dia como posso ajudar
+205,"Bom dia, como posso ajudar?",0.9770352313132212,325,AT039,2024-11-04,bom dia como posso ajudar
+206,"Bom dia, como posso ajudar?",0.7472479247651982,304,AT025,2024-11-04,bom dia como posso ajudar
+214,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7652861849592565,423,AT024,2024-11-12,fico feliz em poder ajudar tenha um otimo dia
+215,"Bom dia, como posso ajudar?",0.9831943939329044,75,AT044,2024-11-20,bom dia como posso ajudar
+216,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7026734680335381,237,AT040,2024-11-03,fico feliz em poder ajudar tenha um otimo dia
+219,"Bom dia, como posso ajudar?",0.9746250626352536,49,AT043,2024-11-21,bom dia como posso ajudar
+220,"Bom dia, como posso ajudar?",0.7493100112860531,113,AT039,2024-11-05,bom dia como posso ajudar
+222,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7779510869373105,65,AT011,2024-11-15,fico feliz em poder ajudar tenha um otimo dia
+223,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8348081582770713,286,AT022,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+228,"Bom dia, como posso ajudar?",0.6594327814883457,423,AT016,2024-11-09,bom dia como posso ajudar
+229,"Bom dia, como posso ajudar?",0.8937108399819198,520,AT029,2024-11-23,bom dia como posso ajudar
+231,"Bom dia, como posso ajudar?",0.8404711860571518,353,AT009,2024-11-30,bom dia como posso ajudar
+233,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7785426364424402,426,AT023,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+234,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9839721074069154,543,AT030,2024-11-22,fico feliz em poder ajudar tenha um otimo dia
+243,"Bom dia, como posso ajudar?",0.6632364785460225,381,AT032,2024-11-24,bom dia como posso ajudar
+245,"Bom dia, como posso ajudar?",0.9125076512265294,121,AT044,2024-11-20,bom dia como posso ajudar
+246,"Bom dia, como posso ajudar?",0.6738838769147238,131,AT007,2024-11-22,bom dia como posso ajudar
+248,"Bom dia, como posso ajudar?",0.7547282526888435,113,AT007,2024-11-20,bom dia como posso ajudar
+249,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7048476285199002,428,AT027,2024-11-09,fico feliz em poder ajudar tenha um otimo dia
+250,"Bom dia, como posso ajudar?",0.8728388774233182,240,AT013,2024-11-14,bom dia como posso ajudar
+251,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6134371671567476,368,AT008,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+252,"Bom dia, como posso ajudar?",0.9335927152262108,159,AT001,2024-11-22,bom dia como posso ajudar
+255,"Bom dia, como posso ajudar?",0.8071970594095231,135,AT046,2024-11-15,bom dia como posso ajudar
+257,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9890813469391012,312,AT023,2024-11-29,fico feliz em poder ajudar tenha um otimo dia
+259,"Bom dia, como posso ajudar?",0.7147136019998032,457,AT013,2024-11-23,bom dia como posso ajudar
+260,"Bom dia, como posso ajudar?",0.8737951848467123,341,AT018,2024-11-28,bom dia como posso ajudar
+263,"Bom dia, como posso ajudar?",0.8526634127794923,39,AT036,2024-11-16,bom dia como posso ajudar
+268,"Bom dia, como posso ajudar?",0.947213792114156,89,AT046,2024-11-20,bom dia como posso ajudar
+277,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6417634581671876,510,AT017,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+279,"Bom dia, como posso ajudar?",0.925354719088805,418,AT034,2024-11-03,bom dia como posso ajudar
+284,"Bom dia, como posso ajudar?",0.6374852188554015,399,AT004,2024-11-28,bom dia como posso ajudar
+285,"Bom dia, como posso ajudar?",0.7220730638918181,99,AT013,2024-11-25,bom dia como posso ajudar
+286,"Bom dia, como posso ajudar?",0.6274031813844979,250,AT047,2024-11-01,bom dia como posso ajudar
+287,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9456599916747708,514,AT012,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+288,"Bom dia, como posso ajudar?",0.9441345104823506,329,AT043,2024-11-18,bom dia como posso ajudar
+291,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.945379856211704,491,AT011,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+292,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8624083261161073,147,AT009,2024-11-29,fico feliz em poder ajudar tenha um otimo dia
+295,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9472082477004866,379,AT033,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+298,"Bom dia, como posso ajudar?",0.7320617780707962,215,AT003,2024-11-15,bom dia como posso ajudar
+314,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8420729605131073,388,AT014,2024-11-03,fico feliz em poder ajudar tenha um otimo dia
+327,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6167229738555345,264,AT036,2024-11-18,fico feliz em poder ajudar tenha um otimo dia
+328,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9241769568956136,534,AT015,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+333,"Bom dia, como posso ajudar?",0.7023729042862366,300,AT015,2024-11-19,bom dia como posso ajudar
+334,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9074238105080272,511,AT030,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+339,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7066524946931148,557,AT039,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+340,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7666843729544842,169,AT026,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+345,"Bom dia, como posso ajudar?",0.7295193501970099,110,AT044,2024-11-20,bom dia como posso ajudar
+351,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6224639202456269,459,AT041,2024-11-09,fico feliz em poder ajudar tenha um otimo dia
+355,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6507311379749963,158,AT048,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+357,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8696614298384617,252,AT003,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+358,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8647805342316832,62,AT048,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+359,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9774005078723118,550,AT019,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+364,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6288474819593585,175,AT041,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+365,"Bom dia, como posso ajudar?",0.9690517873421692,165,AT024,2024-11-09,bom dia como posso ajudar
+366,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7031333635972732,164,AT024,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+369,"Bom dia, como posso ajudar?",0.9822493286285172,288,AT021,2024-11-15,bom dia como posso ajudar
+372,"Bom dia, como posso ajudar?",0.8466840729464067,424,AT033,2024-11-09,bom dia como posso ajudar
+373,"Bom dia, como posso ajudar?",0.644432173200863,557,AT035,2024-11-26,bom dia como posso ajudar
+375,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.963533579220812,327,AT016,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+376,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8892052524171989,306,AT047,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+378,"Bom dia, como posso ajudar?",0.6335320914047172,262,AT043,2024-11-11,bom dia como posso ajudar
+379,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9881749060657432,483,AT010,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+384,"Bom dia, como posso ajudar?",0.6166672204327603,329,AT044,2024-11-05,bom dia como posso ajudar
+385,"Bom dia, como posso ajudar?",0.8407264082595268,412,AT019,2024-11-19,bom dia como posso ajudar
+386,"Bom dia, como posso ajudar?",0.8102233394588949,447,AT032,2024-11-01,bom dia como posso ajudar
+387,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6416239681773543,365,AT042,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+389,"Bom dia, como posso ajudar?",0.7273191775950482,70,AT029,2024-11-27,bom dia como posso ajudar
+391,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6338445481207603,347,AT010,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+394,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6241214653928533,207,AT025,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+401,"Bom dia, como posso ajudar?",0.8416487718038428,51,AT045,2024-11-23,bom dia como posso ajudar
+405,"Bom dia, como posso ajudar?",0.6489565731069504,133,AT020,2024-11-08,bom dia como posso ajudar
+406,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6124389292188906,526,AT027,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+409,"Bom dia, como posso ajudar?",0.6384116405770972,151,AT039,2024-11-22,bom dia como posso ajudar
+412,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9684128593961314,318,AT030,2024-11-28,fico feliz em poder ajudar tenha um otimo dia
+414,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8465773624127909,318,AT025,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+415,"Bom dia, como posso ajudar?",0.8965186151047688,148,AT050,2024-11-30,bom dia como posso ajudar
+418,"Bom dia, como posso ajudar?",0.6027845691524035,598,AT004,2024-11-24,bom dia como posso ajudar
+422,"Bom dia, como posso ajudar?",0.8332290878861144,219,AT041,2024-11-28,bom dia como posso ajudar
+428,"Bom dia, como posso ajudar?",0.877797030682856,36,AT012,2024-11-28,bom dia como posso ajudar
+434,"Bom dia, como posso ajudar?",0.890171407073348,174,AT049,2024-11-04,bom dia como posso ajudar
+437,"Bom dia, como posso ajudar?",0.8380418204082556,391,AT021,2024-11-18,bom dia como posso ajudar
+438,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7324441050892776,483,AT017,2024-11-23,fico feliz em poder ajudar tenha um otimo dia
+440,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.955451747532924,337,AT025,2024-11-18,fico feliz em poder ajudar tenha um otimo dia
+441,"Bom dia, como posso ajudar?",0.8272735682061696,437,AT019,2024-11-07,bom dia como posso ajudar
+442,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7911454200971916,161,AT013,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+444,"Bom dia, como posso ajudar?",0.7334597446384172,277,AT011,2024-11-09,bom dia como posso ajudar
+448,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9464962170427348,274,AT026,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+450,"Bom dia, como posso ajudar?",0.7197387183072423,137,AT035,2024-11-01,bom dia como posso ajudar
+452,"Bom dia, como posso ajudar?",0.8218716047778165,472,AT030,2024-11-09,bom dia como posso ajudar
+453,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9113543507229104,188,AT044,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+454,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6049357781227755,508,AT037,2024-11-18,fico feliz em poder ajudar tenha um otimo dia
+461,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9389565238518588,440,AT048,2024-11-13,fico feliz em poder ajudar tenha um otimo dia
+463,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9174513559018672,237,AT035,2024-11-25,fico feliz em poder ajudar tenha um otimo dia
+471,"Bom dia, como posso ajudar?",0.934604596021544,411,AT013,2024-11-05,bom dia como posso ajudar
+472,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6871193813609653,32,AT048,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+473,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9749826742041152,433,AT030,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+476,"Bom dia, como posso ajudar?",0.9752229158185268,383,AT013,2024-11-28,bom dia como posso ajudar
+478,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7603704633426078,399,AT047,2024-11-29,fico feliz em poder ajudar tenha um otimo dia
+479,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7668765303328547,212,AT015,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+480,"Bom dia, como posso ajudar?",0.9848357969227372,357,AT020,2024-11-01,bom dia como posso ajudar
+483,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6370006378517702,392,AT013,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+484,"Bom dia, como posso ajudar?",0.7087322815505003,393,AT017,2024-11-28,bom dia como posso ajudar
+485,"Bom dia, como posso ajudar?",0.7260814416215507,546,AT044,2024-11-26,bom dia como posso ajudar
+486,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9263235749254304,587,AT035,2024-11-22,fico feliz em poder ajudar tenha um otimo dia
+489,"Bom dia, como posso ajudar?",0.6454466694535964,55,AT042,2024-11-23,bom dia como posso ajudar
+491,"Bom dia, como posso ajudar?",0.9526548104998216,285,AT020,2024-11-26,bom dia como posso ajudar
+492,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8988318800507374,539,AT014,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+493,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8330365180131358,466,AT027,2024-11-10,fico feliz em poder ajudar tenha um otimo dia
+496,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8952002523706459,284,AT012,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+498,"Bom dia, como posso ajudar?",0.6202577439336812,146,AT006,2024-11-05,bom dia como posso ajudar
+500,"Bom dia, como posso ajudar?",0.7122612026934219,251,AT039,2024-11-18,bom dia como posso ajudar
+501,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.87841154223398,525,AT017,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+502,"Bom dia, como posso ajudar?",0.656509300941374,498,AT017,2024-11-16,bom dia como posso ajudar
+504,"Bom dia, como posso ajudar?",0.6623382583918931,482,AT001,2024-11-18,bom dia como posso ajudar
+507,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8082537545446591,84,AT043,2024-11-13,fico feliz em poder ajudar tenha um otimo dia
+511,"Bom dia, como posso ajudar?",0.7567510362992782,236,AT037,2024-11-18,bom dia como posso ajudar
+512,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6476083811244462,219,AT017,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+515,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9805304667005874,317,AT028,2024-11-09,fico feliz em poder ajudar tenha um otimo dia
+517,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9561527862965146,217,AT026,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+518,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6502526734849725,110,AT038,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+521,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.642139471276943,574,AT043,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+523,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6887551557518792,39,AT045,2024-11-12,fico feliz em poder ajudar tenha um otimo dia
+524,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6864976948327695,81,AT006,2024-11-15,fico feliz em poder ajudar tenha um otimo dia
+532,"Bom dia, como posso ajudar?",0.9394756349374946,203,AT043,2024-11-06,bom dia como posso ajudar
+535,"Bom dia, como posso ajudar?",0.7740973511558784,289,AT016,2024-11-28,bom dia como posso ajudar
+544,"Bom dia, como posso ajudar?",0.73638903019339,413,AT034,2024-11-28,bom dia como posso ajudar
+545,"Bom dia, como posso ajudar?",0.7872010601651867,35,AT023,2024-11-15,bom dia como posso ajudar
+548,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7405271037569663,265,AT040,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+555,"Bom dia, como posso ajudar?",0.6625597020256646,201,AT014,2024-11-18,bom dia como posso ajudar
+558,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7041608770289591,106,AT037,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+562,"Bom dia, como posso ajudar?",0.9199468766197736,480,AT041,2024-11-16,bom dia como posso ajudar
+563,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8463769467889977,520,AT017,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+564,"Bom dia, como posso ajudar?",0.7876902395910359,228,AT050,2024-11-11,bom dia como posso ajudar
+565,"Bom dia, como posso ajudar?",0.7353787516583684,141,AT033,2024-11-08,bom dia como posso ajudar
+566,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6535361257212904,588,AT022,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+567,"Bom dia, como posso ajudar?",0.8295506474586278,53,AT019,2024-11-09,bom dia como posso ajudar
+570,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7825035635599069,49,AT025,2024-11-03,fico feliz em poder ajudar tenha um otimo dia
+572,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6280392721737555,538,AT040,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+573,"Bom dia, como posso ajudar?",0.8668723600954363,102,AT047,2024-11-15,bom dia como posso ajudar
+581,"Bom dia, como posso ajudar?",0.8686227312750598,225,AT031,2024-11-13,bom dia como posso ajudar
+583,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6484018532105784,149,AT023,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+584,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7232817656224837,166,AT010,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+586,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6168609542844303,191,AT004,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+587,"Bom dia, como posso ajudar?",0.7420251571659092,466,AT029,2024-11-20,bom dia como posso ajudar
+588,"Bom dia, como posso ajudar?",0.7030962201222786,412,AT021,2024-11-19,bom dia como posso ajudar
+590,"Bom dia, como posso ajudar?",0.7062141016436774,405,AT011,2024-11-01,bom dia como posso ajudar
+591,"Bom dia, como posso ajudar?",0.6493040347037337,364,AT023,2024-11-29,bom dia como posso ajudar
+595,"Bom dia, como posso ajudar?",0.6779010485396529,324,AT049,2024-11-25,bom dia como posso ajudar
+597,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7075746986160374,330,AT002,2024-11-25,fico feliz em poder ajudar tenha um otimo dia
+599,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9751904016141784,220,AT024,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+603,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9464981440542636,454,AT029,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+606,"Bom dia, como posso ajudar?",0.6660234029282656,482,AT034,2024-11-30,bom dia como posso ajudar
+611,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9099306520972016,429,AT025,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+620,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7787130100284589,174,AT036,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+621,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6981309542396132,155,AT031,2024-11-25,fico feliz em poder ajudar tenha um otimo dia
+624,"Bom dia, como posso ajudar?",0.8032236354708856,376,AT036,2024-11-07,bom dia como posso ajudar
+626,"Bom dia, como posso ajudar?",0.6956873312722257,597,AT024,2024-11-02,bom dia como posso ajudar
+631,"Bom dia, como posso ajudar?",0.6194895913711674,447,AT046,2024-11-01,bom dia como posso ajudar
+633,"Bom dia, como posso ajudar?",0.8683195743689518,228,AT049,2024-11-08,bom dia como posso ajudar
+636,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7278997055624427,194,AT010,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+641,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8903285225338864,599,AT030,2024-11-10,fico feliz em poder ajudar tenha um otimo dia
+642,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9893857567765444,350,AT032,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+646,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6226001095302814,419,AT012,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+647,"Bom dia, como posso ajudar?",0.920324845406086,207,AT027,2024-11-24,bom dia como posso ajudar
+648,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8933238013512941,377,AT009,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+650,"Bom dia, como posso ajudar?",0.6582812832278423,493,AT005,2024-11-30,bom dia como posso ajudar
+654,"Bom dia, como posso ajudar?",0.9837803812790716,291,AT023,2024-11-14,bom dia como posso ajudar
+656,"Bom dia, como posso ajudar?",0.9830397185744502,340,AT005,2024-11-03,bom dia como posso ajudar
+662,"Bom dia, como posso ajudar?",0.6212674204127747,585,AT013,2024-11-02,bom dia como posso ajudar
+663,"Bom dia, como posso ajudar?",0.6664490409968975,59,AT002,2024-11-26,bom dia como posso ajudar
+667,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8903890928863929,522,AT037,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+669,"Bom dia, como posso ajudar?",0.7080930136030564,583,AT046,2024-11-17,bom dia como posso ajudar
+670,"Bom dia, como posso ajudar?",0.6892258809028406,206,AT004,2024-11-18,bom dia como posso ajudar
+673,"Bom dia, como posso ajudar?",0.6726718516448512,482,AT043,2024-11-23,bom dia como posso ajudar
+674,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9795048281775618,82,AT025,2024-11-29,fico feliz em poder ajudar tenha um otimo dia
+676,"Bom dia, como posso ajudar?",0.7064679204750235,364,AT047,2024-11-14,bom dia como posso ajudar
+678,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7147196808257671,239,AT017,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+683,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7349331891246776,92,AT021,2024-11-13,fico feliz em poder ajudar tenha um otimo dia
+684,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9441841607389104,407,AT014,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+685,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9542856277477008,412,AT023,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+686,"Bom dia, como posso ajudar?",0.6947794289224162,562,AT016,2024-11-02,bom dia como posso ajudar
+688,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6980362322867499,274,AT045,2024-11-11,fico feliz em poder ajudar tenha um otimo dia
+689,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9103149223459542,75,AT047,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+692,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7351799951121029,472,AT047,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+693,"Bom dia, como posso ajudar?",0.7541901850872272,201,AT034,2024-11-03,bom dia como posso ajudar
+695,"Bom dia, como posso ajudar?",0.6811700573995456,184,AT041,2024-11-12,bom dia como posso ajudar
+700,"Bom dia, como posso ajudar?",0.8552170851561266,469,AT029,2024-11-03,bom dia como posso ajudar
+703,"Bom dia, como posso ajudar?",0.9557603956826112,382,AT037,2024-11-22,bom dia como posso ajudar
+705,"Bom dia, como posso ajudar?",0.7799837287016296,268,AT001,2024-11-01,bom dia como posso ajudar
+710,"Bom dia, como posso ajudar?",0.7737887704877133,319,AT038,2024-11-20,bom dia como posso ajudar
+714,"Bom dia, como posso ajudar?",0.8052927362302783,93,AT015,2024-11-30,bom dia como posso ajudar
+715,"Bom dia, como posso ajudar?",0.9229344653689542,428,AT011,2024-11-28,bom dia como posso ajudar
+719,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7637598932082159,58,AT027,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+720,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6239285441148766,144,AT011,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+721,"Bom dia, como posso ajudar?",0.6361886095368143,529,AT050,2024-11-15,bom dia como posso ajudar
+723,"Bom dia, como posso ajudar?",0.7662701570497353,323,AT022,2024-11-09,bom dia como posso ajudar
+724,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8061458582623121,172,AT002,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+725,"Bom dia, como posso ajudar?",0.8622082597473499,588,AT050,2024-11-15,bom dia como posso ajudar
+727,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6809655017276539,60,AT050,2024-11-25,fico feliz em poder ajudar tenha um otimo dia
+731,"Bom dia, como posso ajudar?",0.9709161538798496,461,AT014,2024-11-20,bom dia como posso ajudar
+735,"Bom dia, como posso ajudar?",0.672526026233345,42,AT021,2024-11-13,bom dia como posso ajudar
+736,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8258067728622216,243,AT002,2024-11-16,fico feliz em poder ajudar tenha um otimo dia
+739,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6942064695074595,463,AT033,2024-11-12,fico feliz em poder ajudar tenha um otimo dia
+751,"Bom dia, como posso ajudar?",0.9117941991214492,242,AT018,2024-11-24,bom dia como posso ajudar
+754,"Bom dia, como posso ajudar?",0.7776849625466438,318,AT012,2024-11-11,bom dia como posso ajudar
+757,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6315020805027954,304,AT022,2024-11-01,fico feliz em poder ajudar tenha um otimo dia
+759,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8110878590646009,211,AT027,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+761,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.607050411076941,480,AT028,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+762,"Bom dia, como posso ajudar?",0.6090091459660106,369,AT034,2024-11-17,bom dia como posso ajudar
+763,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8079448279298161,251,AT040,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+767,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6987447843004342,594,AT040,2024-11-27,fico feliz em poder ajudar tenha um otimo dia
+768,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6578751801653128,267,AT046,2024-11-09,fico feliz em poder ajudar tenha um otimo dia
+775,"Bom dia, como posso ajudar?",0.7378038546425236,142,AT027,2024-11-04,bom dia como posso ajudar
+776,"Bom dia, como posso ajudar?",0.6905125496118246,426,AT014,2024-11-04,bom dia como posso ajudar
+779,"Bom dia, como posso ajudar?",0.6292016600720263,315,AT042,2024-11-10,bom dia como posso ajudar
+783,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9233291714367772,290,AT018,2024-11-05,fico feliz em poder ajudar tenha um otimo dia
+790,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8757641948986645,595,AT019,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+791,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8753234449659795,315,AT023,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+793,"Bom dia, como posso ajudar?",0.9431629786647844,468,AT021,2024-11-02,bom dia como posso ajudar
+794,"Bom dia, como posso ajudar?",0.6190216686343147,137,AT013,2024-11-10,bom dia como posso ajudar
+799,"Bom dia, como posso ajudar?",0.8796417932264413,157,AT039,2024-11-07,bom dia como posso ajudar
+802,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7047743714028241,158,AT007,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+804,"Bom dia, como posso ajudar?",0.821515149044524,222,AT050,2024-11-17,bom dia como posso ajudar
+808,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7525928821201747,47,AT024,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+810,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9054689149790816,126,AT015,2024-11-22,fico feliz em poder ajudar tenha um otimo dia
+811,"Bom dia, como posso ajudar?",0.9732880402559,314,AT003,2024-11-10,bom dia como posso ajudar
+812,"Bom dia, como posso ajudar?",0.6478324796621484,370,AT002,2024-11-14,bom dia como posso ajudar
+815,"Bom dia, como posso ajudar?",0.7559604535604524,564,AT043,2024-11-12,bom dia como posso ajudar
+823,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7215769537913986,540,AT044,2024-11-10,fico feliz em poder ajudar tenha um otimo dia
+825,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9647919418990252,65,AT036,2024-11-17,fico feliz em poder ajudar tenha um otimo dia
+830,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.983488074158646,466,AT037,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+832,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7381619417278382,242,AT035,2024-11-29,fico feliz em poder ajudar tenha um otimo dia
+835,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6503834423002263,389,AT036,2024-11-23,fico feliz em poder ajudar tenha um otimo dia
+836,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9673852533703536,198,AT047,2024-11-04,fico feliz em poder ajudar tenha um otimo dia
+840,"Bom dia, como posso ajudar?",0.6542205489465289,212,AT038,2024-11-15,bom dia como posso ajudar
+841,"Bom dia, como posso ajudar?",0.92856027518123,137,AT008,2024-11-05,bom dia como posso ajudar
+842,"Bom dia, como posso ajudar?",0.7628302023738018,479,AT015,2024-11-17,bom dia como posso ajudar
+843,"Bom dia, como posso ajudar?",0.8173038693681451,197,AT033,2024-11-02,bom dia como posso ajudar
+845,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.939554754893788,542,AT029,2024-11-26,fico feliz em poder ajudar tenha um otimo dia
+849,"Bom dia, como posso ajudar?",0.8449110634109057,226,AT037,2024-11-08,bom dia como posso ajudar
+852,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.978238861384547,214,AT021,2024-11-18,fico feliz em poder ajudar tenha um otimo dia
+853,"Bom dia, como posso ajudar?",0.8689763265943659,185,AT012,2024-11-08,bom dia como posso ajudar
+854,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7975334992370308,275,AT038,2024-11-12,fico feliz em poder ajudar tenha um otimo dia
+855,"Bom dia, como posso ajudar?",0.8328224845185889,550,AT034,2024-11-15,bom dia como posso ajudar
+857,"Bom dia, como posso ajudar?",0.9184725327532636,597,AT022,2024-11-03,bom dia como posso ajudar
+865,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.898527820103868,578,AT038,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+866,"Bom dia, como posso ajudar?",0.9089247317462767,340,AT005,2024-11-16,bom dia como posso ajudar
+867,"Bom dia, como posso ajudar?",0.860807149113257,456,AT004,2024-11-05,bom dia como posso ajudar
+869,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7289726512853685,154,AT043,2024-11-20,fico feliz em poder ajudar tenha um otimo dia
+872,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6957248383433643,91,AT001,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+877,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.681052823280625,409,AT021,2024-11-30,fico feliz em poder ajudar tenha um otimo dia
+878,"Bom dia, como posso ajudar?",0.8378206870338936,169,AT036,2024-11-05,bom dia como posso ajudar
+879,"Bom dia, como posso ajudar?",0.7237891902558428,66,AT031,2024-11-18,bom dia como posso ajudar
+882,"Bom dia, como posso ajudar?",0.6982602764164436,116,AT043,2024-11-20,bom dia como posso ajudar
+884,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7069798906153999,291,AT037,2024-11-07,fico feliz em poder ajudar tenha um otimo dia
+885,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8058157632228706,474,AT014,2024-11-08,fico feliz em poder ajudar tenha um otimo dia
+887,"Bom dia, como posso ajudar?",0.8120070074585972,276,AT028,2024-11-23,bom dia como posso ajudar
+890,"Bom dia, como posso ajudar?",0.6800168123825904,271,AT018,2024-11-25,bom dia como posso ajudar
+894,"Bom dia, como posso ajudar?",0.6472281721599947,331,AT030,2024-11-15,bom dia como posso ajudar
+899,"Bom dia, como posso ajudar?",0.7729075074980695,144,AT002,2024-11-27,bom dia como posso ajudar
+900,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8799175586326922,495,AT032,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+903,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9472582397483416,109,AT047,2024-11-23,fico feliz em poder ajudar tenha um otimo dia
+905,"Bom dia, como posso ajudar?",0.8938836661828973,296,AT022,2024-11-19,bom dia como posso ajudar
+906,"Bom dia, como posso ajudar?",0.8002495943672061,266,AT024,2024-11-09,bom dia como posso ajudar
+908,"Bom dia, como posso ajudar?",0.9123475159165976,507,AT010,2024-11-12,bom dia como posso ajudar
+910,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6405264921598345,130,AT031,2024-11-21,fico feliz em poder ajudar tenha um otimo dia
+914,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9432689143106248,278,AT008,2024-11-02,fico feliz em poder ajudar tenha um otimo dia
+915,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9423719141760736,216,AT043,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+924,"Bom dia, como posso ajudar?",0.954817730826612,241,AT005,2024-11-14,bom dia como posso ajudar
+925,"Bom dia, como posso ajudar?",0.7838737299169661,428,AT008,2024-11-14,bom dia como posso ajudar
+926,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.607773326278212,383,AT022,2024-11-28,fico feliz em poder ajudar tenha um otimo dia
+928,"Bom dia, como posso ajudar?",0.7617754935597958,408,AT035,2024-11-18,bom dia como posso ajudar
+930,"Bom dia, como posso ajudar?",0.78179619930835,531,AT008,2024-11-24,bom dia como posso ajudar
+932,"Bom dia, como posso ajudar?",0.8631319900416268,294,AT015,2024-11-17,bom dia como posso ajudar
+934,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8937484511360594,535,AT041,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+936,"Bom dia, como posso ajudar?",0.7909741926117,45,AT048,2024-11-23,bom dia como posso ajudar
+939,"Bom dia, como posso ajudar?",0.7751209910937032,56,AT038,2024-11-07,bom dia como posso ajudar
+941,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6844327722457751,187,AT041,2024-11-05,fico feliz em poder ajudar tenha um otimo dia
+942,"Bom dia, como posso ajudar?",0.7509995038853432,291,AT003,2024-11-06,bom dia como posso ajudar
+944,"Bom dia, como posso ajudar?",0.7437166575515521,399,AT020,2024-11-16,bom dia como posso ajudar
+945,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6544787284723559,184,AT021,2024-11-17,fico feliz em poder ajudar tenha um otimo dia
+946,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8384044576140626,375,AT004,2024-11-05,fico feliz em poder ajudar tenha um otimo dia
+950,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6960259037238687,420,AT038,2024-11-14,fico feliz em poder ajudar tenha um otimo dia
+951,"Bom dia, como posso ajudar?",0.8217965087006194,400,AT045,2024-11-28,bom dia como posso ajudar
+954,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6345627005162952,374,AT013,2024-11-26,fico feliz em poder ajudar tenha um otimo dia
+959,"Bom dia, como posso ajudar?",0.9849567265966824,227,AT034,2024-11-24,bom dia como posso ajudar
+964,"Bom dia, como posso ajudar?",0.6248157353447503,280,AT019,2024-11-25,bom dia como posso ajudar
+965,"Bom dia, como posso ajudar?",0.9752202830277172,345,AT049,2024-11-06,bom dia como posso ajudar
+972,"Bom dia, como posso ajudar?",0.8356722798698842,216,AT013,2024-11-22,bom dia como posso ajudar
+979,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7968256414338549,366,AT035,2024-11-19,fico feliz em poder ajudar tenha um otimo dia
+981,"Bom dia, como posso ajudar?",0.6555919747341952,295,AT037,2024-11-09,bom dia como posso ajudar
+985,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8748425977393184,453,AT043,2024-11-22,fico feliz em poder ajudar tenha um otimo dia
+986,"Bom dia, como posso ajudar?",0.8930312515865397,127,AT012,2024-11-27,bom dia como posso ajudar
+990,"Bom dia, como posso ajudar?",0.6169719721785003,323,AT041,2024-11-05,bom dia como posso ajudar
+992,"Bom dia, como posso ajudar?",0.9309407102578466,424,AT030,2024-11-15,bom dia como posso ajudar
+993,"Bom dia, como posso ajudar?",0.7223240855787573,115,AT048,2024-11-10,bom dia como posso ajudar
+994,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6373900593250341,449,AT023,2024-11-06,fico feliz em poder ajudar tenha um otimo dia
+995,"Bom dia, como posso ajudar?",0.9692767535549768,183,AT011,2024-11-07,bom dia como posso ajudar
+997,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9802639661901668,291,AT037,2024-11-24,fico feliz em poder ajudar tenha um otimo dia
+998,"Bom dia, como posso ajudar?",0.7363437359502267,552,AT050,2024-11-21,bom dia como posso ajudar
+999,"Bom dia, como posso ajudar?",0.6202074048393209,329,AT002,2024-11-28,bom dia como posso ajudar

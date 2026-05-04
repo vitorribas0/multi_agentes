@@ -1,0 +1,1001 @@
+﻿id,transcricao,confidence,duracao_segundos,atendente_id,data
+1,"Bom dia, como posso ajudar?",0.9104683137055096,175,AT027,2024-11-19
+2,Obrigado por aguardar. Já localizei sua solicitação.,0.941696860529069,508,AT034,2024-11-13
+3,Seu protocolo é 123456. Alguma outra dúvida?,0.8902087343256819,146,AT030,2024-11-21
+4,Obrigado por aguardar. Já localizei sua solicitação.,0.7150854868870378,342,AT030,2024-11-04
+5,"Bom dia, como posso ajudar?",0.7388140449398947,139,AT044,2024-11-12
+6,"Claro, vou verificar isso para você imediatamente.",0.8987054763300246,581,AT041,2024-11-16
+7,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9737497466594467,108,AT013,2024-11-14
+8,Seu protocolo é 123456. Alguma outra dúvida?,0.8531850619301844,542,AT021,2024-11-18
+9,"Bom dia, como posso ajudar?",0.6647278994489824,72,AT019,2024-11-01
+10,Seu protocolo é 123456. Alguma outra dúvida?,0.9877179048089028,405,AT038,2024-11-03
+11,"Bom dia, como posso ajudar?",0.7898513962164421,102,AT003,2024-11-21
+12,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9536372982561452,135,AT023,2024-11-04
+13,Obrigado por aguardar. Já localizei sua solicitação.,0.7836030805450476,555,AT009,2024-11-14
+14,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6860677876398971,68,AT019,2024-11-04
+15,"Bom dia, como posso ajudar?",0.7088478215776929,467,AT044,2024-11-01
+16,"Bom dia, como posso ajudar?",0.7057240716667678,457,AT034,2024-11-08
+17,Não tenho tempo para esse tipo de atendimento.,0.8992039623457131,141,AT020,2024-11-05
+18,"Claro, vou verificar isso para você imediatamente.",0.9155342481571876,45,AT007,2024-11-10
+19,Seu protocolo é 123456. Alguma outra dúvida?,0.7117864846356508,178,AT048,2024-11-07
+20,"Bom dia, como posso ajudar?",0.751650220032069,542,AT025,2024-11-21
+21,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6892597368966623,408,AT025,2024-11-17
+22,Obrigado por aguardar. Já localizei sua solicitação.,0.9318313635155222,318,AT050,2024-11-09
+23,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.766987640758982,320,AT016,2024-11-08
+24,Seu protocolo é 123456. Alguma outra dúvida?,0.7372864439338663,129,AT024,2024-11-14
+25,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8352177728129249,226,AT033,2024-11-27
+26,"Claro, vou verificar isso para você imediatamente.",0.7924024676370297,460,AT025,2024-11-10
+27,Seu protocolo é 123456. Alguma outra dúvida?,0.8070712425689527,558,AT012,2024-11-17
+28,"Bom dia, como posso ajudar?",0.866306930751712,459,AT028,2024-11-29
+29,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8755440618620765,110,AT023,2024-11-17
+30,"Claro, vou verificar isso para você imediatamente.",0.6825863838968008,555,AT043,2024-11-13
+31,"Bom dia, como posso ajudar?",0.87009157746751,321,AT020,2024-11-30
+32,"Claro, vou verificar isso para você imediatamente.",0.724133484669064,400,AT004,2024-11-17
+33,"Bom dia, como posso ajudar?",0.7136115935371105,100,AT037,2024-11-27
+34,Esse tipo de gente sempre reclama.,0.8698706046875322,246,AT019,2024-11-15
+35,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8044444250355021,419,AT018,2024-11-07
+36,"Claro, vou verificar isso para você imediatamente.",0.7068458187932849,162,AT036,2024-11-28
+37,"Bom dia, como posso ajudar?",0.9466990604645813,184,AT020,2024-11-29
+38,"Bom dia, como posso ajudar?",0.7072689145446963,396,AT027,2024-11-26
+39,"Claro, vou verificar isso para você imediatamente.",0.608153977066293,30,AT029,2024-11-21
+40,Esse tipo de gente sempre reclama.,0.8281921957450161,206,AT003,2024-11-16
+41,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6240794387172027,512,AT038,2024-11-07
+42,"Bom dia, como posso ajudar?",0.8404911729075698,132,AT044,2024-11-29
+43,"Claro, vou verificar isso para você imediatamente.",0.9838614337425358,185,AT002,2024-11-16
+44,"Claro, vou verificar isso para você imediatamente.",0.6476536913906059,386,AT047,2024-11-19
+45,Obrigado por aguardar. Já localizei sua solicitação.,0.8163179204770724,547,AT044,2024-11-13
+46,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8507317940712465,437,AT017,2024-11-27
+47,"Bom dia, como posso ajudar?",0.7314121357535963,465,AT032,2024-11-03
+48,Seu protocolo é 123456. Alguma outra dúvida?,0.6074996216487704,521,AT026,2024-11-12
+49,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8213260279082508,67,AT022,2024-11-04
+50,Obrigado por aguardar. Já localizei sua solicitação.,0.6375946928643407,84,AT033,2024-11-15
+51,Seu protocolo é 123456. Alguma outra dúvida?,0.6322814467496025,456,AT029,2024-11-16
+52,"Claro, vou verificar isso para você imediatamente.",0.664191015219568,209,AT032,2024-11-01
+53,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8540815432929343,352,AT032,2024-11-02
+54,Obrigado por aguardar. Já localizei sua solicitação.,0.8169387397390874,179,AT008,2024-11-21
+55,"Bom dia, como posso ajudar?",0.7058071113686533,454,AT011,2024-11-21
+56,"Bom dia, como posso ajudar?",0.6161806868082887,80,AT026,2024-11-27
+57,"Bom dia, como posso ajudar?",0.7632062253477083,187,AT020,2024-11-06
+58,"Bom dia, como posso ajudar?",0.6431828495622398,534,AT046,2024-11-28
+59,"Vocês são todos iguais, sempre reclamando.",0.854601935654826,530,AT043,2024-11-09
+60,"Vocês são todos iguais, sempre reclamando.",0.8981293343406944,570,AT009,2024-11-09
+61,Seu protocolo é 123456. Alguma outra dúvida?,0.7858113722075426,285,AT039,2024-11-05
+62,Seu protocolo é 123456. Alguma outra dúvida?,0.782386239477901,254,AT013,2024-11-28
+63,"Bom dia, como posso ajudar?",0.7752616634014787,309,AT041,2024-11-01
+64,"Bom dia, como posso ajudar?",0.6277611893379501,390,AT014,2024-11-05
+65,"Claro, vou verificar isso para você imediatamente.",0.6026045825700899,578,AT049,2024-11-26
+66,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6292390629374405,36,AT037,2024-11-22
+67,Seu protocolo é 123456. Alguma outra dúvida?,0.7788696973612284,453,AT047,2024-11-03
+68,"Claro, vou verificar isso para você imediatamente.",0.8671002701452195,237,AT029,2024-11-23
+69,Obrigado por aguardar. Já localizei sua solicitação.,0.984721126483771,219,AT037,2024-11-16
+70,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.788413847549195,183,AT017,2024-11-05
+71,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8653740638532386,263,AT049,2024-11-03
+72,Para de fazer escândalo e me deixa trabalhar.,0.8825636623605019,78,AT045,2024-11-13
+73,Obrigado por aguardar. Já localizei sua solicitação.,0.8225998560364117,193,AT043,2024-11-25
+74,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9424505325695262,208,AT012,2024-11-27
+75,Seu protocolo é 123456. Alguma outra dúvida?,0.7569046390292951,311,AT026,2024-11-20
+76,"Claro, vou verificar isso para você imediatamente.",0.6541906522184635,442,AT007,2024-11-07
+77,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6211109880140023,106,AT043,2024-11-04
+78,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.826464610991998,278,AT048,2024-11-07
+79,"Claro, vou verificar isso para você imediatamente.",0.7028930573892818,544,AT044,2024-11-26
+80,Obrigado por aguardar. Já localizei sua solicitação.,0.9415839012240534,203,AT028,2024-11-15
+81,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6541966681460064,338,AT046,2024-11-27
+82,Seu protocolo é 123456. Alguma outra dúvida?,0.7011401383606704,556,AT019,2024-11-16
+83,Obrigado por aguardar. Já localizei sua solicitação.,0.8535120146402795,86,AT021,2024-11-05
+84,"Bom dia, como posso ajudar?",0.9519023190644277,290,AT007,2024-11-08
+85,Obrigado por aguardar. Já localizei sua solicitação.,0.649804108773715,173,AT043,2024-11-16
+86,Obrigado por aguardar. Já localizei sua solicitação.,0.8628264202872313,175,AT049,2024-11-05
+87,Seu protocolo é 123456. Alguma outra dúvida?,0.811654602530715,527,AT034,2024-11-29
+88,Seu protocolo é 123456. Alguma outra dúvida?,0.6964710204377543,521,AT013,2024-11-17
+89,"Bom dia, como posso ajudar?",0.8781505163305703,125,AT028,2024-11-08
+90,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.76305681551334,376,AT002,2024-11-05
+91,"Bom dia, como posso ajudar?",0.6619775373334298,172,AT009,2024-11-13
+92,"Claro, vou verificar isso para você imediatamente.",0.707274047955204,337,AT024,2024-11-01
+93,Obrigado por aguardar. Já localizei sua solicitação.,0.9381936363375155,273,AT028,2024-11-29
+94,"Bom dia, como posso ajudar?",0.9214565861365065,250,AT045,2024-11-09
+95,Obrigado por aguardar. Já localizei sua solicitação.,0.8614807997495435,42,AT048,2024-11-22
+96,Obrigado por aguardar. Já localizei sua solicitação.,0.6391126500221379,410,AT032,2024-11-09
+97,"Bom dia, como posso ajudar?",0.7358991081962286,176,AT042,2024-11-08
+98,"Claro, vou verificar isso para você imediatamente.",0.8319804337901153,179,AT009,2024-11-01
+99,Obrigado por aguardar. Já localizei sua solicitação.,0.7029061764753521,152,AT050,2024-11-21
+100,"Bom dia, como posso ajudar?",0.665919523812467,386,AT025,2024-11-14
+101,Obrigado por aguardar. Já localizei sua solicitação.,0.9262631108687895,190,AT038,2024-11-03
+102,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8106370514529884,455,AT022,2024-11-28
+103,Obrigado por aguardar. Já localizei sua solicitação.,0.6299289997380064,173,AT023,2024-11-01
+104,Seu protocolo é 123456. Alguma outra dúvida?,0.7550863121961355,102,AT020,2024-11-10
+105,Seu protocolo é 123456. Alguma outra dúvida?,0.6243538044859636,317,AT015,2024-11-15
+106,Obrigado por aguardar. Já localizei sua solicitação.,0.8331385698162415,176,AT020,2024-11-07
+107,"Bom dia, como posso ajudar?",0.9175860568181051,169,AT033,2024-11-28
+108,Seu protocolo é 123456. Alguma outra dúvida?,0.7896558559650904,544,AT029,2024-11-19
+109,Obrigado por aguardar. Já localizei sua solicitação.,0.9384275755503526,595,AT035,2024-11-26
+110,Obrigado por aguardar. Já localizei sua solicitação.,0.7994407463578008,547,AT042,2024-11-08
+111,"Claro, vou verificar isso para você imediatamente.",0.6484839218302874,568,AT028,2024-11-13
+112,"Bom dia, como posso ajudar?",0.9798420070090734,376,AT022,2024-11-13
+113,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6177274323228252,457,AT048,2024-11-20
+114,Seu protocolo é 123456. Alguma outra dúvida?,0.7728141609699575,380,AT047,2024-11-04
+115,"Bom dia, como posso ajudar?",0.7414796703108515,274,AT031,2024-11-26
+116,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6624310385592544,354,AT008,2024-11-06
+117,Obrigado por aguardar. Já localizei sua solicitação.,0.9403741327712282,114,AT049,2024-11-16
+118,"Claro, vou verificar isso para você imediatamente.",0.7114086529793943,474,AT019,2024-11-10
+119,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.970262601131852,145,AT030,2024-11-16
+120,"Claro, vou verificar isso para você imediatamente.",0.6333877577962207,195,AT030,2024-11-09
+121,"Bom dia, como posso ajudar?",0.8274285679120456,429,AT026,2024-11-25
+122,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8910630716067909,81,AT019,2024-11-15
+123,"Bom dia, como posso ajudar?",0.9080145266600191,390,AT012,2024-11-29
+124,Obrigado por aguardar. Já localizei sua solicitação.,0.6263935138001708,324,AT016,2024-11-03
+125,"Claro, vou verificar isso para você imediatamente.",0.6193143450360689,223,AT019,2024-11-13
+126,"Bom dia, como posso ajudar?",0.6257243777591623,123,AT002,2024-11-05
+127,Seu protocolo é 123456. Alguma outra dúvida?,0.6729838654350255,396,AT010,2024-11-06
+128,"Claro, vou verificar isso para você imediatamente.",0.8524472529512461,417,AT005,2024-11-12
+129,Obrigado por aguardar. Já localizei sua solicitação.,0.84009177791861,324,AT008,2024-11-01
+130,"Bom dia, como posso ajudar?",0.6219652176501376,290,AT010,2024-11-10
+131,"Bom dia, como posso ajudar?",0.6211999881845051,529,AT042,2024-11-26
+132,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6339870637079916,474,AT038,2024-11-11
+133,"Bom dia, como posso ajudar?",0.9522516541391585,219,AT032,2024-11-29
+134,"Você não entende nada, é muito burro.",0.7204361673152756,460,AT044,2024-11-04
+135,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7804205068828896,367,AT015,2024-11-18
+136,Obrigado por aguardar. Já localizei sua solicitação.,0.9857922318508721,521,AT009,2024-11-01
+137,Seu protocolo é 123456. Alguma outra dúvida?,0.7518346025083248,105,AT030,2024-11-02
+138,Obrigado por aguardar. Já localizei sua solicitação.,0.7031418144352405,354,AT028,2024-11-03
+139,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.77750749684158,499,AT047,2024-11-20
+140,Obrigado por aguardar. Já localizei sua solicitação.,0.8723653976235957,396,AT014,2024-11-04
+141,"Bom dia, como posso ajudar?",0.9012052090241691,101,AT011,2024-11-20
+142,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8606180280924227,415,AT001,2024-11-08
+143,"Bom dia, como posso ajudar?",0.8690226319507407,592,AT016,2024-11-27
+144,Obrigado por aguardar. Já localizei sua solicitação.,0.7035668589213818,341,AT028,2024-11-27
+145,Seu protocolo é 123456. Alguma outra dúvida?,0.7632829199251088,365,AT041,2024-11-17
+146,Obrigado por aguardar. Já localizei sua solicitação.,0.8253150497628667,143,AT040,2024-11-02
+147,Obrigado por aguardar. Já localizei sua solicitação.,0.6502801043919739,294,AT004,2024-11-25
+148,Obrigado por aguardar. Já localizei sua solicitação.,0.9095311396734357,559,AT035,2024-11-19
+149,"Claro, vou verificar isso para você imediatamente.",0.6210140349120079,596,AT016,2024-11-24
+150,"Vocês são todos iguais, sempre reclamando.",0.8615776296213392,180,AT031,2024-11-04
+151,"Bom dia, como posso ajudar?",0.8346366408878172,547,AT002,2024-11-06
+152,Seu protocolo é 123456. Alguma outra dúvida?,0.8403865577776592,176,AT050,2024-11-10
+153,Obrigado por aguardar. Já localizei sua solicitação.,0.7314720864226362,567,AT041,2024-11-04
+154,"Claro, vou verificar isso para você imediatamente.",0.7309167557194116,151,AT035,2024-11-16
+155,"Claro, vou verificar isso para você imediatamente.",0.7147313983348117,114,AT036,2024-11-07
+156,"Bom dia, como posso ajudar?",0.6069208751283484,79,AT025,2024-11-11
+157,Obrigado por aguardar. Já localizei sua solicitação.,0.6211503104053989,371,AT036,2024-11-26
+158,"Claro, vou verificar isso para você imediatamente.",0.8386105036121889,380,AT007,2024-11-02
+159,Seu protocolo é 123456. Alguma outra dúvida?,0.9552428406416045,146,AT005,2024-11-07
+160,"Bom dia, como posso ajudar?",0.9898872434342707,486,AT047,2024-11-07
+161,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7144163703530622,461,AT028,2024-11-25
+162,"Bom dia, como posso ajudar?",0.705634579506296,350,AT035,2024-11-03
+163,Para de fazer escândalo e me deixa trabalhar.,0.8588414909386726,556,AT011,2024-11-29
+164,"Claro, vou verificar isso para você imediatamente.",0.9566487102618931,352,AT045,2024-11-27
+165,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8404517678567323,93,AT046,2024-11-21
+166,Obrigado por aguardar. Já localizei sua solicitação.,0.7189529216658084,295,AT008,2024-11-22
+167,"Claro, vou verificar isso para você imediatamente.",0.9308765245532176,430,AT045,2024-11-13
+168,"Claro, vou verificar isso para você imediatamente.",0.7025446488587412,197,AT024,2024-11-18
+169,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8289133818336547,188,AT030,2024-11-16
+170,Obrigado por aguardar. Já localizei sua solicitação.,0.8752313503091896,367,AT035,2024-11-22
+171,Seu protocolo é 123456. Alguma outra dúvida?,0.6279006968299278,238,AT016,2024-11-03
+172,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9476600502204318,355,AT049,2024-11-06
+173,Seu protocolo é 123456. Alguma outra dúvida?,0.7807725520222382,493,AT020,2024-11-01
+174,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9135414236219757,294,AT028,2024-11-07
+175,Obrigado por aguardar. Já localizei sua solicitação.,0.7042155005557755,451,AT040,2024-11-30
+176,"Bom dia, como posso ajudar?",0.7378620513629134,453,AT009,2024-11-19
+177,Seu protocolo é 123456. Alguma outra dúvida?,0.9588035892222482,53,AT010,2024-11-01
+178,"Claro, vou verificar isso para você imediatamente.",0.7887333118174619,228,AT009,2024-11-30
+179,Obrigado por aguardar. Já localizei sua solicitação.,0.8453350851372874,459,AT038,2024-11-18
+180,"Claro, vou verificar isso para você imediatamente.",0.7000684084095956,462,AT019,2024-11-10
+181,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7233701309882858,223,AT039,2024-11-02
+182,"Vocês são todos iguais, sempre reclamando.",0.7774558570381543,444,AT020,2024-11-19
+183,Seu protocolo é 123456. Alguma outra dúvida?,0.6234573058754697,158,AT011,2024-11-25
+184,"Bom dia, como posso ajudar?",0.7462414628025349,481,AT047,2024-11-22
+185,"Claro, vou verificar isso para você imediatamente.",0.6883083686512766,450,AT018,2024-11-20
+186,Para de fazer escândalo e me deixa trabalhar.,0.8076256656526127,72,AT022,2024-11-24
+187,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8539875642219842,226,AT016,2024-11-08
+188,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8626207337800791,261,AT023,2024-11-04
+189,"Bom dia, como posso ajudar?",0.9320708835821018,295,AT041,2024-11-15
+190,"Bom dia, como posso ajudar?",0.7331382483207098,482,AT015,2024-11-08
+191,Não tenho tempo para esse tipo de atendimento.,0.8497969267459655,472,AT014,2024-11-09
+192,"Claro, vou verificar isso para você imediatamente.",0.7801240353269087,219,AT010,2024-11-26
+193,Obrigado por aguardar. Já localizei sua solicitação.,0.6236526362366908,152,AT040,2024-11-18
+194,"Bom dia, como posso ajudar?",0.6669282351450861,460,AT010,2024-11-10
+195,"Claro, vou verificar isso para você imediatamente.",0.8955714024066148,300,AT013,2024-11-26
+196,"Bom dia, como posso ajudar?",0.7838271356788792,265,AT006,2024-11-16
+197,"Você não entende nada, é muito burro.",0.8299794202000523,91,AT043,2024-11-16
+198,"Claro, vou verificar isso para você imediatamente.",0.616886110916815,428,AT012,2024-11-19
+199,Obrigado por aguardar. Já localizei sua solicitação.,0.6984845287430441,453,AT016,2024-11-24
+200,"Bom dia, como posso ajudar?",0.6102553157284967,296,AT034,2024-11-02
+201,Seu protocolo é 123456. Alguma outra dúvida?,0.7339313417119719,420,AT010,2024-11-10
+202,"Claro, vou verificar isso para você imediatamente.",0.8744804782624561,181,AT015,2024-11-12
+203,Obrigado por aguardar. Já localizei sua solicitação.,0.8577291937135179,172,AT024,2024-11-09
+204,Obrigado por aguardar. Já localizei sua solicitação.,0.9371919865050737,136,AT043,2024-11-02
+205,"Bom dia, como posso ajudar?",0.9770352313132213,325,AT039,2024-11-04
+206,"Bom dia, como posso ajudar?",0.7472479247651982,304,AT025,2024-11-04
+207,Seu protocolo é 123456. Alguma outra dúvida?,0.7022248111045468,206,AT018,2024-11-22
+208,"Claro, vou verificar isso para você imediatamente.",0.732400318942619,519,AT031,2024-11-21
+209,Obrigado por aguardar. Já localizei sua solicitação.,0.6476360373143522,537,AT003,2024-11-11
+210,Obrigado por aguardar. Já localizei sua solicitação.,0.9246018115650204,183,AT037,2024-11-27
+211,Obrigado por aguardar. Já localizei sua solicitação.,0.8924672127681026,426,AT025,2024-11-04
+212,Obrigado por aguardar. Já localizei sua solicitação.,0.6873893738085053,311,AT001,2024-11-22
+213,Seu protocolo é 123456. Alguma outra dúvida?,0.6323957877107934,581,AT028,2024-11-13
+214,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7652861849592565,423,AT024,2024-11-12
+215,"Bom dia, como posso ajudar?",0.9831943939329044,75,AT044,2024-11-20
+216,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7026734680335381,237,AT040,2024-11-03
+217,Obrigado por aguardar. Já localizei sua solicitação.,0.6814919783016962,172,AT023,2024-11-01
+218,Obrigado por aguardar. Já localizei sua solicitação.,0.9060705071261992,377,AT020,2024-11-15
+219,"Bom dia, como posso ajudar?",0.9746250626352537,49,AT043,2024-11-21
+220,"Bom dia, como posso ajudar?",0.7493100112860531,113,AT039,2024-11-05
+221,Seu protocolo é 123456. Alguma outra dúvida?,0.7738344395900296,51,AT018,2024-11-25
+222,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7779510869373105,65,AT011,2024-11-15
+223,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8348081582770713,286,AT022,2024-11-30
+224,Seu protocolo é 123456. Alguma outra dúvida?,0.8103501135133537,395,AT042,2024-11-08
+225,"Claro, vou verificar isso para você imediatamente.",0.6271657788956474,577,AT018,2024-11-14
+226,"Claro, vou verificar isso para você imediatamente.",0.8163835867633196,140,AT039,2024-11-30
+227,Seu protocolo é 123456. Alguma outra dúvida?,0.9292431427411956,233,AT002,2024-11-05
+228,"Bom dia, como posso ajudar?",0.6594327814883457,423,AT016,2024-11-09
+229,"Bom dia, como posso ajudar?",0.8937108399819198,520,AT029,2024-11-23
+230,Seu protocolo é 123456. Alguma outra dúvida?,0.9160396622469688,477,AT046,2024-11-16
+231,"Bom dia, como posso ajudar?",0.8404711860571518,353,AT009,2024-11-30
+232,Obrigado por aguardar. Já localizei sua solicitação.,0.9351658174933006,50,AT024,2024-11-22
+233,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7785426364424402,426,AT023,2024-11-14
+234,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9839721074069154,543,AT030,2024-11-22
+235,Seu protocolo é 123456. Alguma outra dúvida?,0.6861350862938195,165,AT034,2024-11-06
+236,Obrigado por aguardar. Já localizei sua solicitação.,0.6025071889006313,83,AT045,2024-11-18
+237,Seu protocolo é 123456. Alguma outra dúvida?,0.9296908684500717,228,AT050,2024-11-15
+238,Seu protocolo é 123456. Alguma outra dúvida?,0.6103484767793864,54,AT002,2024-11-20
+239,Seu protocolo é 123456. Alguma outra dúvida?,0.7954567400089382,497,AT014,2024-11-05
+240,Obrigado por aguardar. Já localizei sua solicitação.,0.8144056453999233,594,AT022,2024-11-08
+241,"Claro, vou verificar isso para você imediatamente.",0.8204819718497302,329,AT043,2024-11-15
+242,"Claro, vou verificar isso para você imediatamente.",0.9423795509492953,217,AT015,2024-11-27
+243,"Bom dia, como posso ajudar?",0.6632364785460225,381,AT032,2024-11-24
+244,"Claro, vou verificar isso para você imediatamente.",0.9307518811832677,598,AT038,2024-11-26
+245,"Bom dia, como posso ajudar?",0.9125076512265294,121,AT044,2024-11-20
+246,"Bom dia, como posso ajudar?",0.6738838769147238,131,AT007,2024-11-22
+247,Obrigado por aguardar. Já localizei sua solicitação.,0.6395121585025191,325,AT016,2024-11-25
+248,"Bom dia, como posso ajudar?",0.7547282526888435,113,AT007,2024-11-20
+249,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7048476285199002,428,AT027,2024-11-09
+250,"Bom dia, como posso ajudar?",0.8728388774233182,240,AT013,2024-11-14
+251,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6134371671567476,368,AT008,2024-11-20
+252,"Bom dia, como posso ajudar?",0.9335927152262107,159,AT001,2024-11-22
+253,Esse tipo de gente sempre reclama.,0.7965428874132527,544,AT011,2024-11-22
+254,Seu protocolo é 123456. Alguma outra dúvida?,0.823866003047433,350,AT034,2024-11-27
+255,"Bom dia, como posso ajudar?",0.8071970594095231,135,AT046,2024-11-15
+256,Obrigado por aguardar. Já localizei sua solicitação.,0.6659146047424926,369,AT018,2024-11-12
+257,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9890813469391011,312,AT023,2024-11-29
+258,Obrigado por aguardar. Já localizei sua solicitação.,0.8700405763385064,456,AT018,2024-11-16
+259,"Bom dia, como posso ajudar?",0.7147136019998032,457,AT013,2024-11-23
+260,"Bom dia, como posso ajudar?",0.8737951848467123,341,AT018,2024-11-28
+261,Obrigado por aguardar. Já localizei sua solicitação.,0.7845957546305293,210,AT030,2024-11-26
+262,"Claro, vou verificar isso para você imediatamente.",0.7994852259373568,57,AT027,2024-11-22
+263,"Bom dia, como posso ajudar?",0.8526634127794923,39,AT036,2024-11-16
+264,Esse tipo de gente sempre reclama.,0.7020193628622575,490,AT009,2024-11-19
+265,Seu protocolo é 123456. Alguma outra dúvida?,0.9734673748373038,587,AT030,2024-11-01
+266,"Claro, vou verificar isso para você imediatamente.",0.6188065813569525,148,AT016,2024-11-04
+267,Seu protocolo é 123456. Alguma outra dúvida?,0.6805580838748271,31,AT040,2024-11-09
+268,"Bom dia, como posso ajudar?",0.9472137921141561,89,AT046,2024-11-20
+269,Obrigado por aguardar. Já localizei sua solicitação.,0.9708294833317667,388,AT019,2024-11-13
+270,Para de fazer escândalo e me deixa trabalhar.,0.7621440144011485,481,AT033,2024-11-18
+271,"Claro, vou verificar isso para você imediatamente.",0.8629100184092628,311,AT046,2024-11-25
+272,Obrigado por aguardar. Já localizei sua solicitação.,0.7842002539737029,99,AT005,2024-11-15
+273,Obrigado por aguardar. Já localizei sua solicitação.,0.8454397011342105,395,AT032,2024-11-14
+274,Seu protocolo é 123456. Alguma outra dúvida?,0.7991312590011167,123,AT006,2024-11-08
+275,"Vocês são todos iguais, sempre reclamando.",0.9082648771752293,336,AT019,2024-11-23
+276,Seu protocolo é 123456. Alguma outra dúvida?,0.9210975266072037,271,AT010,2024-11-07
+277,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6417634581671876,510,AT017,2024-11-24
+278,Obrigado por aguardar. Já localizei sua solicitação.,0.9264117695288686,333,AT038,2024-11-07
+279,"Bom dia, como posso ajudar?",0.925354719088805,418,AT034,2024-11-03
+280,"Claro, vou verificar isso para você imediatamente.",0.9324196335542627,296,AT012,2024-11-10
+281,"Vocês são todos iguais, sempre reclamando.",0.9201754961150733,162,AT035,2024-11-20
+282,"Claro, vou verificar isso para você imediatamente.",0.7086083609656155,377,AT037,2024-11-22
+283,"Claro, vou verificar isso para você imediatamente.",0.9524417033111073,376,AT035,2024-11-18
+284,"Bom dia, como posso ajudar?",0.6374852188554015,399,AT004,2024-11-28
+285,"Bom dia, como posso ajudar?",0.7220730638918181,99,AT013,2024-11-25
+286,"Bom dia, como posso ajudar?",0.6274031813844979,250,AT047,2024-11-01
+287,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9456599916747707,514,AT012,2024-11-24
+288,"Bom dia, como posso ajudar?",0.9441345104823506,329,AT043,2024-11-18
+289,"Claro, vou verificar isso para você imediatamente.",0.8084048177927451,538,AT045,2024-11-13
+290,Obrigado por aguardar. Já localizei sua solicitação.,0.6502227152320362,550,AT017,2024-11-20
+291,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.945379856211704,491,AT011,2024-11-04
+292,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8624083261161073,147,AT009,2024-11-29
+293,Seu protocolo é 123456. Alguma outra dúvida?,0.8350976775388341,424,AT002,2024-11-05
+294,"Claro, vou verificar isso para você imediatamente.",0.6994237036808062,363,AT007,2024-11-13
+295,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9472082477004866,379,AT033,2024-11-30
+296,Seu protocolo é 123456. Alguma outra dúvida?,0.8949639159471772,55,AT038,2024-11-22
+297,Obrigado por aguardar. Já localizei sua solicitação.,0.6867219710841187,377,AT029,2024-11-18
+298,"Bom dia, como posso ajudar?",0.7320617780707962,215,AT003,2024-11-15
+299,Seu protocolo é 123456. Alguma outra dúvida?,0.8972001747703087,436,AT050,2024-11-06
+300,Obrigado por aguardar. Já localizei sua solicitação.,0.9531023363581212,273,AT046,2024-11-22
+301,Não tenho tempo para esse tipo de atendimento.,0.9198976977624613,308,AT037,2024-11-04
+302,Obrigado por aguardar. Já localizei sua solicitação.,0.8689392621814358,285,AT034,2024-11-15
+303,"Claro, vou verificar isso para você imediatamente.",0.9058978091905536,592,AT004,2024-11-17
+304,Obrigado por aguardar. Já localizei sua solicitação.,0.6854547692505103,344,AT001,2024-11-12
+305,Para de fazer escândalo e me deixa trabalhar.,0.9015921120461454,317,AT003,2024-11-29
+306,Seu protocolo é 123456. Alguma outra dúvida?,0.6057512909563093,581,AT042,2024-11-26
+307,Seu protocolo é 123456. Alguma outra dúvida?,0.8677314858906874,44,AT030,2024-11-12
+308,Seu protocolo é 123456. Alguma outra dúvida?,0.7359289548349759,564,AT027,2024-11-23
+309,"Claro, vou verificar isso para você imediatamente.",0.7142524422513135,457,AT021,2024-11-22
+310,Seu protocolo é 123456. Alguma outra dúvida?,0.6860493746640057,339,AT001,2024-11-22
+311,"Claro, vou verificar isso para você imediatamente.",0.9472786736826047,583,AT014,2024-11-22
+312,Obrigado por aguardar. Já localizei sua solicitação.,0.8636664019511566,155,AT044,2024-11-10
+313,Seu protocolo é 123456. Alguma outra dúvida?,0.9240201385990269,469,AT043,2024-11-19
+314,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8420729605131073,388,AT014,2024-11-03
+315,Seu protocolo é 123456. Alguma outra dúvida?,0.8347103653116211,280,AT045,2024-11-13
+316,"Claro, vou verificar isso para você imediatamente.",0.6566816371909148,81,AT003,2024-11-30
+317,Obrigado por aguardar. Já localizei sua solicitação.,0.8273064807806241,237,AT028,2024-11-10
+318,Obrigado por aguardar. Já localizei sua solicitação.,0.7858862271183148,270,AT021,2024-11-21
+319,Obrigado por aguardar. Já localizei sua solicitação.,0.7928842695300131,191,AT036,2024-11-06
+320,Obrigado por aguardar. Já localizei sua solicitação.,0.8352678823719755,591,AT033,2024-11-02
+321,Obrigado por aguardar. Já localizei sua solicitação.,0.7295217252610953,521,AT014,2024-11-28
+322,"Claro, vou verificar isso para você imediatamente.",0.7318991338296277,326,AT038,2024-11-24
+323,"Claro, vou verificar isso para você imediatamente.",0.8884077068266745,456,AT006,2024-11-10
+324,"Claro, vou verificar isso para você imediatamente.",0.6490078255341069,462,AT015,2024-11-22
+325,Seu protocolo é 123456. Alguma outra dúvida?,0.7504068372735464,373,AT024,2024-11-07
+326,Seu protocolo é 123456. Alguma outra dúvida?,0.9355090201590033,40,AT011,2024-11-30
+327,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6167229738555345,264,AT036,2024-11-18
+328,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9241769568956136,534,AT015,2024-11-04
+329,"Claro, vou verificar isso para você imediatamente.",0.6963655665247466,259,AT035,2024-11-02
+330,Seu protocolo é 123456. Alguma outra dúvida?,0.9206796080417787,73,AT013,2024-11-02
+331,"Claro, vou verificar isso para você imediatamente.",0.7214864283827256,333,AT037,2024-11-23
+332,Seu protocolo é 123456. Alguma outra dúvida?,0.7177031479400544,539,AT038,2024-11-25
+333,"Bom dia, como posso ajudar?",0.7023729042862366,300,AT015,2024-11-19
+334,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9074238105080272,511,AT030,2024-11-21
+335,"Claro, vou verificar isso para você imediatamente.",0.8491004625880846,240,AT045,2024-11-19
+336,Obrigado por aguardar. Já localizei sua solicitação.,0.7946944052053204,151,AT003,2024-11-02
+337,"Claro, vou verificar isso para você imediatamente.",0.6807527121900627,559,AT047,2024-11-04
+338,"Claro, vou verificar isso para você imediatamente.",0.6870833639046847,412,AT038,2024-11-24
+339,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7066524946931148,557,AT039,2024-11-07
+340,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7666843729544842,169,AT026,2024-11-20
+341,Seu protocolo é 123456. Alguma outra dúvida?,0.9658036419524298,108,AT028,2024-11-27
+342,Obrigado por aguardar. Já localizei sua solicitação.,0.8196568058418219,549,AT013,2024-11-02
+343,Obrigado por aguardar. Já localizei sua solicitação.,0.8520903424421374,191,AT022,2024-11-12
+344,"Claro, vou verificar isso para você imediatamente.",0.8154187799005537,538,AT050,2024-11-16
+345,"Bom dia, como posso ajudar?",0.7295193501970099,110,AT044,2024-11-20
+346,Obrigado por aguardar. Já localizei sua solicitação.,0.9632903430662612,198,AT026,2024-11-25
+347,Seu protocolo é 123456. Alguma outra dúvida?,0.7268625468253037,447,AT031,2024-11-12
+348,Seu protocolo é 123456. Alguma outra dúvida?,0.9375221322654899,83,AT048,2024-11-30
+349,"Claro, vou verificar isso para você imediatamente.",0.6262479567605188,457,AT032,2024-11-24
+350,Seu protocolo é 123456. Alguma outra dúvida?,0.8434436450868252,324,AT009,2024-11-12
+351,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6224639202456269,459,AT041,2024-11-09
+352,"Claro, vou verificar isso para você imediatamente.",0.628171118395503,495,AT044,2024-11-17
+353,"Claro, vou verificar isso para você imediatamente.",0.9708890031478115,208,AT019,2024-11-01
+354,"Claro, vou verificar isso para você imediatamente.",0.7241625461121304,323,AT018,2024-11-17
+355,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6507311379749963,158,AT048,2024-11-11
+356,"Claro, vou verificar isso para você imediatamente.",0.9719821799787711,446,AT049,2024-11-21
+357,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8696614298384617,252,AT003,2024-11-04
+358,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8647805342316832,62,AT048,2024-11-27
+359,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9774005078723118,550,AT019,2024-11-24
+360,Seu protocolo é 123456. Alguma outra dúvida?,0.9279786176407845,342,AT046,2024-11-03
+361,Obrigado por aguardar. Já localizei sua solicitação.,0.6520110352661151,580,AT021,2024-11-01
+362,"Claro, vou verificar isso para você imediatamente.",0.8424173958320187,526,AT021,2024-11-01
+363,Seu protocolo é 123456. Alguma outra dúvida?,0.6788619803480529,222,AT024,2024-11-14
+364,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6288474819593585,175,AT041,2024-11-06
+365,"Bom dia, como posso ajudar?",0.9690517873421692,165,AT024,2024-11-09
+366,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7031333635972732,164,AT024,2024-11-21
+367,Seu protocolo é 123456. Alguma outra dúvida?,0.7673810194993304,285,AT046,2024-11-26
+368,"Claro, vou verificar isso para você imediatamente.",0.828936319491701,33,AT006,2024-11-20
+369,"Bom dia, como posso ajudar?",0.9822493286285173,288,AT021,2024-11-15
+370,"Claro, vou verificar isso para você imediatamente.",0.7015683529206831,254,AT008,2024-11-14
+371,"Claro, vou verificar isso para você imediatamente.",0.8416564993599096,401,AT021,2024-11-08
+372,"Bom dia, como posso ajudar?",0.8466840729464067,424,AT033,2024-11-09
+373,"Bom dia, como posso ajudar?",0.644432173200863,557,AT035,2024-11-26
+374,"Claro, vou verificar isso para você imediatamente.",0.9532461457867731,539,AT036,2024-11-22
+375,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.963533579220812,327,AT016,2024-11-02
+376,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8892052524171989,306,AT047,2024-11-30
+377,Seu protocolo é 123456. Alguma outra dúvida?,0.793588399488298,278,AT025,2024-11-18
+378,"Bom dia, como posso ajudar?",0.6335320914047172,262,AT043,2024-11-11
+379,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9881749060657433,483,AT010,2024-11-30
+380,Seu protocolo é 123456. Alguma outra dúvida?,0.7244287823944776,181,AT003,2024-11-19
+381,Obrigado por aguardar. Já localizei sua solicitação.,0.8801920865575212,297,AT039,2024-11-12
+382,Obrigado por aguardar. Já localizei sua solicitação.,0.9275900010211673,428,AT001,2024-11-04
+383,Obrigado por aguardar. Já localizei sua solicitação.,0.9037421300024362,344,AT029,2024-11-08
+384,"Bom dia, como posso ajudar?",0.6166672204327603,329,AT044,2024-11-05
+385,"Bom dia, como posso ajudar?",0.8407264082595268,412,AT019,2024-11-19
+386,"Bom dia, como posso ajudar?",0.8102233394588949,447,AT032,2024-11-01
+387,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6416239681773543,365,AT042,2024-11-08
+388,Seu protocolo é 123456. Alguma outra dúvida?,0.684072750520852,199,AT041,2024-11-29
+389,"Bom dia, como posso ajudar?",0.7273191775950482,70,AT029,2024-11-27
+390,Seu protocolo é 123456. Alguma outra dúvida?,0.9880213324887654,276,AT024,2024-11-22
+391,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6338445481207603,347,AT010,2024-11-11
+392,"Claro, vou verificar isso para você imediatamente.",0.671364741017474,112,AT044,2024-11-21
+393,Esse tipo de gente sempre reclama.,0.7012488302629194,41,AT033,2024-11-23
+394,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6241214653928533,207,AT025,2024-11-24
+395,"Claro, vou verificar isso para você imediatamente.",0.964248720930887,599,AT046,2024-11-07
+396,"Claro, vou verificar isso para você imediatamente.",0.6330608168926963,323,AT032,2024-11-26
+397,Não tenho tempo para esse tipo de atendimento.,0.7942589688087214,525,AT050,2024-11-13
+398,Obrigado por aguardar. Já localizei sua solicitação.,0.7652319013428548,390,AT014,2024-11-26
+399,"Claro, vou verificar isso para você imediatamente.",0.6937467977468658,541,AT021,2024-11-07
+400,Seu protocolo é 123456. Alguma outra dúvida?,0.865542661186148,262,AT015,2024-11-21
+401,"Bom dia, como posso ajudar?",0.8416487718038428,51,AT045,2024-11-23
+402,"Claro, vou verificar isso para você imediatamente.",0.913499403273561,132,AT047,2024-11-01
+403,"Claro, vou verificar isso para você imediatamente.",0.9599501905153585,248,AT011,2024-11-17
+404,Seu protocolo é 123456. Alguma outra dúvida?,0.6164096765163096,180,AT026,2024-11-19
+405,"Bom dia, como posso ajudar?",0.6489565731069504,133,AT020,2024-11-08
+406,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6124389292188906,526,AT027,2024-11-06
+407,Seu protocolo é 123456. Alguma outra dúvida?,0.7132341042964364,350,AT001,2024-11-28
+408,Obrigado por aguardar. Já localizei sua solicitação.,0.916443393426462,245,AT021,2024-11-08
+409,"Bom dia, como posso ajudar?",0.6384116405770972,151,AT039,2024-11-22
+410,Seu protocolo é 123456. Alguma outra dúvida?,0.8254079417989708,374,AT024,2024-11-25
+411,Não tenho tempo para esse tipo de atendimento.,0.8678680894411395,534,AT014,2024-11-25
+412,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9684128593961314,318,AT030,2024-11-28
+413,Seu protocolo é 123456. Alguma outra dúvida?,0.9163134260018728,460,AT012,2024-11-20
+414,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8465773624127909,318,AT025,2024-11-14
+415,"Bom dia, como posso ajudar?",0.8965186151047688,148,AT050,2024-11-30
+416,Seu protocolo é 123456. Alguma outra dúvida?,0.7589643281473271,584,AT035,2024-11-09
+417,Seu protocolo é 123456. Alguma outra dúvida?,0.8625098805846744,77,AT040,2024-11-21
+418,"Bom dia, como posso ajudar?",0.6027845691524035,598,AT004,2024-11-24
+419,"Claro, vou verificar isso para você imediatamente.",0.8888114056643382,273,AT046,2024-11-29
+420,"Claro, vou verificar isso para você imediatamente.",0.8463410867871761,244,AT041,2024-11-30
+421,Obrigado por aguardar. Já localizei sua solicitação.,0.8001399230724581,390,AT042,2024-11-26
+422,"Bom dia, como posso ajudar?",0.8332290878861144,219,AT041,2024-11-28
+423,"Você não entende nada, é muito burro.",0.9368692001718166,322,AT030,2024-11-15
+424,Obrigado por aguardar. Já localizei sua solicitação.,0.7812274290048726,439,AT021,2024-11-06
+425,Obrigado por aguardar. Já localizei sua solicitação.,0.6632172368475088,499,AT031,2024-11-04
+426,"Claro, vou verificar isso para você imediatamente.",0.817235148346502,487,AT041,2024-11-18
+427,Obrigado por aguardar. Já localizei sua solicitação.,0.8658581347182315,246,AT005,2024-11-09
+428,"Bom dia, como posso ajudar?",0.877797030682856,36,AT012,2024-11-28
+429,Seu protocolo é 123456. Alguma outra dúvida?,0.8578710881252826,102,AT026,2024-11-02
+430,Seu protocolo é 123456. Alguma outra dúvida?,0.6944276938960434,337,AT012,2024-11-17
+431,Obrigado por aguardar. Já localizei sua solicitação.,0.6474537241418302,549,AT016,2024-11-20
+432,"Claro, vou verificar isso para você imediatamente.",0.8328518929729891,474,AT041,2024-11-15
+433,"Claro, vou verificar isso para você imediatamente.",0.6604251412255077,515,AT037,2024-11-19
+434,"Bom dia, como posso ajudar?",0.890171407073348,174,AT049,2024-11-04
+435,Obrigado por aguardar. Já localizei sua solicitação.,0.8672887999143504,431,AT018,2024-11-03
+436,Seu protocolo é 123456. Alguma outra dúvida?,0.7253371162391744,32,AT027,2024-11-02
+437,"Bom dia, como posso ajudar?",0.8380418204082556,391,AT021,2024-11-18
+438,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7324441050892776,483,AT017,2024-11-23
+439,Obrigado por aguardar. Já localizei sua solicitação.,0.772606227436514,386,AT026,2024-11-25
+440,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.955451747532924,337,AT025,2024-11-18
+441,"Bom dia, como posso ajudar?",0.8272735682061696,437,AT019,2024-11-07
+442,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7911454200971916,161,AT013,2024-11-27
+443,"Claro, vou verificar isso para você imediatamente.",0.9618246382215634,368,AT020,2024-11-24
+444,"Bom dia, como posso ajudar?",0.7334597446384172,277,AT011,2024-11-09
+445,Obrigado por aguardar. Já localizei sua solicitação.,0.9281883397821469,527,AT041,2024-11-10
+446,"Claro, vou verificar isso para você imediatamente.",0.7341589042324698,558,AT028,2024-11-27
+447,"Claro, vou verificar isso para você imediatamente.",0.7666472451920442,102,AT003,2024-11-17
+448,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9464962170427347,274,AT026,2024-11-04
+449,Seu protocolo é 123456. Alguma outra dúvida?,0.6450072156495754,36,AT016,2024-11-30
+450,"Bom dia, como posso ajudar?",0.7197387183072423,137,AT035,2024-11-01
+451,Obrigado por aguardar. Já localizei sua solicitação.,0.632695082509331,161,AT045,2024-11-28
+452,"Bom dia, como posso ajudar?",0.8218716047778165,472,AT030,2024-11-09
+453,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9113543507229104,188,AT044,2024-11-02
+454,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6049357781227755,508,AT037,2024-11-18
+455,"Claro, vou verificar isso para você imediatamente.",0.8721312455353395,193,AT005,2024-11-10
+456,"Claro, vou verificar isso para você imediatamente.",0.8712490151181721,500,AT010,2024-11-17
+457,"Claro, vou verificar isso para você imediatamente.",0.7714336716877225,114,AT033,2024-11-30
+458,"Vocês são todos iguais, sempre reclamando.",0.7636324892196191,332,AT043,2024-11-15
+459,"Claro, vou verificar isso para você imediatamente.",0.9526538244221456,40,AT005,2024-11-12
+460,Seu protocolo é 123456. Alguma outra dúvida?,0.9464979666994656,524,AT002,2024-11-21
+461,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9389565238518589,440,AT048,2024-11-13
+462,"Claro, vou verificar isso para você imediatamente.",0.6970478590713921,423,AT028,2024-11-01
+463,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9174513559018671,237,AT035,2024-11-25
+464,"Claro, vou verificar isso para você imediatamente.",0.8529762782804231,271,AT022,2024-11-09
+465,Obrigado por aguardar. Já localizei sua solicitação.,0.9171956482654448,203,AT040,2024-11-27
+466,"Claro, vou verificar isso para você imediatamente.",0.8340791520438455,348,AT014,2024-11-18
+467,Obrigado por aguardar. Já localizei sua solicitação.,0.6372597230452199,347,AT001,2024-11-28
+468,"Claro, vou verificar isso para você imediatamente.",0.9753061951463151,562,AT045,2024-11-03
+469,Obrigado por aguardar. Já localizei sua solicitação.,0.6965209514900854,229,AT002,2024-11-26
+470,Seu protocolo é 123456. Alguma outra dúvida?,0.8163836341645244,429,AT041,2024-11-18
+471,"Bom dia, como posso ajudar?",0.9346045960215439,411,AT013,2024-11-05
+472,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6871193813609653,32,AT048,2024-11-04
+473,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9749826742041152,433,AT030,2024-11-08
+474,Obrigado por aguardar. Já localizei sua solicitação.,0.975413844814712,332,AT001,2024-11-03
+475,Seu protocolo é 123456. Alguma outra dúvida?,0.8718568981387804,154,AT012,2024-11-15
+476,"Bom dia, como posso ajudar?",0.9752229158185269,383,AT013,2024-11-28
+477,"Claro, vou verificar isso para você imediatamente.",0.6817082880384299,528,AT045,2024-11-01
+478,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7603704633426078,399,AT047,2024-11-29
+479,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7668765303328547,212,AT015,2024-11-24
+480,"Bom dia, como posso ajudar?",0.9848357969227372,357,AT020,2024-11-01
+481,"Claro, vou verificar isso para você imediatamente.",0.6463598812800827,179,AT010,2024-11-22
+482,Obrigado por aguardar. Já localizei sua solicitação.,0.8636847763268998,471,AT015,2024-11-23
+483,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6370006378517702,392,AT013,2024-11-24
+484,"Bom dia, como posso ajudar?",0.7087322815505003,393,AT017,2024-11-28
+485,"Bom dia, como posso ajudar?",0.7260814416215507,546,AT044,2024-11-26
+486,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9263235749254303,587,AT035,2024-11-22
+487,"Claro, vou verificar isso para você imediatamente.",0.9551338310650352,300,AT027,2024-11-20
+488,Seu protocolo é 123456. Alguma outra dúvida?,0.8876652514618697,65,AT020,2024-11-28
+489,"Bom dia, como posso ajudar?",0.6454466694535964,55,AT042,2024-11-23
+490,Seu protocolo é 123456. Alguma outra dúvida?,0.621481010795647,93,AT027,2024-11-25
+491,"Bom dia, como posso ajudar?",0.9526548104998217,285,AT020,2024-11-26
+492,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8988318800507374,539,AT014,2024-11-27
+493,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8330365180131358,466,AT027,2024-11-10
+494,Seu protocolo é 123456. Alguma outra dúvida?,0.9779845077581648,132,AT032,2024-11-09
+495,Seu protocolo é 123456. Alguma outra dúvida?,0.9580556155985471,532,AT018,2024-11-18
+496,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8952002523706459,284,AT012,2024-11-04
+497,Seu protocolo é 123456. Alguma outra dúvida?,0.842167803895093,170,AT022,2024-11-05
+498,"Bom dia, como posso ajudar?",0.6202577439336812,146,AT006,2024-11-05
+499,Seu protocolo é 123456. Alguma outra dúvida?,0.6161029278726939,455,AT045,2024-11-25
+500,"Bom dia, como posso ajudar?",0.7122612026934219,251,AT039,2024-11-18
+501,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.87841154223398,525,AT017,2024-11-19
+502,"Bom dia, como posso ajudar?",0.656509300941374,498,AT017,2024-11-16
+503,"Claro, vou verificar isso para você imediatamente.",0.6259998988702833,138,AT026,2024-11-08
+504,"Bom dia, como posso ajudar?",0.6623382583918931,482,AT001,2024-11-18
+505,Obrigado por aguardar. Já localizei sua solicitação.,0.688084905590218,451,AT014,2024-11-06
+506,Seu protocolo é 123456. Alguma outra dúvida?,0.932638796048958,166,AT048,2024-11-23
+507,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8082537545446591,84,AT043,2024-11-13
+508,"Claro, vou verificar isso para você imediatamente.",0.7160524201002877,159,AT006,2024-11-10
+509,Obrigado por aguardar. Já localizei sua solicitação.,0.6597888973481257,370,AT045,2024-11-29
+510,Obrigado por aguardar. Já localizei sua solicitação.,0.7478822873634979,40,AT012,2024-11-15
+511,"Bom dia, como posso ajudar?",0.7567510362992782,236,AT037,2024-11-18
+512,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6476083811244462,219,AT017,2024-11-06
+513,Obrigado por aguardar. Já localizei sua solicitação.,0.6563736180220209,534,AT022,2024-11-06
+514,Obrigado por aguardar. Já localizei sua solicitação.,0.9365884484185178,501,AT002,2024-11-24
+515,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9805304667005874,317,AT028,2024-11-09
+516,"Claro, vou verificar isso para você imediatamente.",0.6493951939394453,500,AT027,2024-11-03
+517,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9561527862965146,217,AT026,2024-11-16
+518,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6502526734849725,110,AT038,2024-11-06
+519,Seu protocolo é 123456. Alguma outra dúvida?,0.7662293722457143,102,AT012,2024-11-23
+520,Obrigado por aguardar. Já localizei sua solicitação.,0.6737766493153196,498,AT037,2024-11-28
+521,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.642139471276943,574,AT043,2024-11-24
+522,"Claro, vou verificar isso para você imediatamente.",0.9264875367694825,135,AT007,2024-11-01
+523,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6887551557518792,39,AT045,2024-11-12
+524,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6864976948327695,81,AT006,2024-11-15
+525,"Vocês são todos iguais, sempre reclamando.",0.8389695591045231,372,AT048,2024-11-28
+526,Seu protocolo é 123456. Alguma outra dúvida?,0.6347507840233105,469,AT033,2024-11-16
+527,Obrigado por aguardar. Já localizei sua solicitação.,0.7539238067724214,447,AT039,2024-11-17
+528,Obrigado por aguardar. Já localizei sua solicitação.,0.9030271987648621,223,AT021,2024-11-23
+529,"Claro, vou verificar isso para você imediatamente.",0.7635280538419373,307,AT008,2024-11-05
+530,Obrigado por aguardar. Já localizei sua solicitação.,0.8480822997532004,258,AT015,2024-11-09
+531,Seu protocolo é 123456. Alguma outra dúvida?,0.9837991874536987,587,AT046,2024-11-23
+532,"Bom dia, como posso ajudar?",0.9394756349374946,203,AT043,2024-11-06
+533,"Claro, vou verificar isso para você imediatamente.",0.611476578200514,44,AT019,2024-11-11
+534,"Claro, vou verificar isso para você imediatamente.",0.6771323489137373,169,AT035,2024-11-22
+535,"Bom dia, como posso ajudar?",0.7740973511558784,289,AT016,2024-11-28
+536,Seu protocolo é 123456. Alguma outra dúvida?,0.9791300609483208,399,AT007,2024-11-23
+537,Obrigado por aguardar. Já localizei sua solicitação.,0.922702811520699,346,AT025,2024-11-14
+538,Seu protocolo é 123456. Alguma outra dúvida?,0.9587411196524618,409,AT044,2024-11-29
+539,"Claro, vou verificar isso para você imediatamente.",0.7449589618005674,598,AT003,2024-11-02
+540,"Claro, vou verificar isso para você imediatamente.",0.6738842016702437,452,AT010,2024-11-18
+541,Não tenho tempo para esse tipo de atendimento.,0.9047709054491986,244,AT012,2024-11-10
+542,Obrigado por aguardar. Já localizei sua solicitação.,0.6011909970835109,266,AT038,2024-11-05
+543,Obrigado por aguardar. Já localizei sua solicitação.,0.6630189160535787,295,AT022,2024-11-11
+544,"Bom dia, como posso ajudar?",0.73638903019339,413,AT034,2024-11-28
+545,"Bom dia, como posso ajudar?",0.7872010601651867,35,AT023,2024-11-15
+546,Seu protocolo é 123456. Alguma outra dúvida?,0.6417602155665957,80,AT018,2024-11-14
+547,"Você não entende nada, é muito burro.",0.8390087189233179,514,AT033,2024-11-18
+548,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7405271037569663,265,AT040,2024-11-02
+549,Obrigado por aguardar. Já localizei sua solicitação.,0.6412389470041309,483,AT025,2024-11-14
+550,Seu protocolo é 123456. Alguma outra dúvida?,0.9242603834694552,339,AT038,2024-11-02
+551,Obrigado por aguardar. Já localizei sua solicitação.,0.7667933217310677,389,AT016,2024-11-24
+552,Seu protocolo é 123456. Alguma outra dúvida?,0.9860601844697684,418,AT031,2024-11-29
+553,Seu protocolo é 123456. Alguma outra dúvida?,0.8034404509633752,396,AT016,2024-11-30
+554,Obrigado por aguardar. Já localizei sua solicitação.,0.9075805612065174,286,AT012,2024-11-10
+555,"Bom dia, como posso ajudar?",0.6625597020256646,201,AT014,2024-11-18
+556,Obrigado por aguardar. Já localizei sua solicitação.,0.6206501818396446,488,AT025,2024-11-26
+557,"Claro, vou verificar isso para você imediatamente.",0.664294728275153,566,AT033,2024-11-07
+558,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7041608770289591,106,AT037,2024-11-21
+559,Seu protocolo é 123456. Alguma outra dúvida?,0.742592041601967,589,AT003,2024-11-13
+560,"Claro, vou verificar isso para você imediatamente.",0.8117565289687463,102,AT028,2024-11-25
+561,Seu protocolo é 123456. Alguma outra dúvida?,0.9107847988482944,396,AT038,2024-11-15
+562,"Bom dia, como posso ajudar?",0.9199468766197737,480,AT041,2024-11-16
+563,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8463769467889977,520,AT017,2024-11-04
+564,"Bom dia, como posso ajudar?",0.7876902395910359,228,AT050,2024-11-11
+565,"Bom dia, como posso ajudar?",0.7353787516583684,141,AT033,2024-11-08
+566,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6535361257212904,588,AT022,2024-11-19
+567,"Bom dia, como posso ajudar?",0.8295506474586278,53,AT019,2024-11-09
+568,Obrigado por aguardar. Já localizei sua solicitação.,0.6367834113435061,416,AT024,2024-11-07
+569,Seu protocolo é 123456. Alguma outra dúvida?,0.9046993783219046,111,AT046,2024-11-13
+570,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7825035635599069,49,AT025,2024-11-03
+571,Obrigado por aguardar. Já localizei sua solicitação.,0.7528846188795874,413,AT005,2024-11-02
+572,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6280392721737555,538,AT040,2024-11-19
+573,"Bom dia, como posso ajudar?",0.8668723600954363,102,AT047,2024-11-15
+574,Obrigado por aguardar. Já localizei sua solicitação.,0.8272518347207091,74,AT049,2024-11-06
+575,"Claro, vou verificar isso para você imediatamente.",0.8110487317284749,441,AT008,2024-11-19
+576,"Claro, vou verificar isso para você imediatamente.",0.6547035444416377,61,AT050,2024-11-26
+577,Obrigado por aguardar. Já localizei sua solicitação.,0.9706908270881519,348,AT030,2024-11-08
+578,"Claro, vou verificar isso para você imediatamente.",0.6898375775913833,226,AT033,2024-11-01
+579,Obrigado por aguardar. Já localizei sua solicitação.,0.9391093929711112,472,AT026,2024-11-24
+580,Obrigado por aguardar. Já localizei sua solicitação.,0.6778891794874106,316,AT046,2024-11-08
+581,"Bom dia, como posso ajudar?",0.8686227312750598,225,AT031,2024-11-13
+582,"Claro, vou verificar isso para você imediatamente.",0.8869485600256879,378,AT040,2024-11-18
+583,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6484018532105784,149,AT023,2024-11-16
+584,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7232817656224837,166,AT010,2024-11-11
+585,Obrigado por aguardar. Já localizei sua solicitação.,0.6165476000007011,558,AT030,2024-11-14
+586,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6168609542844303,191,AT004,2024-11-21
+587,"Bom dia, como posso ajudar?",0.7420251571659092,466,AT029,2024-11-20
+588,"Bom dia, como posso ajudar?",0.7030962201222786,412,AT021,2024-11-19
+589,Seu protocolo é 123456. Alguma outra dúvida?,0.9774276580451371,288,AT045,2024-11-05
+590,"Bom dia, como posso ajudar?",0.7062141016436774,405,AT011,2024-11-01
+591,"Bom dia, como posso ajudar?",0.6493040347037337,364,AT023,2024-11-29
+592,"Claro, vou verificar isso para você imediatamente.",0.7722952678510894,485,AT039,2024-11-06
+593,"Claro, vou verificar isso para você imediatamente.",0.7033255808710328,484,AT042,2024-11-28
+594,"Claro, vou verificar isso para você imediatamente.",0.6989942606615566,125,AT030,2024-11-22
+595,"Bom dia, como posso ajudar?",0.6779010485396529,324,AT049,2024-11-25
+596,Obrigado por aguardar. Já localizei sua solicitação.,0.7496963428791136,59,AT034,2024-11-23
+597,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7075746986160374,330,AT002,2024-11-25
+598,"Claro, vou verificar isso para você imediatamente.",0.7135748126887012,219,AT050,2024-11-19
+599,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9751904016141784,220,AT024,2024-11-11
+600,"Claro, vou verificar isso para você imediatamente.",0.7229222158016407,420,AT006,2024-11-27
+601,Obrigado por aguardar. Já localizei sua solicitação.,0.6877373573407358,553,AT036,2024-11-01
+602,"Claro, vou verificar isso para você imediatamente.",0.6231481343040092,311,AT021,2024-11-07
+603,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9464981440542637,454,AT029,2024-11-27
+604,Obrigado por aguardar. Já localizei sua solicitação.,0.7407838769327505,261,AT040,2024-11-17
+605,Obrigado por aguardar. Já localizei sua solicitação.,0.7845401250268537,510,AT030,2024-11-29
+606,"Bom dia, como posso ajudar?",0.6660234029282656,482,AT034,2024-11-30
+607,Obrigado por aguardar. Já localizei sua solicitação.,0.9186021726122706,105,AT007,2024-11-17
+608,Seu protocolo é 123456. Alguma outra dúvida?,0.6991115945928468,76,AT043,2024-11-29
+609,"Claro, vou verificar isso para você imediatamente.",0.8933572355534007,255,AT035,2024-11-08
+610,"Claro, vou verificar isso para você imediatamente.",0.8972185118069671,239,AT009,2024-11-09
+611,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9099306520972016,429,AT025,2024-11-07
+612,Seu protocolo é 123456. Alguma outra dúvida?,0.7481113036464434,150,AT017,2024-11-29
+613,Obrigado por aguardar. Já localizei sua solicitação.,0.8854025364472728,59,AT005,2024-11-25
+614,Seu protocolo é 123456. Alguma outra dúvida?,0.7616665876617859,598,AT017,2024-11-07
+615,"Claro, vou verificar isso para você imediatamente.",0.9452314225468263,45,AT037,2024-11-28
+616,"Claro, vou verificar isso para você imediatamente.",0.916160364445967,417,AT041,2024-11-01
+617,Obrigado por aguardar. Já localizei sua solicitação.,0.8429996142303002,78,AT047,2024-11-24
+618,Seu protocolo é 123456. Alguma outra dúvida?,0.7683303230094607,192,AT022,2024-11-27
+619,Seu protocolo é 123456. Alguma outra dúvida?,0.7472342695343127,407,AT005,2024-11-29
+620,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7787130100284589,174,AT036,2024-11-14
+621,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6981309542396132,155,AT031,2024-11-25
+622,"Claro, vou verificar isso para você imediatamente.",0.9150959479234129,201,AT018,2024-11-06
+623,Seu protocolo é 123456. Alguma outra dúvida?,0.7966857116498385,485,AT009,2024-11-21
+624,"Bom dia, como posso ajudar?",0.8032236354708856,376,AT036,2024-11-07
+625,Seu protocolo é 123456. Alguma outra dúvida?,0.6503695481905264,437,AT018,2024-11-12
+626,"Bom dia, como posso ajudar?",0.6956873312722257,597,AT024,2024-11-02
+627,Obrigado por aguardar. Já localizei sua solicitação.,0.7662863545829548,340,AT003,2024-11-02
+628,Obrigado por aguardar. Já localizei sua solicitação.,0.9793942566768443,585,AT012,2024-11-16
+629,"Claro, vou verificar isso para você imediatamente.",0.7729030555082432,561,AT045,2024-11-13
+630,Obrigado por aguardar. Já localizei sua solicitação.,0.9085402268025053,162,AT018,2024-11-19
+631,"Bom dia, como posso ajudar?",0.6194895913711674,447,AT046,2024-11-01
+632,"Claro, vou verificar isso para você imediatamente.",0.6846368673254819,40,AT045,2024-11-02
+633,"Bom dia, como posso ajudar?",0.8683195743689518,228,AT049,2024-11-08
+634,Obrigado por aguardar. Já localizei sua solicitação.,0.6044273334685863,115,AT031,2024-11-21
+635,"Claro, vou verificar isso para você imediatamente.",0.808389429324811,170,AT032,2024-11-07
+636,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7278997055624427,194,AT010,2024-11-20
+637,Obrigado por aguardar. Já localizei sua solicitação.,0.9526879635777,202,AT017,2024-11-27
+638,Não tenho tempo para esse tipo de atendimento.,0.8648737844989406,304,AT016,2024-11-12
+639,Seu protocolo é 123456. Alguma outra dúvida?,0.6556875455078605,112,AT025,2024-11-03
+640,Obrigado por aguardar. Já localizei sua solicitação.,0.612821985550937,571,AT035,2024-11-17
+641,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8903285225338864,599,AT030,2024-11-10
+642,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9893857567765443,350,AT032,2024-11-24
+643,Esse tipo de gente sempre reclama.,0.947242936115938,116,AT006,2024-11-10
+644,Obrigado por aguardar. Já localizei sua solicitação.,0.7093928807929838,280,AT021,2024-11-21
+645,Obrigado por aguardar. Já localizei sua solicitação.,0.9432034260610829,118,AT036,2024-11-22
+646,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6226001095302814,419,AT012,2024-11-30
+647,"Bom dia, como posso ajudar?",0.9203248454060861,207,AT027,2024-11-24
+648,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8933238013512941,377,AT009,2024-11-20
+649,Seu protocolo é 123456. Alguma outra dúvida?,0.679873146580513,189,AT005,2024-11-25
+650,"Bom dia, como posso ajudar?",0.6582812832278423,493,AT005,2024-11-30
+651,Seu protocolo é 123456. Alguma outra dúvida?,0.9591616367515295,35,AT020,2024-11-14
+652,Obrigado por aguardar. Já localizei sua solicitação.,0.6831687609921419,153,AT028,2024-11-20
+653,Seu protocolo é 123456. Alguma outra dúvida?,0.7008524178434935,589,AT017,2024-11-12
+654,"Bom dia, como posso ajudar?",0.9837803812790716,291,AT023,2024-11-14
+655,"Claro, vou verificar isso para você imediatamente.",0.9062569748685498,485,AT046,2024-11-25
+656,"Bom dia, como posso ajudar?",0.9830397185744502,340,AT005,2024-11-03
+657,"Claro, vou verificar isso para você imediatamente.",0.6250199077448028,425,AT035,2024-11-04
+658,Obrigado por aguardar. Já localizei sua solicitação.,0.9863857489587944,452,AT028,2024-11-27
+659,"Claro, vou verificar isso para você imediatamente.",0.6731040021933374,37,AT038,2024-11-06
+660,Seu protocolo é 123456. Alguma outra dúvida?,0.8765657521188014,304,AT017,2024-11-24
+661,Esse tipo de gente sempre reclama.,0.9308170026888621,523,AT020,2024-11-27
+662,"Bom dia, como posso ajudar?",0.6212674204127747,585,AT013,2024-11-02
+663,"Bom dia, como posso ajudar?",0.6664490409968975,59,AT002,2024-11-26
+664,"Claro, vou verificar isso para você imediatamente.",0.7813963537419748,301,AT013,2024-11-18
+665,"Claro, vou verificar isso para você imediatamente.",0.8066092728041179,543,AT028,2024-11-12
+666,Seu protocolo é 123456. Alguma outra dúvida?,0.989136540206321,554,AT021,2024-11-12
+667,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8903890928863929,522,AT037,2024-11-11
+668,Obrigado por aguardar. Já localizei sua solicitação.,0.8400747148126504,56,AT016,2024-11-29
+669,"Bom dia, como posso ajudar?",0.7080930136030564,583,AT046,2024-11-17
+670,"Bom dia, como posso ajudar?",0.6892258809028406,206,AT004,2024-11-18
+671,Seu protocolo é 123456. Alguma outra dúvida?,0.902877023813867,130,AT009,2024-11-20
+672,Seu protocolo é 123456. Alguma outra dúvida?,0.8407436311943162,417,AT037,2024-11-04
+673,"Bom dia, como posso ajudar?",0.6726718516448512,482,AT043,2024-11-23
+674,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9795048281775618,82,AT025,2024-11-29
+675,"Claro, vou verificar isso para você imediatamente.",0.7810953134668996,220,AT012,2024-11-07
+676,"Bom dia, como posso ajudar?",0.7064679204750235,364,AT047,2024-11-14
+677,Obrigado por aguardar. Já localizei sua solicitação.,0.9709265842258039,258,AT009,2024-11-04
+678,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7147196808257671,239,AT017,2024-11-14
+679,Seu protocolo é 123456. Alguma outra dúvida?,0.9737195604760971,567,AT035,2024-11-23
+680,Obrigado por aguardar. Já localizei sua solicitação.,0.6971100033542234,261,AT004,2024-11-11
+681,Seu protocolo é 123456. Alguma outra dúvida?,0.7719961392347396,183,AT018,2024-11-16
+682,Seu protocolo é 123456. Alguma outra dúvida?,0.9096508307487101,446,AT025,2024-11-01
+683,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7349331891246776,92,AT021,2024-11-13
+684,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9441841607389105,407,AT014,2024-11-16
+685,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9542856277477009,412,AT023,2024-11-11
+686,"Bom dia, como posso ajudar?",0.6947794289224162,562,AT016,2024-11-02
+687,Seu protocolo é 123456. Alguma outra dúvida?,0.9561598717537605,416,AT008,2024-11-29
+688,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6980362322867499,274,AT045,2024-11-11
+689,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9103149223459542,75,AT047,2024-11-04
+690,Seu protocolo é 123456. Alguma outra dúvida?,0.6710892065159538,367,AT047,2024-11-11
+691,Obrigado por aguardar. Já localizei sua solicitação.,0.858839228834632,458,AT007,2024-11-24
+692,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7351799951121029,472,AT047,2024-11-04
+693,"Bom dia, como posso ajudar?",0.7541901850872272,201,AT034,2024-11-03
+694,Seu protocolo é 123456. Alguma outra dúvida?,0.9851851454721368,450,AT036,2024-11-17
+695,"Bom dia, como posso ajudar?",0.6811700573995456,184,AT041,2024-11-12
+696,"Claro, vou verificar isso para você imediatamente.",0.822937550335532,245,AT022,2024-11-04
+697,"Claro, vou verificar isso para você imediatamente.",0.6933278366676545,250,AT029,2024-11-11
+698,"Claro, vou verificar isso para você imediatamente.",0.9086578770923,455,AT033,2024-11-01
+699,Seu protocolo é 123456. Alguma outra dúvida?,0.8753706783182571,249,AT025,2024-11-02
+700,"Bom dia, como posso ajudar?",0.8552170851561266,469,AT029,2024-11-03
+701,"Claro, vou verificar isso para você imediatamente.",0.8799020673185718,488,AT050,2024-11-15
+702,Seu protocolo é 123456. Alguma outra dúvida?,0.8458761754352212,459,AT028,2024-11-21
+703,"Bom dia, como posso ajudar?",0.9557603956826113,382,AT037,2024-11-22
+704,Obrigado por aguardar. Já localizei sua solicitação.,0.8400295935448807,76,AT048,2024-11-27
+705,"Bom dia, como posso ajudar?",0.7799837287016296,268,AT001,2024-11-01
+706,Obrigado por aguardar. Já localizei sua solicitação.,0.9016322162558035,81,AT014,2024-11-08
+707,Obrigado por aguardar. Já localizei sua solicitação.,0.8742488615323214,108,AT021,2024-11-28
+708,Seu protocolo é 123456. Alguma outra dúvida?,0.8622951625561677,133,AT005,2024-11-03
+709,Obrigado por aguardar. Já localizei sua solicitação.,0.9057644491153931,502,AT030,2024-11-21
+710,"Bom dia, como posso ajudar?",0.7737887704877133,319,AT038,2024-11-20
+711,Seu protocolo é 123456. Alguma outra dúvida?,0.8627622762177338,54,AT050,2024-11-04
+712,Seu protocolo é 123456. Alguma outra dúvida?,0.8625159840248515,372,AT016,2024-11-25
+713,"Claro, vou verificar isso para você imediatamente.",0.6189100872438724,141,AT015,2024-11-27
+714,"Bom dia, como posso ajudar?",0.8052927362302783,93,AT015,2024-11-30
+715,"Bom dia, como posso ajudar?",0.9229344653689542,428,AT011,2024-11-28
+716,Obrigado por aguardar. Já localizei sua solicitação.,0.9841445581116094,591,AT001,2024-11-15
+717,Seu protocolo é 123456. Alguma outra dúvida?,0.8825126992672454,71,AT045,2024-11-27
+718,Seu protocolo é 123456. Alguma outra dúvida?,0.6367400349353887,543,AT027,2024-11-19
+719,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7637598932082159,58,AT027,2024-11-24
+720,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6239285441148766,144,AT011,2024-11-21
+721,"Bom dia, como posso ajudar?",0.6361886095368143,529,AT050,2024-11-15
+722,Obrigado por aguardar. Já localizei sua solicitação.,0.8324075148366616,180,AT047,2024-11-03
+723,"Bom dia, como posso ajudar?",0.7662701570497353,323,AT022,2024-11-09
+724,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8061458582623121,172,AT002,2024-11-14
+725,"Bom dia, como posso ajudar?",0.8622082597473499,588,AT050,2024-11-15
+726,Seu protocolo é 123456. Alguma outra dúvida?,0.8528774097904481,329,AT001,2024-11-27
+727,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6809655017276539,60,AT050,2024-11-25
+728,Obrigado por aguardar. Já localizei sua solicitação.,0.7499069307793517,421,AT029,2024-11-18
+729,"Claro, vou verificar isso para você imediatamente.",0.9592918039287986,168,AT037,2024-11-24
+730,"Claro, vou verificar isso para você imediatamente.",0.7592375016410536,62,AT029,2024-11-07
+731,"Bom dia, como posso ajudar?",0.9709161538798496,461,AT014,2024-11-20
+732,"Você não entende nada, é muito burro.",0.9055366147745982,228,AT009,2024-11-01
+733,Obrigado por aguardar. Já localizei sua solicitação.,0.8686837154530487,245,AT021,2024-11-13
+734,Seu protocolo é 123456. Alguma outra dúvida?,0.9692562273222891,404,AT022,2024-11-06
+735,"Bom dia, como posso ajudar?",0.672526026233345,42,AT021,2024-11-13
+736,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8258067728622216,243,AT002,2024-11-16
+737,Obrigado por aguardar. Já localizei sua solicitação.,0.9440008942639231,145,AT007,2024-11-30
+738,Obrigado por aguardar. Já localizei sua solicitação.,0.7376172683056015,100,AT013,2024-11-01
+739,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6942064695074595,463,AT033,2024-11-12
+740,Obrigado por aguardar. Já localizei sua solicitação.,0.8844186910592109,526,AT037,2024-11-30
+741,Seu protocolo é 123456. Alguma outra dúvida?,0.8143205426772631,345,AT033,2024-11-11
+742,"Claro, vou verificar isso para você imediatamente.",0.7566605057074836,477,AT015,2024-11-02
+743,"Claro, vou verificar isso para você imediatamente.",0.9163836373633969,499,AT019,2024-11-02
+744,Seu protocolo é 123456. Alguma outra dúvida?,0.8825378169944995,335,AT013,2024-11-18
+745,Obrigado por aguardar. Já localizei sua solicitação.,0.8431866558558689,239,AT041,2024-11-13
+746,Obrigado por aguardar. Já localizei sua solicitação.,0.8200697703008666,105,AT032,2024-11-09
+747,"Claro, vou verificar isso para você imediatamente.",0.7318804136388928,492,AT038,2024-11-11
+748,Seu protocolo é 123456. Alguma outra dúvida?,0.6283144521668738,132,AT008,2024-11-07
+749,"Claro, vou verificar isso para você imediatamente.",0.9806124604409207,353,AT030,2024-11-25
+750,Seu protocolo é 123456. Alguma outra dúvida?,0.8702138510364958,220,AT041,2024-11-12
+751,"Bom dia, como posso ajudar?",0.9117941991214492,242,AT018,2024-11-24
+752,Obrigado por aguardar. Já localizei sua solicitação.,0.8134941656521378,399,AT025,2024-11-15
+753,Seu protocolo é 123456. Alguma outra dúvida?,0.9345518786803053,34,AT012,2024-11-24
+754,"Bom dia, como posso ajudar?",0.7776849625466438,318,AT012,2024-11-11
+755,Obrigado por aguardar. Já localizei sua solicitação.,0.9892570965520603,170,AT028,2024-11-08
+756,"Claro, vou verificar isso para você imediatamente.",0.643212003370347,547,AT016,2024-11-10
+757,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6315020805027954,304,AT022,2024-11-01
+758,Seu protocolo é 123456. Alguma outra dúvida?,0.7139827781568918,216,AT021,2024-11-28
+759,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8110878590646009,211,AT027,2024-11-08
+760,Seu protocolo é 123456. Alguma outra dúvida?,0.9188459791566859,143,AT005,2024-11-05
+761,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.607050411076941,480,AT028,2024-11-07
+762,"Bom dia, como posso ajudar?",0.6090091459660106,369,AT034,2024-11-17
+763,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8079448279298161,251,AT040,2024-11-04
+764,Obrigado por aguardar. Já localizei sua solicitação.,0.9875158523294559,58,AT001,2024-11-14
+765,"Claro, vou verificar isso para você imediatamente.",0.8761050678655307,307,AT037,2024-11-27
+766,Seu protocolo é 123456. Alguma outra dúvida?,0.8220939739141715,561,AT018,2024-11-08
+767,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6987447843004342,594,AT040,2024-11-27
+768,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6578751801653128,267,AT046,2024-11-09
+769,Seu protocolo é 123456. Alguma outra dúvida?,0.8974681609770863,92,AT022,2024-11-27
+770,Seu protocolo é 123456. Alguma outra dúvida?,0.7003959222124145,59,AT013,2024-11-27
+771,Seu protocolo é 123456. Alguma outra dúvida?,0.9238732720250777,545,AT036,2024-11-02
+772,Obrigado por aguardar. Já localizei sua solicitação.,0.6665604795226571,516,AT022,2024-11-08
+773,Obrigado por aguardar. Já localizei sua solicitação.,0.7521124128370598,234,AT044,2024-11-28
+774,Seu protocolo é 123456. Alguma outra dúvida?,0.80882007606198,310,AT015,2024-11-13
+775,"Bom dia, como posso ajudar?",0.7378038546425236,142,AT027,2024-11-04
+776,"Bom dia, como posso ajudar?",0.6905125496118246,426,AT014,2024-11-04
+777,Seu protocolo é 123456. Alguma outra dúvida?,0.7656383316741728,40,AT001,2024-11-26
+778,Seu protocolo é 123456. Alguma outra dúvida?,0.881735575324767,182,AT010,2024-11-19
+779,"Bom dia, como posso ajudar?",0.6292016600720263,315,AT042,2024-11-10
+780,Obrigado por aguardar. Já localizei sua solicitação.,0.8675478865031563,163,AT034,2024-11-16
+781,Obrigado por aguardar. Já localizei sua solicitação.,0.9659183247542115,91,AT027,2024-11-14
+782,"Claro, vou verificar isso para você imediatamente.",0.6903372218245258,404,AT050,2024-11-27
+783,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9233291714367773,290,AT018,2024-11-05
+784,Seu protocolo é 123456. Alguma outra dúvida?,0.8427636341495991,114,AT021,2024-11-15
+785,"Você não entende nada, é muito burro.",0.8741554290660691,528,AT017,2024-11-07
+786,Obrigado por aguardar. Já localizei sua solicitação.,0.7807006828436612,242,AT013,2024-11-14
+787,"Claro, vou verificar isso para você imediatamente.",0.9878643446064961,402,AT026,2024-11-03
+788,Obrigado por aguardar. Já localizei sua solicitação.,0.7475678073448248,409,AT003,2024-11-11
+789,"Claro, vou verificar isso para você imediatamente.",0.8314953321899238,88,AT046,2024-11-04
+790,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8757641948986645,595,AT019,2024-11-19
+791,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8753234449659795,315,AT023,2024-11-14
+792,Seu protocolo é 123456. Alguma outra dúvida?,0.9679806312483075,225,AT008,2024-11-20
+793,"Bom dia, como posso ajudar?",0.9431629786647843,468,AT021,2024-11-02
+794,"Bom dia, como posso ajudar?",0.6190216686343147,137,AT013,2024-11-10
+795,"Claro, vou verificar isso para você imediatamente.",0.9169282785967301,166,AT004,2024-11-01
+796,"Claro, vou verificar isso para você imediatamente.",0.8174046134881353,316,AT004,2024-11-14
+797,"Claro, vou verificar isso para você imediatamente.",0.7133734478968432,591,AT033,2024-11-18
+798,"Claro, vou verificar isso para você imediatamente.",0.9280370289910261,65,AT006,2024-11-13
+799,"Bom dia, como posso ajudar?",0.8796417932264413,157,AT039,2024-11-07
+800,Obrigado por aguardar. Já localizei sua solicitação.,0.6316545286186711,357,AT039,2024-11-14
+801,"Claro, vou verificar isso para você imediatamente.",0.6774925590806149,341,AT007,2024-11-14
+802,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7047743714028241,158,AT007,2024-11-21
+803,"Claro, vou verificar isso para você imediatamente.",0.9564212773734793,600,AT026,2024-11-06
+804,"Bom dia, como posso ajudar?",0.821515149044524,222,AT050,2024-11-17
+805,Seu protocolo é 123456. Alguma outra dúvida?,0.8073988985477363,267,AT034,2024-11-04
+806,Obrigado por aguardar. Já localizei sua solicitação.,0.8619323215182864,161,AT047,2024-11-20
+807,"Claro, vou verificar isso para você imediatamente.",0.7100145512299275,522,AT012,2024-11-23
+808,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7525928821201747,47,AT024,2024-11-14
+809,Seu protocolo é 123456. Alguma outra dúvida?,0.647394851866134,168,AT050,2024-11-05
+810,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9054689149790816,126,AT015,2024-11-22
+811,"Bom dia, como posso ajudar?",0.9732880402558999,314,AT003,2024-11-10
+812,"Bom dia, como posso ajudar?",0.6478324796621484,370,AT002,2024-11-14
+813,"Claro, vou verificar isso para você imediatamente.",0.7651283533691837,251,AT042,2024-11-24
+814,Obrigado por aguardar. Já localizei sua solicitação.,0.9550429418881368,262,AT030,2024-11-11
+815,"Bom dia, como posso ajudar?",0.7559604535604524,564,AT043,2024-11-12
+816,Obrigado por aguardar. Já localizei sua solicitação.,0.6680859844323415,273,AT021,2024-11-30
+817,"Claro, vou verificar isso para você imediatamente.",0.7206585952658184,508,AT014,2024-11-17
+818,Obrigado por aguardar. Já localizei sua solicitação.,0.8266297919441564,496,AT020,2024-11-20
+819,Obrigado por aguardar. Já localizei sua solicitação.,0.6389263290676053,51,AT017,2024-11-29
+820,"Claro, vou verificar isso para você imediatamente.",0.603171753915914,125,AT018,2024-11-02
+821,Obrigado por aguardar. Já localizei sua solicitação.,0.8383846049702739,346,AT016,2024-11-11
+822,Seu protocolo é 123456. Alguma outra dúvida?,0.8537862763126307,540,AT047,2024-11-09
+823,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7215769537913986,540,AT044,2024-11-10
+824,Obrigado por aguardar. Já localizei sua solicitação.,0.7724998363757919,529,AT004,2024-11-11
+825,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9647919418990252,65,AT036,2024-11-17
+826,Seu protocolo é 123456. Alguma outra dúvida?,0.9732102067368359,553,AT034,2024-11-19
+827,Obrigado por aguardar. Já localizei sua solicitação.,0.8169339139164552,568,AT026,2024-11-24
+828,Obrigado por aguardar. Já localizei sua solicitação.,0.7807694121463564,296,AT026,2024-11-19
+829,"Claro, vou verificar isso para você imediatamente.",0.778832195039606,230,AT012,2024-11-21
+830,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.983488074158646,466,AT037,2024-11-24
+831,"Claro, vou verificar isso para você imediatamente.",0.8570431069813513,426,AT015,2024-11-13
+832,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7381619417278382,242,AT035,2024-11-29
+833,Seu protocolo é 123456. Alguma outra dúvida?,0.7218936687425317,48,AT013,2024-11-20
+834,Obrigado por aguardar. Já localizei sua solicitação.,0.652257450898972,93,AT026,2024-11-24
+835,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6503834423002263,389,AT036,2024-11-23
+836,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9673852533703537,198,AT047,2024-11-04
+837,"Claro, vou verificar isso para você imediatamente.",0.936659316439054,109,AT048,2024-11-25
+838,"Claro, vou verificar isso para você imediatamente.",0.7772657453886427,529,AT044,2024-11-21
+839,"Claro, vou verificar isso para você imediatamente.",0.8480479788605885,486,AT035,2024-11-29
+840,"Bom dia, como posso ajudar?",0.6542205489465289,212,AT038,2024-11-15
+841,"Bom dia, como posso ajudar?",0.9285602751812301,137,AT008,2024-11-05
+842,"Bom dia, como posso ajudar?",0.7628302023738018,479,AT015,2024-11-17
+843,"Bom dia, como posso ajudar?",0.8173038693681451,197,AT033,2024-11-02
+844,"Claro, vou verificar isso para você imediatamente.",0.7368615150516169,78,AT036,2024-11-27
+845,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9395547548937879,542,AT029,2024-11-26
+846,"Claro, vou verificar isso para você imediatamente.",0.9116599333612444,577,AT023,2024-11-23
+847,"Claro, vou verificar isso para você imediatamente.",0.8285908079135329,291,AT012,2024-11-07
+848,Não tenho tempo para esse tipo de atendimento.,0.816344494410695,46,AT042,2024-11-12
+849,"Bom dia, como posso ajudar?",0.8449110634109057,226,AT037,2024-11-08
+850,"Claro, vou verificar isso para você imediatamente.",0.9317622757115149,108,AT005,2024-11-15
+851,Obrigado por aguardar. Já localizei sua solicitação.,0.7184787454224736,585,AT031,2024-11-22
+852,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.978238861384547,214,AT021,2024-11-18
+853,"Bom dia, como posso ajudar?",0.8689763265943659,185,AT012,2024-11-08
+854,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7975334992370308,275,AT038,2024-11-12
+855,"Bom dia, como posso ajudar?",0.8328224845185889,550,AT034,2024-11-15
+856,Seu protocolo é 123456. Alguma outra dúvida?,0.7377040947560235,136,AT016,2024-11-26
+857,"Bom dia, como posso ajudar?",0.9184725327532635,597,AT022,2024-11-03
+858,Obrigado por aguardar. Já localizei sua solicitação.,0.9070512843326968,78,AT025,2024-11-25
+859,Seu protocolo é 123456. Alguma outra dúvida?,0.7912758580865664,103,AT042,2024-11-27
+860,Seu protocolo é 123456. Alguma outra dúvida?,0.890528891716136,49,AT010,2024-11-17
+861,"Claro, vou verificar isso para você imediatamente.",0.9369104189675729,398,AT018,2024-11-16
+862,Obrigado por aguardar. Já localizei sua solicitação.,0.9628909152765092,372,AT021,2024-11-09
+863,"Claro, vou verificar isso para você imediatamente.",0.6608852128567311,159,AT013,2024-11-16
+864,Seu protocolo é 123456. Alguma outra dúvida?,0.6723056327317903,513,AT016,2024-11-23
+865,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.898527820103868,578,AT038,2024-11-14
+866,"Bom dia, como posso ajudar?",0.9089247317462767,340,AT005,2024-11-16
+867,"Bom dia, como posso ajudar?",0.860807149113257,456,AT004,2024-11-05
+868,Seu protocolo é 123456. Alguma outra dúvida?,0.7758513960119888,87,AT021,2024-11-24
+869,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7289726512853685,154,AT043,2024-11-20
+870,"Claro, vou verificar isso para você imediatamente.",0.7592557173638748,67,AT007,2024-11-19
+871,Obrigado por aguardar. Já localizei sua solicitação.,0.8116126910916996,147,AT012,2024-11-07
+872,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6957248383433643,91,AT001,2024-11-06
+873,Obrigado por aguardar. Já localizei sua solicitação.,0.6748088765242306,36,AT036,2024-11-11
+874,Seu protocolo é 123456. Alguma outra dúvida?,0.985882381352024,412,AT020,2024-11-25
+875,Seu protocolo é 123456. Alguma outra dúvida?,0.8070573646070348,412,AT012,2024-11-23
+876,"Claro, vou verificar isso para você imediatamente.",0.6808056101224427,362,AT008,2024-11-14
+877,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.681052823280625,409,AT021,2024-11-30
+878,"Bom dia, como posso ajudar?",0.8378206870338936,169,AT036,2024-11-05
+879,"Bom dia, como posso ajudar?",0.7237891902558428,66,AT031,2024-11-18
+880,"Claro, vou verificar isso para você imediatamente.",0.851160999021684,182,AT039,2024-11-10
+881,Obrigado por aguardar. Já localizei sua solicitação.,0.6171905247339983,207,AT023,2024-11-16
+882,"Bom dia, como posso ajudar?",0.6982602764164436,116,AT043,2024-11-20
+883,Obrigado por aguardar. Já localizei sua solicitação.,0.7577074972323351,64,AT015,2024-11-04
+884,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7069798906153999,291,AT037,2024-11-07
+885,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8058157632228706,474,AT014,2024-11-08
+886,Obrigado por aguardar. Já localizei sua solicitação.,0.8433783600294671,43,AT036,2024-11-22
+887,"Bom dia, como posso ajudar?",0.8120070074585972,276,AT028,2024-11-23
+888,Seu protocolo é 123456. Alguma outra dúvida?,0.7516835484749228,168,AT042,2024-11-16
+889,Obrigado por aguardar. Já localizei sua solicitação.,0.7776609789924758,361,AT023,2024-11-19
+890,"Bom dia, como posso ajudar?",0.6800168123825904,271,AT018,2024-11-25
+891,Obrigado por aguardar. Já localizei sua solicitação.,0.8573913174406791,140,AT047,2024-11-06
+892,Seu protocolo é 123456. Alguma outra dúvida?,0.8447819889275845,210,AT043,2024-11-14
+893,Seu protocolo é 123456. Alguma outra dúvida?,0.6662298001591115,285,AT039,2024-11-04
+894,"Bom dia, como posso ajudar?",0.6472281721599947,331,AT030,2024-11-15
+895,"Claro, vou verificar isso para você imediatamente.",0.6354309454592002,369,AT017,2024-11-25
+896,"Claro, vou verificar isso para você imediatamente.",0.7919797831681091,502,AT033,2024-11-02
+897,Seu protocolo é 123456. Alguma outra dúvida?,0.76253153435111,338,AT033,2024-11-28
+898,Obrigado por aguardar. Já localizei sua solicitação.,0.8826388660622744,173,AT047,2024-11-28
+899,"Bom dia, como posso ajudar?",0.7729075074980695,144,AT002,2024-11-27
+900,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8799175586326922,495,AT032,2024-11-21
+901,Seu protocolo é 123456. Alguma outra dúvida?,0.8408783501887229,141,AT046,2024-11-13
+902,Esse tipo de gente sempre reclama.,0.9476023254275745,277,AT025,2024-11-19
+903,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9472582397483417,109,AT047,2024-11-23
+904,Seu protocolo é 123456. Alguma outra dúvida?,0.7131162998084906,147,AT012,2024-11-12
+905,"Bom dia, como posso ajudar?",0.8938836661828973,296,AT022,2024-11-19
+906,"Bom dia, como posso ajudar?",0.8002495943672061,266,AT024,2024-11-09
+907,Seu protocolo é 123456. Alguma outra dúvida?,0.807978672433149,295,AT037,2024-11-08
+908,"Bom dia, como posso ajudar?",0.9123475159165975,507,AT010,2024-11-12
+909,"Claro, vou verificar isso para você imediatamente.",0.7494564697488147,283,AT003,2024-11-07
+910,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6405264921598345,130,AT031,2024-11-21
+911,"Claro, vou verificar isso para você imediatamente.",0.9481609376471128,461,AT041,2024-11-29
+912,Obrigado por aguardar. Já localizei sua solicitação.,0.9149756555677453,441,AT002,2024-11-05
+913,Seu protocolo é 123456. Alguma outra dúvida?,0.7554065233183629,385,AT036,2024-11-03
+914,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9432689143106248,278,AT008,2024-11-02
+915,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9423719141760736,216,AT043,2024-11-14
+916,Obrigado por aguardar. Já localizei sua solicitação.,0.9123680227013606,509,AT001,2024-11-01
+917,Seu protocolo é 123456. Alguma outra dúvida?,0.8309719827838947,202,AT010,2024-11-18
+918,Seu protocolo é 123456. Alguma outra dúvida?,0.7643219344352108,56,AT021,2024-11-06
+919,Obrigado por aguardar. Já localizei sua solicitação.,0.9262047092002046,218,AT011,2024-11-28
+920,Seu protocolo é 123456. Alguma outra dúvida?,0.6980533251176223,545,AT043,2024-11-10
+921,Obrigado por aguardar. Já localizei sua solicitação.,0.8713893606587753,463,AT047,2024-11-04
+922,Obrigado por aguardar. Já localizei sua solicitação.,0.7921299418765927,81,AT026,2024-11-05
+923,Obrigado por aguardar. Já localizei sua solicitação.,0.8138251419444671,393,AT035,2024-11-16
+924,"Bom dia, como posso ajudar?",0.9548177308266121,241,AT005,2024-11-14
+925,"Bom dia, como posso ajudar?",0.7838737299169661,428,AT008,2024-11-14
+926,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.607773326278212,383,AT022,2024-11-28
+927,Obrigado por aguardar. Já localizei sua solicitação.,0.7217790111889836,457,AT035,2024-11-28
+928,"Bom dia, como posso ajudar?",0.7617754935597958,408,AT035,2024-11-18
+929,Obrigado por aguardar. Já localizei sua solicitação.,0.7626667619781735,521,AT037,2024-11-03
+930,"Bom dia, como posso ajudar?",0.78179619930835,531,AT008,2024-11-24
+931,Obrigado por aguardar. Já localizei sua solicitação.,0.6283174087706241,305,AT030,2024-11-20
+932,"Bom dia, como posso ajudar?",0.8631319900416268,294,AT015,2024-11-17
+933,"Claro, vou verificar isso para você imediatamente.",0.7561168508332242,548,AT042,2024-11-29
+934,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8937484511360594,535,AT041,2024-11-19
+935,Obrigado por aguardar. Já localizei sua solicitação.,0.8348153753078884,149,AT004,2024-11-18
+936,"Bom dia, como posso ajudar?",0.7909741926117,45,AT048,2024-11-23
+937,"Claro, vou verificar isso para você imediatamente.",0.6114463125929464,70,AT027,2024-11-10
+938,"Claro, vou verificar isso para você imediatamente.",0.862360558791597,297,AT043,2024-11-30
+939,"Bom dia, como posso ajudar?",0.7751209910937032,56,AT038,2024-11-07
+940,Seu protocolo é 123456. Alguma outra dúvida?,0.9761867871076237,529,AT022,2024-11-13
+941,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6844327722457751,187,AT041,2024-11-05
+942,"Bom dia, como posso ajudar?",0.7509995038853432,291,AT003,2024-11-06
+943,Obrigado por aguardar. Já localizei sua solicitação.,0.9528718456932934,52,AT050,2024-11-26
+944,"Bom dia, como posso ajudar?",0.7437166575515521,399,AT020,2024-11-16
+945,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6544787284723559,184,AT021,2024-11-17
+946,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8384044576140626,375,AT004,2024-11-05
+947,"Claro, vou verificar isso para você imediatamente.",0.9407082791314711,407,AT049,2024-11-15
+948,"Claro, vou verificar isso para você imediatamente.",0.9299629689584974,154,AT029,2024-11-02
+949,"Claro, vou verificar isso para você imediatamente.",0.905702405033439,421,AT046,2024-11-18
+950,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6960259037238687,420,AT038,2024-11-14
+951,"Bom dia, como posso ajudar?",0.8217965087006194,400,AT045,2024-11-28
+952,"Claro, vou verificar isso para você imediatamente.",0.9032722131322408,185,AT002,2024-11-25
+953,Obrigado por aguardar. Já localizei sua solicitação.,0.8368208916975393,465,AT012,2024-11-08
+954,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6345627005162952,374,AT013,2024-11-26
+955,"Claro, vou verificar isso para você imediatamente.",0.9543540098503596,417,AT020,2024-11-23
+956,Seu protocolo é 123456. Alguma outra dúvida?,0.980513102070377,244,AT016,2024-11-13
+957,Não tenho tempo para esse tipo de atendimento.,0.7700177868133624,501,AT049,2024-11-30
+958,Obrigado por aguardar. Já localizei sua solicitação.,0.682038155934659,216,AT035,2024-11-09
+959,"Bom dia, como posso ajudar?",0.9849567265966825,227,AT034,2024-11-24
+960,Seu protocolo é 123456. Alguma outra dúvida?,0.6636130141178516,567,AT047,2024-11-14
+961,Obrigado por aguardar. Já localizei sua solicitação.,0.8715020264185551,442,AT017,2024-11-14
+962,Seu protocolo é 123456. Alguma outra dúvida?,0.9593692969712047,187,AT015,2024-11-14
+963,Seu protocolo é 123456. Alguma outra dúvida?,0.6700551781223582,100,AT010,2024-11-19
+964,"Bom dia, como posso ajudar?",0.6248157353447503,280,AT019,2024-11-25
+965,"Bom dia, como posso ajudar?",0.9752202830277172,345,AT049,2024-11-06
+966,"Vocês são todos iguais, sempre reclamando.",0.700366303321804,119,AT010,2024-11-03
+967,Seu protocolo é 123456. Alguma outra dúvida?,0.7599525328507186,511,AT032,2024-11-23
+968,"Vocês são todos iguais, sempre reclamando.",0.7853425750577105,309,AT005,2024-11-15
+969,Seu protocolo é 123456. Alguma outra dúvida?,0.6740098441649586,36,AT002,2024-11-01
+970,"Claro, vou verificar isso para você imediatamente.",0.6300033070851893,260,AT001,2024-11-18
+971,Obrigado por aguardar. Já localizei sua solicitação.,0.6555338172762635,441,AT028,2024-11-29
+972,"Bom dia, como posso ajudar?",0.8356722798698842,216,AT013,2024-11-22
+973,"Claro, vou verificar isso para você imediatamente.",0.9420664121233238,103,AT016,2024-11-25
+974,Seu protocolo é 123456. Alguma outra dúvida?,0.7522598188650563,426,AT033,2024-11-24
+975,Seu protocolo é 123456. Alguma outra dúvida?,0.8501161906584069,320,AT014,2024-11-01
+976,Seu protocolo é 123456. Alguma outra dúvida?,0.9297278545829122,383,AT028,2024-11-01
+977,Seu protocolo é 123456. Alguma outra dúvida?,0.84573361515297,452,AT032,2024-11-06
+978,Seu protocolo é 123456. Alguma outra dúvida?,0.6044147941341638,297,AT041,2024-11-25
+979,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.7968256414338549,366,AT035,2024-11-19
+980,"Claro, vou verificar isso para você imediatamente.",0.7479913592758745,108,AT022,2024-11-19
+981,"Bom dia, como posso ajudar?",0.6555919747341952,295,AT037,2024-11-09
+982,"Claro, vou verificar isso para você imediatamente.",0.6514219493329502,406,AT028,2024-11-06
+983,Obrigado por aguardar. Já localizei sua solicitação.,0.6692306939733464,123,AT027,2024-11-29
+984,"Claro, vou verificar isso para você imediatamente.",0.8744412186744387,308,AT046,2024-11-06
+985,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.8748425977393184,453,AT043,2024-11-22
+986,"Bom dia, como posso ajudar?",0.8930312515865397,127,AT012,2024-11-27
+987,Seu protocolo é 123456. Alguma outra dúvida?,0.9601251556805265,188,AT023,2024-11-23
+988,Obrigado por aguardar. Já localizei sua solicitação.,0.9512459729015637,275,AT031,2024-11-20
+989,"Claro, vou verificar isso para você imediatamente.",0.9433734590397069,301,AT046,2024-11-14
+990,"Bom dia, como posso ajudar?",0.6169719721785003,323,AT041,2024-11-05
+991,Obrigado por aguardar. Já localizei sua solicitação.,0.725137446082956,459,AT020,2024-11-09
+992,"Bom dia, como posso ajudar?",0.9309407102578466,424,AT030,2024-11-15
+993,"Bom dia, como posso ajudar?",0.7223240855787573,115,AT048,2024-11-10
+994,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.6373900593250341,449,AT023,2024-11-06
+995,"Bom dia, como posso ajudar?",0.9692767535549767,183,AT011,2024-11-07
+996,Seu protocolo é 123456. Alguma outra dúvida?,0.6268313925233658,578,AT049,2024-11-23
+997,Fico feliz em poder ajudar. Tenha um ótimo dia!,0.9802639661901669,291,AT037,2024-11-24
+998,"Bom dia, como posso ajudar?",0.7363437359502267,552,AT050,2024-11-21
+999,"Bom dia, como posso ajudar?",0.6202074048393209,329,AT002,2024-11-28
+1000,"Você não entende nada, é muito burro.",0.8706994842001713,450,AT010,2024-11-25

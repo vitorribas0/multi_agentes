@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configurações — MCP Reclamações</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-main:    #212121;
+      --bg-sidebar: #171717;
+      --bg-card:    #2a2a2a;
+      --bg-input:   #2f2f2f;
+      --border:     #3a3a3a;
+      --accent:     #10a37f;
+      --accent-dim: rgba(16,163,127,.15);
+      --text:       #ececec;
+      --text-muted: #8e8ea0;
+      --text-dim:   #b4b4b4;
+      --tag-bg:     #1a3a2e;
+      --tag-text:   #4ade80;
+      --badge-bg:   #1e2d4a;
+      --badge-text: #60a5fa;
+      --warn-bg:    #2d2010;
+      --warn-text:  #fbbf24;
+      --radius:     12px;
+      --radius-sm:  8px;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────── */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      display: flex;
+      flex-direction: column;
+      padding: 20px 12px;
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      margin-bottom: 24px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .sidebar-brand .icon {
+      font-size: 20px;
+    }
+
+    .nav-section {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 12px;
+      margin-bottom: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: background .15s, color .15s;
+      cursor: pointer;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover { background: rgba(255,255,255,.06); color: var(--text); }
+    .nav-item.active { background: rgba(16,163,127,.15); color: var(--accent); }
+
+    .nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+    /* ── Main ────────────────────────────────────────────── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .topbar {
+      padding: 20px 32px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .topbar h1 {
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .topbar p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: -8px;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 8px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color .15s, border-color .15s;
+    }
+
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-color: var(--accent); }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px;
+    }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Cards ───────────────────────────────────────────── */
+    .section-title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.55;
+      margin-bottom: 14px;
+    }
+
+    /* Status badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .badge.green { background: var(--tag-bg); color: var(--tag-text); }
+    .badge.blue  { background: var(--badge-bg); color: var(--badge-text); }
+    .badge.yellow { background: var(--warn-bg); color: var(--warn-text); }
+
+    .badge::before { content: "●"; font-size: 8px; }
+
+    /* Params table */
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    .params-table th {
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 500;
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .params-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      color: var(--text-dim);
+    }
+
+    .params-table tr:last-child td { border-bottom: none; }
+
+    .param-name { font-family: monospace; color: var(--text); font-size: 12.5px; }
+
+    .req-tag {
+      display: inline-block;
+      background: rgba(239,68,68,.15);
+      color: #f87171;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    .opt-tag {
+      display: inline-block;
+      background: rgba(255,255,255,.07);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 4px;
+    }
+
+    /* Tool list in agent card */
+    .tool-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tool-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(16,163,127,.3);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: monospace;
+    }
+    .tool-chip-btn {
+      cursor: pointer;
+      transition: transform .12s ease, filter .12s ease;
+    }
+    .tool-chip-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+
+    .tool-open-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(16,163,127,.35);
+      background: rgba(16,163,127,.12);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .15s;
+    }
+    .tool-open-btn:hover {
+      background: rgba(16,163,127,.2);
+      border-color: rgba(16,163,127,.55);
+    }
+
+    /* Model info */
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .meta-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; }
+    .meta-value { font-size: 13px; color: var(--text); font-weight: 500; }
+    .meta-value.mono { font-family: monospace; color: var(--accent); }
+
+    /* Agent flow graph */
+    .agent-graph-wrap {
+      margin-top: 12px;
+      background: #161616;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 16px;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 120px;
+    }
+    .agent-graph-wrap svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .agent-graph-wrap .nodeLabel,
+    .agent-graph-wrap .label,
+    .agent-graph-wrap foreignObject {
+      line-height: 1.28 !important;
+    }
+    .agent-graph-inner {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .graph-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      text-align: center;
+      letter-spacing: .3px;
+    }
+    details.graph-section {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+    details.graph-section summary {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dim);
+      cursor: pointer;
+      user-select: none;
+      padding: 10px 14px;
+      background: rgba(255,255,255,.03);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    details.graph-section summary::-webkit-details-marker { display: none; }
+    details.graph-section summary::after {
+      content: '›';
+      margin-left: auto;
+      font-size: 16px;
+      transition: transform .2s;
+      color: var(--text-muted);
+    }
+    details.graph-section[open] summary::after { transform: rotate(90deg); }
+    details.graph-section summary:hover { color: var(--accent); background: rgba(16,163,127,.07); }
+    details.graph-section[open] { border-color: rgba(16,163,127,.3); }
+
+    /* Tool detail modal */
+    .tool-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(2px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    .tool-modal-backdrop.open { display: flex; }
+    .tool-modal {
+      width: min(980px, 95vw);
+      max-height: 92vh;
+      overflow: auto;
+      background: #202020;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 14px 50px rgba(0,0,0,.4);
+    }
+    .tool-modal-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      background: #202020;
+      z-index: 1;
+    }
+    .tool-modal-title {
+      font-size: 14px;
+      font-family: monospace;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .tool-modal-close {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .tool-modal-close:hover { color: var(--text); border-color: #4a4a4a; }
+    .tool-modal-body { padding: 16px; }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    .tool-pane {
+      background: #181818;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .tool-pane h3 {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    .tool-flow-list {
+      margin: 0;
+      padding-left: 20px;
+      color: var(--text-dim);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+    .tool-flow-graph {
+      margin-top: 10px;
+      background: #141414;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      overflow-x: auto;
+      min-height: 88px;
+    }
+    .tool-flow-graph svg {
+      min-width: 100%;
+      height: auto;
+    }
+    .tool-flow-graph .nodeLabel,
+    .tool-flow-graph .label,
+    .tool-flow-graph foreignObject {
+      font-size: 10px !important;
+      line-height: 1.24 !important;
+    }
+    .tool-flow-tree {
+      margin-top: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #131313;
+    }
+    .tree-node {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 2px 8px;
+      border-radius: 7px;
+      border: 1px solid #2f2f2f;
+      background: #181818;
+      color: var(--text-dim);
+      font-size: 11px;
+      line-height: 1.3;
+    }
+    .tree-node.start {
+      border-color: #60a5fa;
+      background: #1e2d4a;
+      color: #c8d8ff;
+      font-weight: 600;
+    }
+    .tree-node.end {
+      border-color: #10a37f;
+      background: #1a3a2e;
+      color: #cfffea;
+      font-weight: 600;
+    }
+    .tree-root {
+      margin: 0 0 8px 0;
+    }
+    .tree-root.end {
+      margin: 8px 0 0 0;
+    }
+    .tree-list {
+      margin: 0;
+      padding: 0 0 0 16px;
+      list-style: none;
+      border-left: 1px solid #2f2f2f;
+    }
+    .tree-list li {
+      position: relative;
+      margin: 6px 0;
+      padding-left: 12px;
+    }
+    .tree-list li::before {
+      content: '';
+      position: absolute;
+      left: -1px;
+      top: 11px;
+      width: 12px;
+      border-top: 1px solid #2f2f2f;
+    }
+    .tool-steps-details {
+      margin-top: 8px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #131313;
+      overflow: hidden;
+    }
+    .tool-steps-details summary {
+      cursor: pointer;
+      user-select: none;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: rgba(255,255,255,.02);
+    }
+    .tool-steps-details[open] summary { color: var(--accent); }
+    .tool-steps-details .tool-flow-list {
+      padding: 8px 10px 10px 24px;
+    }
+    .tool-code {
+      margin: 0;
+      white-space: pre;
+      overflow: auto;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #d4d4d4;
+    }
+    .tool-loading {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    /* System prompt preview */
+    .prompt-preview {
+      background: var(--bg-input);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      font-size: 12.5px;
+      color: var(--text-dim);
+      line-height: 1.6;
+      white-space: pre-wrap;
+      font-family: monospace;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+
+    /* ── Models tab ──────────────────────────────────────── */
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .model-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+
+    .model-name {
+      font-size: 14px;
+      font-weight: 600;
+      font-family: monospace;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .model-provider {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .model-agents {
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .model-agents span {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(255,255,255,.06);
+      padding: 2px 8px;
+      border-radius: 5px;
+      margin-right: 4px;
+      margin-top: 4px;
+    }
+
+    /* Spinner */
+    .loading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+      font-size: 14px;
+      padding: 40px 0;
+    }
+
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Scrollbar */
+    .content::-webkit-scrollbar { width: 5px; }
+    .content::-webkit-scrollbar-track { background: transparent; }
+    .content::-webkit-scrollbar-thumb { background: #3a3a3a; border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="icon">🔍</span>
+    MCP Reclamações
+  </div>
+
+  <div class="nav-section">Navegação</div>
+  <a href="/" class="nav-item">
+    <span class="nav-icon">💬</span> Chat
+  </a>
+  <a href="/settings/" class="nav-item active">
+    <span class="nav-icon">⚙️</span> Configurações
+  </a>
+</aside>
+
+<!-- Main -->
+<div class="main">
+  <div class="topbar">
+    <div>
+      <h1>Configurações</h1>
+      <p>Visualize as ferramentas, agentes e modelos do sistema MCP.</p>
+    </div>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="tools">🔧 Tools</button>
+      <button class="tab-btn" data-tab="agents">🤖 Agentes</button>
+      <button class="tab-btn" data-tab="models">🧠 Modelos</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Tools -->
+    <div class="tab-panel active" id="panel-tools">
+      <div class="loading" id="tools-loading">
+        <div class="spinner"></div> Carregando tools…
+      </div>
+      <div id="tools-list" style="display:none"></div>
+    </div>
+
+    <!-- Agents -->
+    <div class="tab-panel" id="panel-agents">
+      <div class="loading" id="agents-loading">
+        <div class="spinner"></div> Carregando agentes…
+      </div>
+      <div id="agents-list" style="display:none"></div>
+    </div>
+
+    <!-- Models -->
+    <div class="tab-panel" id="panel-models">
+      <div class="loading" id="models-loading">
+        <div class="spinner"></div> Carregando modelos…
+      </div>
+      <div id="models-list" style="display:none"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tool-modal-backdrop" id="tool-modal-backdrop" onclick="onToolModalBackdrop(event)">
+  <div class="tool-modal" role="dialog" aria-modal="true" aria-labelledby="tool-modal-title">
+    <div class="tool-modal-head">
+      <div class="tool-modal-title" id="tool-modal-title">Tool</div>
+      <button class="tool-modal-close" type="button" onclick="closeToolDetail()" aria-label="Fechar">×</button>
+    </div>
+    <div class="tool-modal-body" id="tool-modal-body">
+      <div class="tool-loading">Carregando detalhes da tool...</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const TOOL_DETAIL_CACHE = {};
+
+  // ── Tab switching ─────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Fetch settings data ───────────────────────────────────
+  async function loadSettings() {
+    const res = await fetch('/api/settings/');
+    const data = await res.json();
+    renderTools(data.tools);
+    renderAgents(data.agents);
+    renderModels(data.agents);
+  }
+
+  // ── Tools ─────────────────────────────────────────────────
+  function renderTools(tools) {
+    const container = document.getElementById('tools-list');
+    document.getElementById('tools-loading').style.display = 'none';
+    container.style.display = 'block';
+
+    container.innerHTML = `<p class="section-title">${tools.length} tool${tools.length !== 1 ? 's' : ''} registrada${tools.length !== 1 ? 's' : ''}</p>`;
+
+    tools.forEach(tool => {
+      const params = Object.entries(tool.parameters);
+      const paramsHtml = params.length
+        ? `
+          <table class="params-table">
+            <thead><tr>
+              <th>Parâmetro</th><th>Tipo</th><th>Descrição</th><th>Obrigatório</th>
+            </tr></thead>
+            <tbody>
+              ${params.map(([key, meta]) => `
+                <tr>
+                  <td><span class="param-name">${key}</span></td>
+                  <td style="color:var(--text-muted)">${meta.type || '—'}</td>
+                  <td>${meta.description || '—'}</td>
+                  <td>${tool.required.includes(key)
+                    ? '<span class="req-tag">obrigatório</span>'
+                    : '<span class="opt-tag">opcional</span>'
+                  }</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>`
+        : '<p style="font-size:13px;color:var(--text-muted);margin-top:8px">Sem parâmetros.</p>';
+
+      container.innerHTML += `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>⚡</span>
+              <code style="font-size:15px">${tool.name}</code>
+            </div>
+            <span class="badge green">ativa</span>
+          </div>
+          <p class="card-desc">${tool.description}</p>
+          <button class="tool-open-btn" type="button" onclick="openToolDetail('${tool.name}')">📖 Ver funcionamento e código</button>
+          ${paramsHtml}
+        </div>`;
+    });
+  }
+
+  // ── Agents ────────────────────────────────────────────────
+  function renderAgents(agents) {
+    const container = document.getElementById('agents-list');
+    document.getElementById('agents-loading').style.display = 'none';
+    container.style.display = 'block';
+
+    container.innerHTML = `<p class="section-title">${agents.length} agente${agents.length !== 1 ? 's' : ''}</p>`;
+
+    agents.forEach(agent => {
+      const toolChips = agent.tools.map(t =>
+        `<button class="tool-chip tool-chip-btn" type="button" onclick="openToolDetail('${t}')">⚡ ${t}</button>`
+      ).join('');
+
+      container.innerHTML += `
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              🤖 ${agent.name}
+            </div>
+            <span class="badge ${agent.status === 'ativo' ? 'green' : 'yellow'}">${agent.status}</span>
+          </div>
+          <p class="card-desc">${agent.description}</p>
+
+          <p style="font-size:12px;color:var(--text-muted);margin-bottom:6px">Tools vinculadas</p>
+          <div class="tool-chips">${toolChips}</div>
+
+          <div class="meta-row">
+            <div class="meta-item">
+              <span class="meta-label">Modelo</span>
+              <span class="meta-value mono">${agent.model}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Provedor</span>
+              <span class="meta-value">${agent.provider}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">ID</span>
+              <span class="meta-value" style="font-family:monospace;color:var(--text-muted)">${agent.id}</span>
+            </div>
+          </div>
+
+          <details class="graph-section" open>
+            <summary>📊 Fluxo do agente</summary>
+            <div class="agent-graph-wrap">
+              <div id="graph-${agent.id}" class="agent-graph-inner"></div>
+            </div>
+            <p class="graph-label">Clique nos nós de tool para abrir os detalhes</p>
+          </details>
+
+          <details style="margin-top:10px">
+            <summary style="font-size:12px;color:var(--text-muted);cursor:pointer;user-select:none">
+              Ver system prompt
+            </summary>
+            <div class="prompt-preview">${escapeHtml(agent.system_prompt)}</div>
+          </details>
+        </div>`;
+    });
+
+    renderMermaidGraphs(agents);
+  }
+
+  async function renderMermaidGraphs(agents) {
+    for (const agent of agents) {
+      const el = document.getElementById(`graph-${agent.id}`);
+      if (!el) continue;
+      try {
+        const { svg } = await mermaid.render(`mid-${agent.id}`, buildAgentMermaid(agent));
+        el.innerHTML = svg;
+        const svgEl = el.querySelector('svg');
+        if (svgEl) { svgEl.style.maxWidth = '100%'; svgEl.style.height = 'auto'; }
+        bindGraphToolNodes(el, agent.tools);
+      } catch (e) {
+        el.innerHTML = `<span style="font-size:12px;color:var(--text-muted)">Erro ao renderizar grafo.</span>`;
+        console.warn('Mermaid error:', agent.id, e);
+      }
+    }
+  }
+
+  function bindGraphToolNodes(graphElement, toolNames) {
+    const nodes = graphElement.querySelectorAll('g.node');
+    nodes.forEach(node => {
+      const label = (node.textContent || '').trim();
+      if (!toolNames.includes(label)) return;
+      node.style.cursor = 'pointer';
+      node.addEventListener('click', () => openToolDetail(label));
+      node.addEventListener('mouseenter', () => { node.style.filter = 'brightness(1.2)'; });
+      node.addEventListener('mouseleave', () => { node.style.filter = 'none'; });
+    });
+  }
+
+  function buildAgentMermaid(agent) {
+    const toolNodes = agent.tools.map((t, i) =>
+      `        T${i}("${t}")`
+    ).join('\n');
+    const toolStyles = agent.tools.map((t, i) =>
+      `    style T${i} fill:#1a3a2e,stroke:#10a37f,color:#cfffea`
+    ).join('\n');
+    return [
+      'flowchart LR',
+      '    U(["Usuário"]) --> L["LLM / Groq"]',
+      '    L --> D{"Tool?"}',
+      '    D -->|Não| R(["Resposta"])',
+      '    D -->|Sim| TS',
+      '    subgraph TS ["Tools disponíveis"]',
+      toolNodes,
+      '    end',
+      '    TS --> L',
+      '    style U fill:#1a3a2e,stroke:#10a37f,color:#cfffea',
+      '    style L fill:#1e2d4a,stroke:#60a5fa,color:#c8d8ff',
+      '    style D fill:#2d2010,stroke:#fbbf24,color:#ffe5a0',
+      '    style R fill:#1a3a2e,stroke:#10a37f,color:#cfffea',
+      '    style TS fill:#1a1a2e,stroke:#3a3a5a,color:#b4b4b4',
+      toolStyles,
+    ].join('\n');
+  }
+
+  function onToolModalBackdrop(event) {
+    if (event.target.id === 'tool-modal-backdrop') closeToolDetail();
+  }
+
+  function closeToolDetail() {
+    document.getElementById('tool-modal-backdrop').classList.remove('open');
+  }
+
+  async function openToolDetail(toolName) {
+    const backdrop = document.getElementById('tool-modal-backdrop');
+    const body = document.getElementById('tool-modal-body');
+    const title = document.getElementById('tool-modal-title');
+
+    backdrop.classList.add('open');
+    title.textContent = toolName;
+    body.innerHTML = '<div class="tool-loading">Carregando detalhes da tool...</div>';
+
+    try {
+      const detail = await fetchToolDetail(toolName);
+      body.innerHTML = `
+        <div class="tool-grid">
+          <div class="tool-pane">
+            <h3>Como Funciona</h3>
+            <div class="tool-flow-tree" id="tool-flow-tree"></div>
+            <details class="tool-steps-details">
+              <summary>Ver passos detalhados</summary>
+              <ol class="tool-flow-list">
+                ${detail.flow_summary.map(step => `<li>${escapeHtml(step)}</li>`).join('')}
+              </ol>
+            </details>
+          </div>
+          <div class="tool-pane">
+            <h3>Código Da Função</h3>
+            <pre class="tool-code"><code>${escapeHtml(detail.source_code)}</code></pre>
+          </div>
+        </div>`;
+
+      renderToolFlowTree(detail.flow_summary);
+    } catch (e) {
+      body.innerHTML = `<div class="tool-loading">Não foi possível carregar os detalhes da tool.</div>`;
+      console.error('Tool detail error:', e);
+    }
+  }
+
+  async function fetchToolDetail(toolName) {
+    if (TOOL_DETAIL_CACHE[toolName]) return TOOL_DETAIL_CACHE[toolName];
+    const res = await fetch(`/api/tool-detail/?name=${encodeURIComponent(toolName)}`);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro ao buscar detalhe da tool');
+    TOOL_DETAIL_CACHE[toolName] = data;
+    return data;
+  }
+
+  function renderToolFlowTree(steps) {
+    const el = document.getElementById('tool-flow-tree');
+    if (!el) return;
+    const items = steps
+      .map((step, i) => `<li><span class="tree-node">E${i + 1}: ${escapeHtml(compactStepText(step))}</span></li>`)
+      .join('');
+
+    el.innerHTML = `
+      <div class="tree-root"><span class="tree-node start">Início</span></div>
+      <ul class="tree-list">${items}</ul>
+      <div class="tree-root end"><span class="tree-node end">Fim</span></div>
+    `;
+  }
+
+  function compactStepText(stepText) {
+    const s = String(stepText || '').replace(/\s+/g, ' ').trim();
+    if (!s) return 'Etapa';
+    return s.length > 52 ? `${s.slice(0, 49)}...` : s;
+  }
+
+  // ── Models ────────────────────────────────────────────────
+  function renderModels(agents) {
+    const container = document.getElementById('models-list');
+    document.getElementById('models-loading').style.display = 'none';
+    container.style.display = 'block';
+
+    // Agrupa agentes por modelo
+    const byModel = {};
+    agents.forEach(agent => {
+      const key = agent.model + '|' + agent.provider;
+      if (!byModel[key]) byModel[key] = { model: agent.model, provider: agent.provider, agents: [] };
+      byModel[key].agents.push(agent.name);
+    });
+
+    const models = Object.values(byModel);
+    container.innerHTML = `<p class="section-title">${models.length} modelo${models.length !== 1 ? 's' : ''} em uso</p>
+      <div class="model-grid">`;
+
+    models.forEach(m => {
+      const agentTags = m.agents.map(a => `<span>🤖 ${a}</span>`).join('');
+      container.innerHTML += `
+        <div class="model-card">
+          <div class="model-name">${m.model}</div>
+          <div class="model-provider">Provedor: ${m.provider}</div>
+          <div class="model-agents">
+            <span style="color:var(--text-muted);font-size:11px;display:block;margin-bottom:4px">USADO POR</span>
+            ${agentTags}
+          </div>
+        </div>`;
+    });
+
+    container.innerHTML += '</div>';
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  async function waitForMermaid(maxWaitMs = 4000) {
+    const step = 80;
+    let waited = 0;
+    while (!window.mermaid && waited < maxWaitMs) {
+      await new Promise(resolve => setTimeout(resolve, step));
+      waited += step;
+    }
+    return !!window.mermaid;
+  }
+
+  async function bootstrapSettings() {
+    const ok = await waitForMermaid();
+    if (ok) {
+      mermaid.initialize({
+        startOnLoad: false,
+        theme: 'dark',
+        darkMode: true,
+        securityLevel: 'loose',
+        flowchart: {
+          htmlLabels: true,
+          wrappingWidth: 170,
+          nodeSpacing: 18,
+          rankSpacing: 22,
+          padding: 4,
+          useMaxWidth: false,
+        },
+      });
+    }
+    await loadSettings();
+  }
+
+  bootstrapSettings();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+</body>
+</html>
