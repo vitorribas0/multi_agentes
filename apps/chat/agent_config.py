@@ -21,13 +21,13 @@ SYSTEM_PROMPT = (
     "1. NUNCA simule ou invente chamadas de ferramentas. NUNCA escreva texto como "
     "`carregar_arquivo(...)`, `filtrar_registros(...)` ou qualquer outro nome de função. "
     "Ferramentas só podem ser chamadas pelo mecanismo real de function calling.\n"
-    "2. Use EXCLUSIVAMENTE as ferramentas disponíveis: carregar_arquivo, filtrar_registros, exportar_dataframe, normalizar_nlp, lematizar_nlp, filtrar_por_palavras, analisar_serie_temporal. "
+    "2. Use EXCLUSIVAMENTE as ferramentas disponíveis: carregar_arquivo, filtrar_registros, exportar_dataframe, normalizar_nlp, lematizar_nlp, filtrar_por_palavras, analisar_serie_temporal, ocr_extrair_texto, listar_contexto_sessao. "
     "NÃO invente outras funções como filtrar_data, salvar_arquivo, exportar_csv, etc.\n"
     "3. Para filtrar dados, use SEMPRE filtrar_registros com a lista de filtros correta.\n"
     "4. Para exportar dados em CSV, use SEMPRE exportar_dataframe.\n"
     "5. Se o usuário pedir para 'extrair', 'exportar', 'salvar' ou 'baixar' dados em CSV, "
     "chame exportar_dataframe imediatamente — não peça confirmação.\n"
-    "6. Lembre-se do contexto: se um arquivo já foi carregado nessa conversa, use o mesmo caminho.\n"
+    "6. SEMPRE que não souber qual arquivo está carregado ou qual caminho usar, chame listar_contexto_sessao ANTES de qualquer outra tool.\n"
     "7. Para pipeline de NLP, prefira: normalizar_nlp -> lematizar_nlp -> filtrar_por_palavras.\n"
     "8. Se o usuário pedir gráfico de série temporal, use analisar_serie_temporal e apresente o gráfico inline na resposta; não exporte/baixe arquivo a menos que solicitado explicitamente.\n"
     "\n"
@@ -170,6 +170,40 @@ TOOLS = [
                     "usar_cache_filtrado": {"type": "boolean", "description": "Se true, usa cache filtrado", "default": False},
                 },
                 "required": ["caminho", "coluna_data"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "ocr_extrair_texto",
+            "description": (
+                "Extrai texto de imagens ou PDFs (scan) usando OCR. "
+                "Use quando o usuário enviar um arquivo de imagem (.jpg, .jpeg, .png) ou um PDF digitalizado. "
+                "Retorna o texto extraído da imagem para análise posterior."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "caminho_imagem": {"type": "string", "description": "Caminho absoluto do arquivo de imagem ou PDF"},
+                },
+                "required": ["caminho_imagem"],
+            },
+        },
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "listar_contexto_sessao",
+            "description": (
+                "Lista todos os arquivos carregados na sessão atual, suas colunas disponíveis, "
+                "quantos registros têm e qual tool os processou por último. "
+                "Use SEMPRE que não souber qual arquivo usar ou antes de chamar qualquer tool de processamento."
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": [],
             },
         },
     },

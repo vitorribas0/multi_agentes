@@ -997,6 +997,7 @@
       <div class="tool-badge"><span class="dot"></span> lematizar_nlp</div>
       <div class="tool-badge"><span class="dot"></span> filtrar_por_palavras</div>
       <div class="tool-badge"><span class="dot"></span> analisar_serie_temporal</div>
+      <div class="tool-badge"><span class="dot"></span> ocr_extrair_texto</div>
     </div>
 
     <div class="sidebar-footer">
@@ -1208,23 +1209,49 @@
           }
         })
         .catch(() => { alert('Erro ao enviar o arquivo.'); clearFile(); });
-    } else if (file.type.startsWith('image/')) {
-      // Imagem: base64 local
-      if (file.size > 5 * 1024 * 1024) {
-        alert('A imagem deve ter no máximo 5 MB.');
+    } else if (file.type.startsWith('image/') || file.name.toLowerCase().endsWith('.pdf')) {
+      // Imagem/PDF: faz preview local E envia ao servidor para obter caminho para OCR
+      if (file.size > 20 * 1024 * 1024) {
+        alert('A imagem deve ter no máximo 20 MB.');
         return;
       }
+      // Preview visual imediato via base64
       const reader = new FileReader();
       reader.onload = (e) => {
         pendingImageDataUrl = e.target.result;
-        pendingImageName    = file.name;
-        imgPreviewThumb.src  = pendingImageDataUrl;
-        imgPreviewThumb.style.display = 'block';
-        imgPreviewName.textContent = file.name;
+        if (file.type.startsWith('image/')) {
+          imgPreviewThumb.src = pendingImageDataUrl;
+          imgPreviewThumb.style.display = 'block';
+        } else {
+          imgPreviewThumb.style.display = 'none';
+        }
+        imgPreviewName.textContent = `⏳ Enviando ${file.name}…`;
         imgPreviewWrap.style.display = 'flex';
         updateSendBtn();
       };
       reader.readAsDataURL(file);
+
+      // Upload ao servidor para obter caminho real (necessário para OCR)
+      const form = new FormData();
+      form.append('file', file);
+      sendBtn.disabled = true;
+      fetch('/api/upload/', { method: 'POST', body: form })
+        .then(r => r.json())
+        .then(data => {
+          if (data.error) { alert(data.error); clearFile(); return; }
+          pendingFilePath     = data.path;
+          pendingFileOrigName = data.name;
+          pendingImageName    = data.name;
+          imgPreviewName.textContent = `🖼️ ${data.name}`;
+          updateSendBtn();
+          // Sugere automaticamente invocar OCR se o campo estiver vazio
+          if (!msgInput.value.trim()) {
+            msgInput.value = `Extraia o texto da imagem: ${data.path}`;
+            msgInput.style.height = 'auto';
+            msgInput.style.height = Math.min(msgInput.scrollHeight, 200) + 'px';
+          }
+        })
+        .catch(() => { alert('Erro ao enviar a imagem.'); clearFile(); });
     } else {
       alert('Tipo não suportado. Use: imagens, CSV ou Excel.');
     }
@@ -1264,8 +1291,9 @@
   async function sendMessage() {
     const text  = msgInput.value.trim();
     const image = pendingImageDataUrl;
+    const filePath = pendingFilePath;
 
-    if (!text && !image) return;
+    if (!text && !image && !filePath) return;
     if (isLoading) return;
 
     // Esconde welcome state na primeira mensagem

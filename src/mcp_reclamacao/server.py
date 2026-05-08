@@ -14,6 +14,21 @@ _CACHE: dict[str, list[dict]] = {}
 # Cache do dataframe filtrado (sobrescrito a cada filtro aplicado)
 _CACHE_FILTRADO: dict[str, list[dict]] = {}
 
+# Metadados do cache: rastreia qual tool escreveu cada entrada e quando
+# Estrutura: { caminho: {"tool": str, "colunas": [...], "ts": str} }
+_CACHE_META: dict[str, dict] = {}
+_CACHE_FILTRADO_META: dict[str, dict] = {}
+
+
+def _registrar_meta(caminho: str, tool: str, colunas: list, filtrado: bool = False) -> None:
+    """Registra metadados de qual tool modificou o cache e quando."""
+    from datetime import datetime
+    entry = {"tool": tool, "colunas": colunas, "ts": datetime.now().strftime("%H:%M:%S")}
+    if filtrado:
+        _CACHE_FILTRADO_META[caminho] = entry
+    else:
+        _CACHE_META[caminho] = entry
+
 
 def _slug_coluna(nome: str) -> str:
     """Normaliza nome de coluna para comparação tolerante a acento/variações."""
@@ -86,6 +101,7 @@ def carregar_arquivo(caminho: str) -> str:
 
     # Guarda tudo no cache para processamento posterior
     _CACHE[caminho] = df.to_dict(orient="records")
+    _registrar_meta(caminho, "carregar_arquivo", list(df.columns))
 
     return json.dumps(
         {
@@ -144,6 +160,7 @@ def normalizar_nlp(caminho: str, coluna: str) -> str:
     nova_coluna = f"{coluna_real}_limpo"
     df[nova_coluna] = df[coluna_real].apply(clean)
     _CACHE[caminho] = df.to_dict(orient="records")
+    _registrar_meta(caminho, "normalizar_nlp", list(df.columns))
     return json.dumps({"sucesso": True, "coluna_origem": coluna_real, "nova_coluna": nova_coluna}, ensure_ascii=False)
 
 
@@ -171,6 +188,7 @@ def filtrar_por_palavras(caminho: str, coluna: str, palavras: list[str]) -> str:
     df_filtrado = df[df[coluna_real].astype(str).str.contains(padrao, case=False, na=False)]
     
     _CACHE_FILTRADO[caminho] = df_filtrado.to_dict(orient="records")
+    _registrar_meta(caminho, "filtrar_por_palavras", list(df_filtrado.columns), filtrado=True)
     return json.dumps(
         {
             "coluna_usada": coluna_real,
@@ -233,6 +251,7 @@ def lematizar_nlp(caminho: str, coluna: str) -> str:
     df[nova_coluna] = df[coluna_alvo].apply(lemmatize)
     
     _CACHE[caminho] = df.to_dict(orient="records")
+    _registrar_meta(caminho, "lematizar_nlp", list(df.columns))
     return json.dumps(
         {
             "sucesso": True,
@@ -253,6 +272,48 @@ def get_registros_cache(caminho: str) -> list[dict]:
 def get_registros_filtrado(caminho: str) -> list[dict]:
     """Funcao Python pura (nao e tool). Retorna os registros do cache filtrado."""
     return _CACHE_FILTRADO.get(caminho, [])
+
+
+@mcp.tool(
+    description=(
+        "Lista todos os arquivos carregados na sessão atual, suas colunas disponíveis, "
+        "quantos registros têm e qual tool os processou por último. "
+        "Use SEMPRE que não souber qual arquivo usar ou antes de chamar qualquer tool de processamento."
+    )
+)
+def listar_contexto_sessao() -> str:
+    """Retorna o estado atual do cache: arquivos carregados, colunas e qual tool gerou cada estado."""
+    from pathlib import Path as _Path
+
+    if not _CACHE:
+        return json.dumps({"status": "vazio", "mensagem": "Nenhum arquivo carregado. Use carregar_arquivo primeiro."}, ensure_ascii=False)
+
+    itens = []
+    for caminho, registros in _CACHE.items():
+        meta = _CACHE_META.get(caminho, {})
+        meta_filtrado = _CACHE_FILTRADO_META.get(caminho, {})
+        colunas = list(registros[0].keys()) if registros else []
+
+        item = {
+            "arquivo": _Path(caminho).name,
+            "caminho": caminho,
+            "total_registros": len(registros),
+            "colunas": colunas,
+            "ultima_tool_principal": meta.get("tool", "carregar_arquivo"),
+            "ultima_atualizacao": meta.get("ts", "-"),
+        }
+
+        if caminho in _CACHE_FILTRADO:
+            filtrado = _CACHE_FILTRADO[caminho]
+            item["cache_filtrado"] = {
+                "total_registros_filtrados": len(filtrado),
+                "ultima_tool_filtro": meta_filtrado.get("tool", "-"),
+                "ultima_atualizacao": meta_filtrado.get("ts", "-"),
+            }
+
+        itens.append(item)
+
+    return json.dumps({"arquivos_em_cache": itens, "total_arquivos": len(itens)}, ensure_ascii=False, default=str)
 
 
 @mcp.tool(
@@ -313,6 +374,7 @@ def filtrar_registros(caminho: str, filtros_json: str) -> str:
             return json.dumps({"erro": f"Operador '{operador}' nao suportado."})
 
     _CACHE_FILTRADO[caminho] = df.to_dict(orient="records")
+    _registrar_meta(caminho, "filtrar_registros", list(df.columns), filtrado=True)
     return json.dumps(
         {
             "total_original": total_original,
@@ -415,11 +477,17 @@ def exportar_dataframe(caminho: str, caminho_saida: str, usar_filtrado: bool = T
     """Salva o dataframe (filtrado ou completo) em CSV."""
     import pandas as pd
 
-    if usar_filtrado and caminho in _CACHE_FILTRADO:
-        registros = _CACHE_FILTRADO[caminho]
+    # Usa _get_from_cache para normalizar barras/aspas igual às outras tools
+    dados_filtrado, path_real = _get_from_cache(caminho, usar_filtrado=True)
+    dados_completo, path_real_c = _get_from_cache(caminho, usar_filtrado=False)
+
+    if usar_filtrado and dados_filtrado is not None:
+        registros = dados_filtrado
+        caminho = path_real
         origem = "filtrado"
-    elif caminho in _CACHE:
-        registros = _CACHE[caminho]
+    elif dados_completo is not None:
+        registros = dados_completo
+        caminho = path_real_c
         origem = "completo"
     else:
         return json.dumps({"erro": f"Nenhum dado em cache para: {caminho}. Use carregar_arquivo primeiro."})

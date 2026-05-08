@@ -19,7 +19,7 @@ if _mcp_path not in sys.path:
     sys.path.insert(0, _mcp_path)
 
 from groq import Groq
-from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, normalizar_nlp
+from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
 from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, SYSTEM_PROMPT, TOOLS
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
@@ -32,6 +32,8 @@ TOOL_MAP = {
     "lematizar_nlp": lematizar_nlp,
     "filtrar_por_palavras": filtrar_por_palavras,
     "analisar_serie_temporal": analisar_serie_temporal,
+    "ocr_extrair_texto": ocr_extrair_texto,
+    "listar_contexto_sessao": listar_contexto_sessao,
 }
 
 
@@ -81,6 +83,12 @@ def _tool_flow_summary(tool_name: str) -> list[str]:
             "Calcula métrica (count, sum ou mean)",
             "Retorna série para gráfico inline no chat",
         ],
+        "listar_contexto_sessao": [
+            "Lê _CACHE e _CACHE_FILTRADO do servidor",
+            "Para cada arquivo: retorna nome, caminho, total de registros e colunas",
+            "Indica qual tool processou o dado por último e quando",
+            "Se houver cache filtrado, mostra quantos registros restaram após filtro",
+        ],
     }
     return summaries.get(tool_name, ["Tool sem resumo detalhado cadastrado."])
 
@@ -117,7 +125,12 @@ def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
     # Intercepta exportar_dataframe: redireciona saída para uploads/
     if tool_name == "exportar_dataframe":
         _UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-        original_name = Path(args.get("caminho_saida", "resultado.csv")).name
+        # Deriva nome a partir do arquivo de origem se caminho_saida não foi passado
+        origem_path = args.get("caminho") or args.get("caminho_saida") or "resultado"
+        base_name = Path(args.get("caminho_saida", "")).name or f"{Path(origem_path).stem}_exportado.csv"
+        if not base_name.endswith(".csv"):
+            base_name += ".csv"
+        original_name = base_name
         safe_name = f"{uuid.uuid4().hex[:8]}_{original_name}"
         args["caminho_saida"] = str(_UPLOAD_DIR / safe_name)
 
@@ -136,6 +149,7 @@ def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
                     "name": original_name,
                     "url": f"/api/download/?file={safe_name}",
                 }
+            # Se houve erro, loga no resultado para o LLM explicar ao usuário
         except Exception:
             pass
 
@@ -245,10 +259,22 @@ def _find_last_loaded_path(history: list[dict]) -> str | None:
             continue
         for t in reversed(msg.get("toolsCalled", [])):
             args = t.get("args", {}) if isinstance(t, dict) else {}
-            caminho = args.get("caminho")
-            if isinstance(caminho, str) and caminho.strip():
-                return caminho.strip()
+            for key in ("caminho", "caminho_imagem"):
+                caminho = args.get(key)
+                if isinstance(caminho, str) and caminho.strip():
+                    return caminho.strip()
     return None
+
+
+_TOOLS_WITH_CAMINHO = {
+    "filtrar_registros",
+    "exportar_dataframe",
+    "normalizar_nlp",
+    "lematizar_nlp",
+    "filtrar_por_palavras",
+    "analisar_serie_temporal",
+    "ocr_extrair_texto",
+}
 
 
 def _sanitize_tool_args(tool_name: str, args: dict, fallback_caminho: str | None) -> dict:
@@ -265,11 +291,14 @@ def _sanitize_tool_args(tool_name: str, args: dict, fallback_caminho: str | None
     # Alguns modelos inventam payload dataframe; ignoramos e usamos o caminho carregado
     clean.pop("dataframe", None)
 
-    if tool_name == "analisar_serie_temporal":
-        caminho = clean.get("caminho")
-        if not caminho and fallback_caminho:
-            clean["caminho"] = fallback_caminho
+    # Injeta automaticamente o caminho do último arquivo carregado para qualquer
+    # tool que precise de "caminho" quando o LLM não passou o argumento
+    if tool_name in _TOOLS_WITH_CAMINHO:
+        caminho_key = "caminho_imagem" if tool_name == "ocr_extrair_texto" else "caminho"
+        if not clean.get(caminho_key) and fallback_caminho:
+            clean[caminho_key] = fallback_caminho
 
+    if tool_name == "analisar_serie_temporal":
         usar_filtrado = clean.get("usar_cache_filtrado")
         if isinstance(usar_filtrado, str):
             val = usar_filtrado.strip().lower()
@@ -290,8 +319,9 @@ def chat_view(request):
     return render(request, "chat/index.html")
 
 
-# Extensões permitidas para upload de planilhas
-_ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls"}
+# Extensões permitidas para upload de planilhas e imagens
+_ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".jpg", ".jpeg", ".png", ".pdf"}
+_IMAGE_EXTENSIONS   = {".jpg", ".jpeg", ".png", ".pdf"}
 _UPLOAD_DIR = settings.BASE_DIR / "uploads"
 
 
@@ -323,7 +353,7 @@ def upload_file(request):
         for chunk in file.chunks():
             f.write(chunk)
 
-    return JsonResponse({"path": str(dest), "name": file.name})
+    return JsonResponse({"path": str(dest), "name": file.name, "is_image": ext in _IMAGE_EXTENSIONS})
 
 
 @csrf_exempt
@@ -342,6 +372,32 @@ def chat_api(request):
             return JsonResponse({"error": "Mensagem vazia."}, status=400)
 
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+
+        # Injeta automaticamente o contexto do cache na primeira mensagem do sistema.
+        # Assim o LLM sempre sabe quais arquivos estão disponíveis sem precisar chamar tool.
+        try:
+            ctx_raw = listar_contexto_sessao()
+            ctx = json.loads(ctx_raw)
+            if ctx.get("total_arquivos", 0) > 0:
+                linhas = []
+                for arq in ctx["arquivos_em_cache"]:
+                    linha = (
+                        f"- '{arq['arquivo']}' | caminho: {arq['caminho']} | "
+                        f"{arq['total_registros']} registros | colunas: {arq['colunas']} | "
+                        f"última tool: {arq['ultima_tool_principal']}"
+                    )
+                    if "cache_filtrado" in arq:
+                        cf = arq["cache_filtrado"]
+                        linha += (
+                            f" | filtrado: {cf['total_registros_filtrados']} registros "
+                            f"(por {cf['ultima_tool_filtro']})"
+                        )
+                    linhas.append(linha)
+                ctx_text = "CONTEXTO DA SESSÃO - Arquivos carregados em memória:\n" + "\n".join(linhas)
+                messages[0]["content"] = SYSTEM_PROMPT + "\n\n" + ctx_text
+        except Exception:
+            pass  # Se o cache estiver vazio ou ocorrer erro, segue sem contexto
+
         for msg in history:
             role = msg.get("role")
             if role == "user":
