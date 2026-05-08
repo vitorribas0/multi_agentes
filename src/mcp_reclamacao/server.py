@@ -442,5 +442,51 @@ def exportar_dataframe(caminho: str, caminho_saida: str, usar_filtrado: bool = T
     )
 
 
+@mcp.tool(
+    description=("OCR para extrair texto de imagens. Recebe o caminho de uma imagem e retorna o texto extraído. Suporta formatos comuns como .jpg, .png, .pdf (primeira página).")
+)
+def ocr_extrair_texto(caminho_imagem: str) -> str:
+    """Extrai texto de uma imagem usando OCR."""
+    import pytesseract
+    from PIL import Image
+    import pdfplumber
+    import os
+
+    # Pasta tessdata local do projeto (contém por.traineddata)
+    local_tessdata = str(Path(__file__).parents[2] / "suporte" / "tessdata")
+
+    # Executável: preferir instalação padrão Windows, depois PATH
+    tesseract_exe = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    tesseract_dir = r"C:\Program Files\Tesseract-OCR"
+    if not Path(tesseract_exe).exists():
+        import shutil
+        found = shutil.which("tesseract")
+        if found:
+            tesseract_exe = found
+            tesseract_dir = str(Path(found).parent)
+
+    # Adiciona a pasta ao PATH para que as DLLs dependentes sejam encontradas
+    if tesseract_dir not in os.environ.get("PATH", ""):
+        os.environ["PATH"] = tesseract_dir + os.pathsep + os.environ.get("PATH", "")
+
+    # Usa o tessdata local do projeto (garante por.traineddata disponível)
+    os.environ["TESSDATA_PREFIX"] = local_tessdata
+
+    pytesseract.pytesseract.tesseract_cmd = tesseract_exe
+
+    try:
+        if caminho_imagem.lower().endswith(".pdf"):
+            with pdfplumber.open(caminho_imagem) as pdf:
+                primeira_pagina = pdf.pages[0]
+                img = primeira_pagina.to_image()
+                texto = pytesseract.image_to_string(img.original, lang="por")
+        else:
+            img = Image.open(caminho_imagem)
+            texto = pytesseract.image_to_string(img, lang="por")
+        return json.dumps({"sucesso": True, "texto_extraido": texto.strip()})
+    except Exception as e:
+        return json.dumps({"erro": f"Falha ao processar imagem: {str(e)}"})
+
+
 if __name__ == "__main__":
     mcp.run()
