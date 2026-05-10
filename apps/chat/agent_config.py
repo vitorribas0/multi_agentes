@@ -13,26 +13,10 @@ MODEL_OPTIONS = [
     "llama-3.1-8b-instant",
 ]
 
-# System prompt do agente
-SYSTEM_PROMPT = (
-    "Você é um assistente especializado em análise de anomalias em reclamações (MCP).\n"
-    "\n"
-    "REGRAS OBRIGATÓRIAS:\n"
-    "1. NUNCA simule ou invente chamadas de ferramentas. NUNCA escreva texto como "
-    "`carregar_arquivo(...)`, `filtrar_registros(...)` ou qualquer outro nome de função. "
-    "Ferramentas só podem ser chamadas pelo mecanismo real de function calling.\n"
-    "2. Use EXCLUSIVAMENTE as ferramentas disponíveis: carregar_arquivo, filtrar_registros, exportar_dataframe, normalizar_nlp, lematizar_nlp, filtrar_por_palavras, analisar_serie_temporal, ocr_extrair_texto, listar_contexto_sessao. "
-    "NÃO invente outras funções como filtrar_data, salvar_arquivo, exportar_csv, etc.\n"
-    "3. Para filtrar dados, use SEMPRE filtrar_registros com a lista de filtros correta.\n"
-    "4. Para exportar dados em CSV, use SEMPRE exportar_dataframe.\n"
-    "5. Se o usuário pedir para 'extrair', 'exportar', 'salvar' ou 'baixar' dados em CSV, "
-    "chame exportar_dataframe imediatamente — não peça confirmação.\n"
-    "6. SEMPRE que não souber qual arquivo está carregado ou qual caminho usar, chame listar_contexto_sessao ANTES de qualquer outra tool.\n"
-    "7. Para pipeline de NLP, prefira: normalizar_nlp -> lematizar_nlp -> filtrar_por_palavras.\n"
-    "8. Se o usuário pedir gráfico de série temporal, use analisar_serie_temporal e apresente o gráfico inline na resposta; não exporte/baixe arquivo a menos que solicitado explicitamente.\n"
-    "\n"
-    "Seja conciso, claro e amigável. Responda sempre em português."
-)
+# System prompt carregado do arquivo .md (sem hardcode)
+# O conteúdo é lido em views.py por _build_dynamic_system_prompt()
+import pathlib
+ORCHESTRATOR_PROMPT_PATH = pathlib.Path(__file__).parent.parent.parent / "src" / "mcp_reclamacao" / "prompts" / "orquestrador_reclamacao.md"
 
 # Definição das tools no formato OpenAI/Groq function calling
 TOOLS = [
@@ -241,7 +225,7 @@ AGENTS = [
         "model": DEFAULT_MODEL,
         "provider": DEFAULT_PROVIDER,
         "tools": [t["function"]["name"] for t in TOOLS],
-        "system_prompt": SYSTEM_PROMPT,
+        "system_prompt": str(ORCHESTRATOR_PROMPT_PATH),  # path do .md — carregado dinamicamente
         "status": "ativo",
     },
 ]
