@@ -5,6 +5,7 @@ import re
 import inspect
 import sys
 import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 
 from django.conf import settings
@@ -20,7 +21,7 @@ if _mcp_path not in sys.path:
 
 from groq import Groq
 from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
-from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, SYSTEM_PROMPT, TOOLS
+from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PROMPT_PATH, TOOLS
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 
@@ -120,6 +121,8 @@ def tool_detail_api(request):
 
 def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
     """Executa uma tool localmente e retorna args normalizados, resultado e metadado de download."""
+    if not isinstance(args, dict):
+        args = {}
     exported_file = None
 
     # Intercepta exportar_dataframe: redireciona saída para uploads/
@@ -156,6 +159,40 @@ def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
     return args, resultado, exported_file
 
 
+def _repair_json(raw: str) -> dict | None:
+    """Tenta parsear JSON possivelmente malformado gerado pelo LLM.
+
+    Lida com: chaves sem aspas, prefixo $, aspas simples, trailing comma.
+    """
+    # Tentativa 1: JSON válido direto
+    try:
+        return json.loads(raw)
+    except Exception:
+        pass
+
+    # Tentativa 2: normaliza chaves sem aspas e com $ (ex: {$pedido: "valor"})
+    fixed = re.sub(r'\$?([a-zA-Z_]\w*)\s*:', r'"\1":', raw)
+    # troca aspas simples por duplas (apenas em valores simples)
+    fixed = re.sub(r":\s*'([^']*)'", r': "\1"', fixed)
+    # remove trailing commas antes de } ou ]
+    fixed = re.sub(r',\s*([}\]])', r'\1', fixed)
+    try:
+        return json.loads(fixed)
+    except Exception:
+        pass
+
+    # Tentativa 3: extrai pares chave:valor manualmente
+    pairs = re.findall(r'\$?([a-zA-Z_]\w*)\s*:\s*"([^"]*)"', raw)
+    if pairs:
+        return {k: v for k, v in pairs}
+
+    pairs_sq = re.findall(r"\$?([a-zA-Z_]\w*)\s*:\s*'([^']*)'", raw)
+    if pairs_sq:
+        return {k: v for k, v in pairs_sq}
+
+    return None
+
+
 def _extract_failed_tool_from_error(error_text: str) -> tuple[str, dict] | None:
     """Extrai (nome_da_tool, args) de mensagens tool_use_failed do Groq."""
     fn_prefix = r"(?<!\\w)(?:<|\\.)?function="
@@ -163,32 +200,23 @@ def _extract_failed_tool_from_error(error_text: str) -> tuple[str, dict] | None:
     # Formato 1: <function=nome={...}>
     m = re.search(rf"{fn_prefix}([a-zA-Z_][\\w]*)=(\{{.*\}})>", error_text)
     if m:
-        tool_name = m.group(1)
-        raw_args = m.group(2)
-        try:
-            return tool_name, json.loads(raw_args)
-        except Exception:
-            return None
+        parsed = _repair_json(m.group(2))
+        if parsed is not None:
+            return m.group(1), parsed
 
     # Formato 2: <function=nome({...})>
     m = re.search(rf"{fn_prefix}([a-zA-Z_][\\w]*)\((\{{.*\}})\)>", error_text)
     if m:
-        tool_name = m.group(1)
-        raw_args = m.group(2)
-        try:
-            return tool_name, json.loads(raw_args)
-        except Exception:
-            return None
+        parsed = _repair_json(m.group(2))
+        if parsed is not None:
+            return m.group(1), parsed
 
-    # Formato 3: <function=nome>{...}
-    m = re.search(rf"{fn_prefix}([a-zA-Z_][\\w]*)>\s*(\{{.*\}})", error_text)
+    # Formato 3: <function=nome>{...}  (inclui JSON malformado como {$chave: valor})
+    m = re.search(rf"{fn_prefix}([a-zA-Z_][\\w]*)>\s*(\{{.*\}})", error_text, re.DOTALL)
     if m:
-        tool_name = m.group(1)
-        raw_args = m.group(2)
-        try:
-            return tool_name, json.loads(raw_args)
-        except Exception:
-            return None
+        parsed = _repair_json(m.group(2))
+        if parsed is not None:
+            return m.group(1), parsed
 
     return None
 
@@ -218,7 +246,12 @@ def _extract_tool_calls_from_text(error_text: str) -> list[tuple[str, dict]]:
             try:
                 obj, end_pos = decoder.raw_decode(segment, pos)
             except Exception:
-                break
+                # Tenta reparar JSON malformado no segmento
+                raw_seg = segment[pos:].strip()
+                obj = _repair_json(raw_seg)
+                if obj is None:
+                    break
+                end_pos = pos + len(raw_seg)
 
             if isinstance(obj, dict):
                 calls.append((tool_name, obj))
@@ -280,7 +313,7 @@ _TOOLS_WITH_CAMINHO = {
 def _sanitize_tool_args(tool_name: str, args: dict, fallback_caminho: str | None) -> dict:
     """Normaliza args vindos de function-like text para melhorar robustez."""
     if not isinstance(args, dict):
-        return args
+        return {}
 
     # Remove espaços acidentais nas chaves e normaliza strings
     clean: dict = {}
@@ -323,6 +356,375 @@ def chat_view(request):
 _ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".jpg", ".jpeg", ".png", ".pdf"}
 _IMAGE_EXTENSIONS   = {".jpg", ".jpeg", ".png", ".pdf"}
 _UPLOAD_DIR = settings.BASE_DIR / "uploads"
+_SKILLS_DIR = settings.BASE_DIR / "skills"
+
+
+# ── Helpers de Skills ─────────────────────────────────────────────────────────
+
+def _skills_list() -> list[dict]:
+    """Retorna todas as skills salvas em disco."""
+    _SKILLS_DIR.mkdir(parents=True, exist_ok=True)
+    skills = []
+    for f in sorted(_SKILLS_DIR.glob("*.json")):
+        try:
+            skills.append(json.loads(f.read_text(encoding="utf-8")))
+        except Exception:
+            pass
+    return skills
+
+
+def _match_skills(user_message: str) -> tuple[list[dict], str]:
+    """Retorna (skills_ativas, mensagem_limpa).
+
+    Ativação por /nome: prefixo /id ou /nome (slug) da skill.
+    Ativação automática: chama o LLM leve para decidir se a mensagem bate com 'when_to_use'.
+    Retorna também a mensagem sem o prefixo /comando.
+    """
+    all_skills = [s for s in _skills_list() if s.get("active", True)]
+    if not all_skills:
+        return [], user_message
+
+    cleaned = user_message
+    explicit: list[dict] = []
+
+    # ── Modo 1: /nome_skill explícito ────────────────────────
+    if user_message.startswith("/"):
+        parts = user_message.split(None, 1)
+        cmd = parts[0][1:].lower().strip()  # tira a barra
+        cleaned = parts[1].strip() if len(parts) > 1 else ""
+        for s in all_skills:
+            slug = re.sub(r'[^a-z0-9]+', '_', s["name"].lower()).strip('_')
+            if cmd in (s["id"].lower(), slug):
+                explicit.append(s)
+        if explicit:
+            # Se não há texto após o comando, pede ao LLM para executar a skill com o contexto atual
+            skill_name = explicit[0]["name"]
+            default_msg = f"Execute a skill '{skill_name}' com os dados disponíveis na sessão."
+            return explicit, cleaned if cleaned else default_msg
+        # Comando não reconhecido — trata mensagem inteira normalmente
+        cleaned = user_message
+
+    # ── Modo 2: classificação pelo LLM leve ──────────────────
+    matched: list[dict] = []
+    for skill in all_skills:
+        when_to_use = (skill.get("when_to_use") or "").strip()
+        if not when_to_use:
+            continue
+        try:
+            resp = _client.chat.completions.create(
+                model="llama-3.1-8b-instant",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "Você é um classificador binário estrito. "
+                            "Ative a skill APENAS se o pedido do usuário for EXPLICITAMENTE sobre o cenário descrito. "
+                            "Se a mensagem falar em carregar arquivo, abrir dados, fazer upload ou qualquer operação "
+                            "que precede a análise, responda NAO. "
+                            "Só responda SIM se o pedido principal do usuário for exatamente o que o cenário descreve. "
+                            "Responda SOMENTE a palavra SIM ou a palavra NAO, sem pontuação, sem explicação."
+                        ),
+                    },
+                    {
+                        "role": "user",
+                        "content": (
+                            f"Cenário em que a skill deve ser ativada: {when_to_use}\n"
+                            f"Mensagem do usuário: {cleaned}\n"
+                            "A mensagem é ESPECIFICAMENTE sobre o cenário acima? Resposta (SIM ou NAO):"
+                        ),
+                    },
+                ],
+                max_tokens=5,
+                temperature=0,
+            )
+            answer = (resp.choices[0].message.content or "").strip().upper()
+            # Aceita apenas SIM exato (com ou sem ponto final)
+            if answer.rstrip(".") == "SIM":
+                matched.append(skill)
+        except Exception as exc:
+            import logging
+            logging.getLogger(__name__).warning("Skill match error (%s): %s", skill.get("id"), exc)
+
+    return matched, cleaned
+
+
+# ── Skills como tools reais ───────────────────────────────────────────────────
+
+_SKILL_TOOL_PREFIX = "skill__"
+
+
+def _build_dynamic_system_prompt() -> str:
+    """Carrega o prompt do orquestrador do .md e injeta tools MCP e skills ativas dinamicamente."""
+    try:
+        template = ORCHESTRATOR_PROMPT_PATH.read_text(encoding="utf-8")
+    except Exception:
+        template = "{MCP_TOOLS}\n{SKILLS_SECTION}"
+
+    # Tools MCP derivadas de TOOLS (sem hardcode)
+    mcp_names = [t["function"]["name"] for t in TOOLS if t.get("type") == "function"]
+    mcp_section = "\n".join(f"  • {name}" for name in mcp_names)
+
+    # Skills ativas cadastradas pelo usuário
+    skills = [s for s in _skills_list() if s.get("active", True)]
+    if skills:
+        skills_section = "\n".join(
+            f"  • **{s['name']}**: {(s.get('when_to_use') or s.get('instructions', ''))[:150]}"
+            for s in skills
+        )
+    else:
+        skills_section = "  (nenhuma skill cadastrada ainda)"
+
+    return (
+        template
+        .replace("{MCP_TOOLS}", mcp_section)
+        .replace("{SKILLS_SECTION}", skills_section)
+    )
+
+
+def _build_skill_tools() -> list[dict]:
+    """Converte skills ativas em definições de tool no formato Groq/OpenAI function calling."""
+    skill_tools = []
+    for s in _skills_list():
+        if not s.get("active", True):
+            continue
+        slug = s.get("slug") or re.sub(r'[^a-z0-9]+', '_', s["name"].lower()).strip('_')
+        tool_name = f"{_SKILL_TOOL_PREFIX}{slug}"
+        skill_tools.append({
+            "type": "function",
+            "function": {
+                "name": tool_name,
+                "description": (
+                    f"{s.get('when_to_use') or s.get('instructions', '')}\n\n"
+                    f"[Skill: {s['name']}]"
+                ),
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "pedido": {
+                            "type": "string",
+                            "description": "Descreva detalhadamente o que deve ser feito com os dados.",
+                        },
+                    },
+                    "required": ["pedido"],
+                },
+            },
+        })
+    return skill_tools
+
+
+def _resolve_skill_by_tool_name(tool_name: str) -> dict | None:
+    """Retorna a skill correspondente a um nome de tool `skill__<slug>`, ou None."""
+    if not tool_name.startswith(_SKILL_TOOL_PREFIX):
+        return None
+    slug = tool_name[len(_SKILL_TOOL_PREFIX):]
+    for s in _skills_list():
+        s_slug = s.get("slug") or re.sub(r'[^a-z0-9]+', '_', s["name"].lower()).strip('_')
+        if s_slug == slug:
+            return s
+    return None
+
+
+def _run_skill_tool_call(skill: dict, pedido: str) -> tuple[str, str | None, dict]:
+    """Gera código para a skill, executa e retorna (resultado_texto, img_b64, execution_record)."""
+    import logging  # noqa: PLC0415
+    logger = logging.getLogger(__name__)
+
+    generated_code = _generate_skill_code(skill, pedido)
+    if not generated_code:
+        msg = "Não foi possível gerar o código para esta skill."
+        logger.warning("_run_skill_tool_call: código vazio para skill '%s'", skill["name"])
+        return msg, None, {
+            "name": skill["name"], "slug": skill.get("slug", ""),
+            "code": "", "output": msg,
+        }
+
+    output_text, output_img = _execute_skill_code(generated_code)
+    record = {
+        "name": skill["name"],
+        "slug": skill.get("slug", ""),
+        "code": generated_code,
+        "output": output_text or "",
+    }
+    return output_text or "Skill executada.", output_img, record
+
+
+def _get_data_context() -> dict:
+    """Retorna schema completo dos DataFrames no cache para uso no prompt de geração de código."""
+    try:
+        from server import _CACHE  # noqa: PLC0415
+        import pandas as pd  # noqa: PLC0415
+        info = {}
+        for caminho, registros in (_CACHE or {}).items():
+            if registros:
+                nome = Path(caminho).stem
+                df = pd.DataFrame(registros)
+                info[nome] = {
+                    "shape": list(df.shape),
+                    "columns": list(df.columns),
+                    "dtypes": {c: str(t) for c, t in df.dtypes.items()},
+                    "sample": df.head(3).to_dict(orient="records"),
+                }
+        return info
+    except Exception:
+        return {}
+
+
+# Caminho do prompt do gerador de código de skills
+_SKILL_CODE_GENERATOR_PROMPT = (
+    Path(__file__).resolve().parent.parent.parent
+    / "src" / "mcp_reclamacao" / "prompts" / "skill_code_generator.md"
+)
+
+
+def _generate_skill_code(skill: dict, user_message: str) -> str:
+    """Usa o LLM para gerar código Python dinamicamente para atender ao pedido do usuário.
+
+    O prompt é carregado de src/mcp_reclamacao/prompts/skill_code_generator.md.
+    """
+    import logging  # noqa: PLC0415
+    logger = logging.getLogger(__name__)
+
+    data_ctx = _get_data_context()
+
+    # Monta descrição detalhada de cada DataFrame
+    if data_ctx:
+        data_blocks = []
+        for nome, info in data_ctx.items():
+            col_types = ", ".join(f"{c} ({t})" for c, t in info["dtypes"].items())
+            sample_lines = "\n".join("  " + str(row) for row in info["sample"])
+            data_blocks.append(
+                f'dados["{nome}"]  →  {info["shape"][0]} linhas × {info["shape"][1]} colunas\n'
+                f'  Colunas e tipos: {col_types}\n'
+                f'  Amostra:\n{sample_lines}'
+            )
+        data_desc = "\n\n".join(data_blocks)
+    else:
+        data_desc = "(nenhum dado carregado na sessão)"
+
+    example_block = ""
+    example_code = (skill.get("code") or "").strip()
+    if example_code:
+        example_block = (
+            f"**Código de referência / template** (adapte ao pedido do usuário):\n"
+            f"```python\n{example_code}\n```"
+        )
+
+    # Carrega o prompt do arquivo .md e substitui os placeholders
+    try:
+        prompt_template = _SKILL_CODE_GENERATOR_PROMPT.read_text(encoding="utf-8")
+    except Exception:
+        prompt_template = "{DATA_CONTEXT}\n{SKILL_NAME}\n{SKILL_INSTRUCTIONS}\n{EXAMPLE_BLOCK}\n{USER_MESSAGE}"
+
+    full_prompt = (
+        prompt_template
+        .replace("{DATA_CONTEXT}", data_desc)
+        .replace("{SKILL_NAME}", skill.get("name", ""))
+        .replace("{SKILL_INSTRUCTIONS}", skill.get("instructions", ""))
+        .replace("{EXAMPLE_BLOCK}", example_block)
+        .replace("{USER_MESSAGE}", user_message)
+    )
+
+    try:
+        resp = _client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": full_prompt}],
+            temperature=0.1,
+            max_tokens=2000,
+        )
+        code = resp.choices[0].message.content.strip()
+        # Remove fences markdown caso o modelo inclua mesmo com instrução contrária
+        if "```" in code:
+            code = "\n".join(
+                line for line in code.splitlines()
+                if not line.strip().startswith("```")
+            ).strip()
+        return code
+    except Exception as exc:
+        logger.warning("_generate_skill_code error: %s", exc)
+        return ""
+
+
+def _execute_skill_code(code: str) -> tuple[str, str | None]:
+    """Executa o código Python da skill com acesso ao cache de DataFrames.
+
+    Retorna (texto_output, base64_png_ou_None).
+    O código pode:
+      - Usar `dados` (dict nome_arquivo → DataFrame) ou variáveis diretas pelo nome do arquivo
+      - Usar `pd`, `np`, `plt`
+      - Definir a variável `resultado` para forçar o texto de saída
+      - Plotar com matplotlib — a figura é capturada e retornada como imagem
+    """
+    import base64
+    import contextlib
+    import io
+    import importlib
+    import logging
+
+    logger = logging.getLogger(__name__)
+
+    # Monta contexto com os DataFrames do cache MCP
+    try:
+        from server import _CACHE
+        import pandas as pd
+        dados: dict = {}
+        for caminho, registros in (_CACHE or {}).items():
+            if registros:
+                nome = Path(caminho).stem
+                df = pd.DataFrame(registros)
+                dados[nome] = df
+    except Exception as exc:
+        logger.warning("_execute_skill_code: erro ao acessar _CACHE: %s", exc)
+        dados = {}
+
+    ctx: dict = {"__builtins__": __builtins__, "dados": dados}
+
+    # Libs comuns disponíveis no contexto
+    for alias, mod in [("pd", "pandas"), ("np", "numpy"), ("plt", "matplotlib.pyplot"),
+                       ("json", "json"), ("datetime", "datetime"), ("re", "re")]:
+        try:
+            ctx[alias] = importlib.import_module(mod)
+        except ImportError:
+            pass
+
+    # DataFrames acessíveis diretamente pelo nome do arquivo
+    ctx.update(dados)
+
+    # Configura matplotlib para não abrir janela
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+    except Exception:
+        pass
+
+    stdout_buf = io.StringIO()
+    img_b64: str | None = None
+
+    try:
+        with contextlib.redirect_stdout(stdout_buf):
+            exec(compile(code, "<skill>", "exec"), ctx)  # noqa: S102
+
+        # Captura figura matplotlib se foi criada
+        try:
+            import matplotlib.pyplot as plt
+            if plt.get_fignums():
+                buf = io.BytesIO()
+                plt.savefig(buf, format="png", bbox_inches="tight", dpi=130)
+                buf.seek(0)
+                img_b64 = base64.b64encode(buf.read()).decode()
+                plt.close("all")
+        except Exception:
+            pass
+
+        text = stdout_buf.getvalue().strip()
+        if "resultado" in ctx and ctx["resultado"] is not None:
+            extra = str(ctx["resultado"])
+            text = extra + ("\n" + text if text else "")
+
+        return text or "Código executado com sucesso.", img_b64
+
+    except Exception as exc:
+        logger.warning("_execute_skill_code error: %s", exc)
+        return f"Erro na execução do código da skill: {exc}", None
 
 
 @csrf_exempt
@@ -371,7 +773,9 @@ def chat_api(request):
         if not user_message:
             return JsonResponse({"error": "Mensagem vazia."}, status=400)
 
-        messages = [{"role": "system", "content": SYSTEM_PROMPT}]
+        # System prompt dinâmico: inclui tools MCP + skills cadastradas pelo usuário
+        system_prompt = _build_dynamic_system_prompt()
+        messages = [{"role": "system", "content": system_prompt}]
 
         # Injeta automaticamente o contexto do cache na primeira mensagem do sistema.
         # Assim o LLM sempre sabe quais arquivos estão disponíveis sem precisar chamar tool.
@@ -398,6 +802,13 @@ def chat_api(request):
         except Exception:
             pass  # Se o cache estiver vazio ou ocorrer erro, segue sem contexto
 
+        # Skills são expostas como tools reais — o LLM decide quando chamá-las
+        skill_tools = _build_skill_tools()
+        all_tools = TOOLS + skill_tools
+
+        skill_output_image: str | None = None
+        skill_executions: list[dict] = []
+
         for msg in history:
             role = msg.get("role")
             if role == "user":
@@ -421,12 +832,12 @@ def chat_api(request):
         exported_file = None  # preenchido se exportar_dataframe for chamado
         msg = None
 
-        # 1ª chamada: o modelo decide se usa tool ou responde direto
+        # 1ª chamada: o modelo decide se usa tool/skill ou responde direto
         try:
             response = _client.chat.completions.create(
                 model=selected_model,
                 messages=messages,
-                tools=TOOLS,
+                tools=all_tools,
                 tool_choice="auto",
             )
             msg = response.choices[0].message
@@ -438,6 +849,17 @@ def chat_api(request):
 
             executed = []
             for nome, args in parsed_calls:
+                # Verifica se é uma skill tool
+                skill_fb = _resolve_skill_by_tool_name(nome)
+                if skill_fb:
+                    pedido_fb = args.get("pedido") or user_message
+                    resultado_fb, img_fb, record_fb = _run_skill_tool_call(skill_fb, pedido_fb)
+                    if img_fb:
+                        skill_output_image = img_fb
+                    skill_executions.append(record_fb)
+                    tools_called.append({"tool": nome, "args": args, "result": resultado_fb})
+                    executed.append((nome, resultado_fb))
+                    continue
                 if nome not in TOOL_MAP:
                     continue
                 args = _sanitize_tool_args(nome, args, last_loaded_path)
@@ -476,30 +898,76 @@ def chat_api(request):
                 "answer": answer,
                 "tools_called": tools_called,
                 "exported_file": exported_file,
+                "activated_skills": [r["name"] for r in skill_executions],
+                "skill_output_image": skill_output_image,
+                "skill_executions": skill_executions,
             })
 
         if msg.tool_calls:
-            messages.append(msg)
+            # Constrói dict limpo do assistant — model_dump() inclui campos extras do SDK
+            # que o Groq rejeita ou usa de forma errada na 2ª chamada.
+            messages.append({
+                "role": "assistant",
+                "content": msg.content or "",
+                "tool_calls": [
+                    {
+                        "id": tc.id,
+                        "type": "function",
+                        "function": {
+                            "name": tc.function.name,
+                            "arguments": tc.function.arguments,
+                        },
+                    }
+                    for tc in msg.tool_calls
+                ],
+            })
             for tc in msg.tool_calls:
                 nome = tc.function.name
                 args = json.loads(tc.function.arguments)
-                args = _sanitize_tool_args(nome, args, last_loaded_path)
 
+                # ── Skill tool call ──────────────────────────────────────────
+                skill = _resolve_skill_by_tool_name(nome)
+                if skill:
+                    pedido = args.get("pedido") or user_message
+                    resultado_sk, img_sk, record = _run_skill_tool_call(skill, pedido)
+                    if img_sk:
+                        skill_output_image = img_sk
+                    skill_executions.append(record)
+                    tools_called.append({"tool": nome, "args": args, "result": resultado_sk})
+                    messages.append({
+                        "role": "tool",
+                        "tool_call_id": tc.id,
+                        "content": resultado_sk or "(skill executada sem saída)",
+                    })
+                    continue
+
+                # ── Tool MCP normal ──────────────────────────────────────────
+                args = _sanitize_tool_args(nome, args, last_loaded_path)
                 args, resultado, exported_file_delta = _run_tool_call(nome, args)
                 if exported_file_delta:
                     exported_file = exported_file_delta
                 tools_called.append({"tool": nome, "args": args, "result": resultado})
-
                 messages.append({
                     "role": "tool",
                     "tool_call_id": tc.id,
                     "content": str(resultado),
                 })
 
-            # 2ª chamada: formulação da resposta final
+            # 2ª chamada: formula a resposta com base nos resultados das tools/skills.
+            # System prompt minimalista: evita que o modelo liste tools ou adicione meta-comentários.
+            messages_final = [
+                {
+                    "role": "system",
+                    "content": (
+                        "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
+                        "formule uma resposta direta, clara e em português para o usuário. "
+                        "NÃO mencione nomes de tools, funções internas ou restrições do sistema."
+                    ),
+                }
+            ] + [m for m in messages if m["role"] != "system"]
             response_final = _client.chat.completions.create(
                 model=selected_model,
-                messages=messages,
+                messages=messages_final,
             )
             answer = response_final.choices[0].message.content
         else:
@@ -523,6 +991,9 @@ def chat_api(request):
                         "answer": answer,
                         "tools_called": tools_called,
                         "exported_file": exported_file,
+                        "activated_skills": [r["name"] for r in skill_executions],
+                        "skill_output_image": skill_output_image,
+                        "skill_executions": skill_executions,
                     })
 
                 nome = executed[0][0]
@@ -585,6 +1056,9 @@ def chat_api(request):
             "answer": answer,
             "tools_called": tools_called,
             "exported_file": exported_file,
+            "activated_skills": [r["name"] for r in skill_executions],
+            "skill_output_image": skill_output_image,
+            "skill_executions": skill_executions,
         })
 
     except Exception as exc:
@@ -637,3 +1111,79 @@ def settings_api(request):
         "default_model": DEFAULT_MODEL,
         "model_options": MODEL_OPTIONS,
     })
+
+
+# ── Skills API ────────────────────────────────────────────────────────────────
+
+@require_GET
+def skill_list_api(request):
+    """Lista todas as skills salvas."""
+    return JsonResponse({"skills": _skills_list()}, json_dumps_params={"ensure_ascii": False})
+
+
+@csrf_exempt
+@require_POST
+def skill_save_api(request):
+    """Cria ou atualiza uma skill. Body JSON: {name, keywords, instructions, active?, id?}."""
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "JSON inválido."}, status=400)
+
+    name = (data.get("name") or "").strip()
+    when_to_use = (data.get("when_to_use") or "").strip()
+    instructions = (data.get("instructions") or "").strip()
+
+    if not name:
+        return JsonResponse({"error": "Campo 'name' obrigatório."}, status=400)
+    if not instructions:
+        return JsonResponse({"error": "Campo 'instructions' obrigatório."}, status=400)
+    if not when_to_use:
+        return JsonResponse({"error": "Campo 'when_to_use' obrigatório."}, status=400)
+
+    skill_id = (data.get("id") or "").strip() or uuid.uuid4().hex[:12]
+    # Valida que o id não contém caracteres perigosos para nome de arquivo
+    if not re.match(r'^[a-zA-Z0-9_-]+$', skill_id):
+        return JsonResponse({"error": "id inválido."}, status=400)
+
+    # Gera slug para uso com /comando
+    slug = re.sub(r'[^a-z0-9]+', '_', name.lower()).strip('_')
+
+    skill = {
+        "id": skill_id,
+        "name": name,
+        "slug": slug,
+        "when_to_use": when_to_use,
+        "instructions": instructions,
+        "code": (data.get("code") or "").strip(),
+        "active": bool(data.get("active", True)),
+        "created_at": data.get("created_at") or datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+    _SKILLS_DIR.mkdir(parents=True, exist_ok=True)
+    ((_SKILLS_DIR / f"{skill_id}.json")).write_text(
+        json.dumps(skill, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    return JsonResponse({"skill": skill}, json_dumps_params={"ensure_ascii": False})
+
+
+@csrf_exempt
+@require_POST
+def skill_delete_api(request):
+    """Remove uma skill pelo id. Body JSON: {id}."""
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "JSON inválido."}, status=400)
+
+    skill_id = (data.get("id") or "").strip()
+    if not skill_id or not re.match(r'^[a-zA-Z0-9_-]+$', skill_id):
+        return JsonResponse({"error": "id inválido."}, status=400)
+
+    path = _SKILLS_DIR / f"{skill_id}.json"
+    if not path.exists():
+        return JsonResponse({"error": "Skill não encontrada."}, status=404)
+
+    path.unlink()
+    return JsonResponse({"ok": True})
