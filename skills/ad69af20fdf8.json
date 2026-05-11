@@ -1,0 +1,11 @@
+{
+  "id": "ad69af20fdf8",
+  "name": "cotação dolar",
+  "slug": "cota_o_dolar",
+  "when_to_use": "quando eu pedir o valor do dolar",
+  "instructions": "toda vez que eu pedi o valor do dolar você vai me trazer o valor que estiver nessa api https://br.dolarapi.com/v1/cotacoes/usd\n\no json da api volta assim:\n{\n  \"moeda\": \"USD\",\n  \"nome\": \"Dólar\",\n  \"compra\": 4.8919,\n  \"venda\": 4.8944,\n  \"fechoAnterior\": 4.9206,\n  \"dataAtualizacao\": \"2026-05-07T21:59:53.000Z\"\n}\n\npontos importantes: \nvocê só faz oq foi pedido nada mais\no código de requisição que você realizar eh somente da requisição, não invente nada",
+  "code": "",
+  "active": true,
+  "created_at": "2026-05-10T15:23:42.277856+00:00",
+  "updated_at": "2026-05-10T15:23:42.277856+00:00"
+}

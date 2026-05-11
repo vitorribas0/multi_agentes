@@ -1,0 +1,11 @@
+{
+  "id": "99076f061a45",
+  "name": "data_hora_atual",
+  "slug": "data_hora_atual",
+  "when_to_use": "quando o usairo perguntas as horas",
+  "instructions": "você vai pegar a data e hora atual e os segundos quando o suario pedir\nusando biblioteca datetime\n\nvocê eh resposael por saber o dia da semana",
+  "code": "",
+  "active": true,
+  "created_at": "2026-05-09T03:37:59.988761+00:00",
+  "updated_at": "2026-05-09T03:37:59.988761+00:00"
+}

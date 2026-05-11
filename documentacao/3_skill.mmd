@@ -1,0 +1,164 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#1e1e2e"
+    primaryTextColor: "#cdd6f4"
+    primaryBorderColor: "#cba6f7"
+    lineColor: "#cba6f7"
+    secondaryColor: "#181825"
+    tertiaryColor: "#313244"
+    background: "#1e1e2e"
+    mainBkg: "#1e1e2e"
+    nodeBorder: "#cba6f7"
+    clusterBkg: "#181825"
+    clusterBorder: "#45475a"
+    titleColor: "#cba6f7"
+    edgeLabelBackground: "#313244"
+    fontFamily: "monospace"
+---
+flowchart TB
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 0 — CADASTRO DA SKILL  (feito uma vez pelo usuário)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph CADASTRO["  📝  FASE 0 — CADASTRO  ·  feito uma vez pelo usuário"]
+        direction TB
+
+        U(["👤 Usuário\nabre o Modal de Skills"]):::user
+
+        F1["Preenche o formulário\n━━━━━━━━━━━━━━━━━━━━━━\nnome         → ex: 'Top Produtos'\nwhen_to_use  → 'quando pedirem ranking\n               de produtos por volume'\ninstructions → 'agrupar por coluna produto,\n               contar registros, ordenar desc'\ncode         → template opcional de código\nactive       → true"]:::form
+
+        F2["POST /api/skills/save/\n→ skill_save_api()"]:::endpoint
+
+        F3["Validação\n━━━━━━━━━━━━━━━━━━━━━━\n✅ name obrigatório\n✅ instructions obrigatório\n✅ when_to_use obrigatório\n✅ id sanitizado [a-zA-Z0-9_-]"]:::validate
+
+        F4["Geração de identificadores\n━━━━━━━━━━━━━━━━━━━━━━\nid   = uuid4().hex[:12]\nslug = re.sub('[^a-z0-9]+','_', name)\n       ex: 'top_produtos'\n→ será o nome da tool: skill__top_produtos"]:::generate
+
+        F5["💾 Salvo em disco\nskills/&lt;id&gt;.json\n━━━━━━━━━━━━━━━━━━━━━━\n{\n  id, name, slug,\n  when_to_use,   ← LLM aprende quando usar\n  instructions,  ← LLM gera código disso\n  code,\n  active: true,\n  created_at, updated_at\n}"]:::storage
+
+        U --> F1 --> F2 --> F3 --> F4 --> F5
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 1 — INÍCIO DA CONVERSA  (toda mensagem nova)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph INICIO["  💬  FASE 1 — INÍCIO DA CONVERSA"]
+        direction TB
+
+        MSG(["👤 Usuário digita:\n'me mostra o ranking de produtos'"]):::user
+
+        C1["POST /api/chat/\nchat_api() inicia"]:::endpoint
+
+        C2["_build_dynamic_system_prompt()\n━━━━━━━━━━━━━━━━━━━━━━\nlê orquestrador_reclamacao.md\ninjeta {SKILLS_SECTION}:\n  • Top Produtos: quando pedirem ranking\n    de produtos por volume\n→ LLM JÁ SABE que essa skill existe\ne quando deve usá-la"]:::orchestrator
+
+        C3["_build_skill_tools()\n━━━━━━━━━━━━━━━━━━━━━━\nlê skills/*.json (só ativas)\ngera tool definition:\n  name:        skill__top_produtos\n  description: when_to_use + instructions\n  parameters:  { pedido: string }\n→ adicionada em all_tools junto com\n  as 9 tools MCP do servidor"]:::build
+
+        C4["messages = [system] + history + [user]\n━━━━━━━━━━━━━━━━━━━━━━\nHistórico completo da conversa\npreservado turno a turno:\n  role: user | assistant | tool"]:::history
+
+        MSG --> C1 --> C2 --> C3 --> C4
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 2 — DECISÃO DO LLM
+    %% ══════════════════════════════════════════════════════════════
+    subgraph DECISAO["  🤖  FASE 2 — DECISÃO DO LLM  ·  1ª Chamada Groq"]
+        direction TB
+
+        G1["Groq  ·  llama-3.3-70b-versatile\n━━━━━━━━━━━━━━━━━━━━━━\nRecebe: messages + all_tools\ntool_choice = auto\n\nVê no system prompt que existe\na skill 'Top Produtos' e quando usá-la.\nVê a tool skill__top_produtos disponível."]:::groq
+
+        D{"LLM decide:"}:::decision
+
+        D1["Chama  skill__top_produtos\n{\n  pedido: 'ranking de produtos\n           por volume de registros'\n}"]:::skill_call
+
+        D2["Responde direto\n(sem tool)"]:::skip
+
+        G1 --> D
+        D -- "pedido bate\ncom when_to_use" --> D1
+        D -- "não é sobre\nskills" --> D2
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 3 — GERAÇÃO DE CÓDIGO
+    %% ══════════════════════════════════════════════════════════════
+    subgraph GERACAO["  ⚡  FASE 3 — GERAÇÃO DE CÓDIGO  ·  _generate_skill_code()"]
+        direction TB
+
+        GC1["_resolve_skill_by_tool_name('skill__top_produtos')\n→ encontra o dict da skill no disco pelo slug\n→ passa para _run_skill_tool_call(skill, pedido)"]:::resolve
+
+        GC2["Monta o prompt para o LLM gerador\n━━━━━━━━━━━━━━━━━━━━━━\nCarrega skill_code_generator.md\nSubstitui placeholders:\n  {DATA_CONTEXT}       ← schema + 3 linhas do cache\n                          ex: colunas produto, qtd, data\n  {SKILL_NAME}         ← 'Top Produtos'\n  {SKILL_INSTRUCTIONS} ← 'agrupar por coluna produto...'\n  {EXAMPLE_BLOCK}      ← skill.code (template)\n  {USER_MESSAGE}       ← 'ranking de produtos por volume'"]:::prompt_node
+
+        GC3["Groq  ·  llama-3.3-70b-versatile\ntemp=0.1  ·  max_tokens=2000\n━━━━━━━━━━━━━━━━━━━━━━\nRetorna APENAS código Python puro:\n\ndf = pd.DataFrame(dados['arquivo.csv'])\nresultado = (\n    df.groupby('produto')\n      .size()\n      .reset_index(name='total')\n      .sort_values('total', ascending=False)\n      .head(10)\n      .to_dict('records')\n)"]:::groq
+
+        GC1 --> GC2 --> GC3
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 4 — EXECUÇÃO DO CÓDIGO
+    %% ══════════════════════════════════════════════════════════════
+    subgraph EXECUCAO["  🔬  FASE 4 — EXECUÇÃO  ·  _execute_skill_code()"]
+        direction TB
+
+        EC1["Prepara contexto do exec()\n━━━━━━━━━━━━━━━━━━━━━━\ndados    → dict com DataFrames do _CACHE\n            ex: {'arquivo.csv': [{'produto':...}]}\npd       → pandas\nnp       → numpy\nplt      → matplotlib.pyplot\njson, datetime, re"]:::exec_node
+
+        EC2["exec(code, contexto)\n━━━━━━━━━━━━━━━━━━━━━━\nCódigo roda com os dados reais\nCaptura saída:\n  variável resultado → serializado como JSON\n  plt figure         → base64 PNG (se criado)"]:::exec_node
+
+        EC3{"Saída gerada:"}:::decision
+
+        EC4["resultado = lista/dict\n→ serializado como string JSON\n  '[{produto: X, total: 42}, ...]'"]:::output_node
+
+        EC5["figura matplotlib\n→ convertida para base64 PNG\n→ enviada como skill_output_image"]:::output_node
+
+        EC1 --> EC2 --> EC3
+        EC3 -- "tabela/valor" --> EC4
+        EC3 -- "gráfico" --> EC5
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  FASE 5 — RESPOSTA FINAL
+    %% ══════════════════════════════════════════════════════════════
+    subgraph RESPOSTA["  📩  FASE 5 — RESPOSTA FINAL  ·  2ª Chamada Groq"]
+        direction TB
+
+        R1["messages.append(\n  role: 'tool'\n  tool_call_id: id_da_chamada\n  content: resultado JSON serializado\n)\n→ histórico agora tem o resultado da skill"]:::history
+
+        R2["2ª chamada Groq\n━━━━━━━━━━━━━━━━━━━━━━\nSystem prompt mínimo (sem tools listadas)\nmessages_final com todos os resultados\n→ LLM formula resposta em português\n  usando os dados da skill"]:::groq
+
+        R3["JsonResponse retorna:\n{\n  answer:            texto formulado pelo LLM\n  skill_executions:  [{ name, code, output }]\n  skill_output_image: base64 PNG (se houver)\n  activated_skills:  ['Top Produtos']\n  tool_calls:        [{ ... }]\n}"]:::output_node
+
+        R4(["👤 Usuário vê:\n✅ Resposta em texto natural\n🟣 Card roxo com código gerado\n📊 Tabela ou gráfico do resultado"]):::user
+
+        R1 --> R2 --> R3 --> R4
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CONEXÕES ENTRE FASES
+    %% ══════════════════════════════════════════════════════════════
+    F5 -.->|"skill salva,\naparece nas próximas conversas"| C2
+    C4 --> G1
+    D1 --> GC1
+    GC3 --> EC1
+    EC4 --> R1
+    EC5 --> R1
+    D2 -.->|"resposta direta\nsem skill"| R4
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  ESTILOS
+    %% ══════════════════════════════════════════════════════════════
+    classDef user        fill:#f38ba8,stroke:#f38ba8,color:#1e1e2e,font-weight:bold
+    classDef form        fill:#313244,stroke:#cba6f7,color:#cdd6f4
+    classDef endpoint    fill:#fab387,stroke:#fab387,color:#1e1e2e,font-weight:bold
+    classDef validate    fill:#313244,stroke:#a6e3a1,color:#cdd6f4
+    classDef generate    fill:#313244,stroke:#89b4fa,color:#cdd6f4
+    classDef storage     fill:#313244,stroke:#fab387,color:#cdd6f4
+    classDef orchestrator fill:#89dceb,stroke:#89dceb,color:#1e1e2e
+    classDef build       fill:#b4befe,stroke:#cba6f7,color:#1e1e2e
+    classDef history     fill:#313244,stroke:#6c7086,color:#cdd6f4
+    classDef groq        fill:#f9e2af,stroke:#f9e2af,color:#1e1e2e,font-weight:bold
+    classDef decision    fill:#fe640b,stroke:#fe640b,color:#1e1e2e,font-weight:bold
+    classDef skill_call  fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e,font-weight:bold
+    classDef skip        fill:#45475a,stroke:#6c7086,color:#bac2de
+    classDef resolve     fill:#b4befe,stroke:#cba6f7,color:#1e1e2e
+    classDef prompt_node fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e
+    classDef exec_node   fill:#313244,stroke:#cba6f7,color:#cdd6f4
+    classDef output_node fill:#a6e3a1,stroke:#a6e3a1,color:#1e1e2e

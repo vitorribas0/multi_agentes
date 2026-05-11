@@ -1,0 +1,10 @@
+{
+  "id": "355cc3db67df",
+  "name": "Plotar gráfico de barras",
+  "slug": "plotar_gr_fico_de_barras",
+  "when_to_use": "quando eu pedir um gráfico de barras sobre os meus dados",
+  "instructions": "eu preciso que você crie um gráfico de barras para qualquer pedido que eu realizar para qualuqer tipo de dados que eu passar, você vai ler os meus schema da base que eu passar e vai tratar, você vai ver também duas linhas da tabela pra ter um preview da tabela",
+  "active": true,
+  "created_at": "2026-05-09T02:09:08.180670+00:00",
+  "updated_at": "2026-05-09T02:11:44.946071+00:00"
+}

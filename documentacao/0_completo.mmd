@@ -1,0 +1,318 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#1e1e2e"
+    primaryTextColor: "#cdd6f4"
+    primaryBorderColor: "#89b4fa"
+    lineColor: "#89b4fa"
+    secondaryColor: "#181825"
+    tertiaryColor: "#313244"
+    background: "#1e1e2e"
+    mainBkg: "#1e1e2e"
+    nodeBorder: "#89b4fa"
+    clusterBkg: "#181825"
+    clusterBorder: "#45475a"
+    titleColor: "#cba6f7"
+    edgeLabelBackground: "#313244"
+    fontFamily: "monospace"
+---
+flowchart TB
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 1 — USUÁRIO / BROWSER
+    %% ══════════════════════════════════════════════════════════════
+    subgraph BROWSER["  🌐  BROWSER  ·  index.html"]
+        direction TB
+
+        USER(["👤 Usuário\ndigita mensagem"]):::user
+
+        subgraph CHAT_UI["Chat UI"]
+            direction LR
+            MSG_IN["📨 Mensagem enviada\nFetch POST /api/chat/\nbody: { message, history, model }"]:::input
+            MSG_OUT["📩 Resposta renderizada\nMarkdown + highlight.js\nImagens base64 inline"]:::output
+        end
+
+        subgraph SIDEBAR["🗂️ Sidebar"]
+            direction TB
+            HIST_LIST["📜 Histórico de conversas\narmazenado em localStorage\nCarrega contexto anterior"]:::sidebar
+            TOOL_LIST["🔧 Catálogo de tools MCP\nGET /api/tool-detail/\ndescrição + fluxo de cada tool"]:::sidebar
+        end
+
+        subgraph SKILL_MODAL["⚡ Modal de Skills"]
+            direction TB
+            SK_FORM["📝 Formulário de cadastro\nnome  ·  when_to_use\ninstruções  ·  código template (opt.)\nPOST /api/skills/save/"]:::skill
+            SK_LIST["📋 Lista de skills salvas\nGET /api/skills/\nEditar · Ativar/Desativar · Deletar"]:::skill
+        end
+
+        CARDS["🎴 Cards de execução\n🟢 Tool MCP  → args + resultado\n🟣 Skill      → código gerado + output\n🖼️ Gráfico   → imagem base64 PNG"]:::output
+
+        USER --> MSG_IN
+        MSG_OUT --> USER
+        MSG_IN -.->|"renderiza"| CARDS
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 2 — DJANGO ROTEAMENTO
+    %% ══════════════════════════════════════════════════════════════
+    subgraph DJANGO["  🔗  DJANGO  ·  config/urls.py  →  apps/chat/urls.py"]
+        direction LR
+        EP1["POST /api/chat/\nchat_api()"]:::endpoint
+        EP2["POST /api/upload/\nupload_file()"]:::endpoint
+        EP3["GET  /api/download/\ndownload_file()"]:::endpoint
+        EP4["GET  /api/skills/\nskill_list_api()"]:::endpoint
+        EP5["POST /api/skills/save/\nskill_save_api()"]:::endpoint
+        EP6["POST /api/skills/delete/\nskill_delete_api()"]:::endpoint
+        EP7["GET  /api/tool-detail/\ntool_detail_api()"]:::endpoint
+        EP8["GET  /api/settings/\nsettings_api()"]:::endpoint
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 3 — CRUD DE SKILLS  (cadastro → disco → orquestrador)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph SKILL_CRUD["  💾  CRUD DE SKILLS  ·  views.py  +  skills/*.json"]
+        direction TB
+
+        subgraph SK_SAVE["skill_save_api() — Criar / Atualizar"]
+            direction TB
+            CSV1["Recebe JSON: name, when_to_use,\ninstructions, code?, active?, id?"]:::skill_node
+            CSV2["Valida campos obrigatórios\n(name, instructions, when_to_use)"]:::skill_node
+            CSV3["Gera id = uuid4().hex[:12]\nou usa id existente (update)\nValida regex [a-zA-Z0-9_-]+"]:::skill_node
+            CSV4["Gera slug:\nre.sub('[^a-z0-9]+','_', name.lower())\nUsado como nome da tool: skill__slug"]:::skill_node
+            CSV5["Salva skills/<id>.json\n{\n  id, name, slug,\n  when_to_use,   ← quando LLM ativa\n  instructions,  ← o que o código faz\n  code,          ← template opcional\n  active: true,\n  created_at, updated_at\n}"]:::storage
+            CSV1 --> CSV2 --> CSV3 --> CSV4 --> CSV5
+        end
+
+        subgraph SK_READ["_skills_list() — Leitura em runtime"]
+            direction LR
+            SLR1["Varre skills/*.json\nordenados por nome\nretorna lista de dicts"]:::skill_node
+            SLR2["Filtro: active == True\nusa em:\n  _build_dynamic_system_prompt()\n  _build_skill_tools()\n  _resolve_skill_by_tool_name()"]:::skill_node
+            SLR1 --> SLR2
+        end
+
+        subgraph SK_DEL["skill_delete_api() — Remover"]
+            SLD1["Recebe id · valida regex\npath.unlink()\n→ skill deixa de aparecer\nno system prompt e nas tools"]:::skill_node
+        end
+
+        CSV5 --> SLR1
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 4 — ORQUESTRADOR  (views.py · chat_api)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph ORCHESTRATOR["  🧠  ORQUESTRADOR  ·  apps/chat/views.py  ·  chat_api()"]
+        direction TB
+
+        subgraph STEP1["① System Prompt Dinâmico"]
+            DP["_build_dynamic_system_prompt()\n━━━━━━━━━━━━━━━━━━━━━━━━\n📄 lê  orquestrador_reclamacao.md\n🔧 injeta {MCP_TOOLS}\n   ← nomes derivados de TOOLS em agent_config.py\n⚡ injeta {SKILLS_SECTION}\n   ← skill.name + when_to_use[:150] de cada ativa"]:::orchestrator
+        end
+
+        subgraph STEP2["② Histórico de Mensagens"]
+            HIST["messages = [ system ] + history + [ user ]\n━━━━━━━━━━━━━━━━━━━━━━━━\nCada turno preserva:\n  role: user | assistant | tool\n  content: texto ou resultado JSON da tool\nPassado inteiro na 1ª chamada → contexto completo"]:::history
+        end
+
+        subgraph STEP3["③ Montar Tools Disponíveis"]
+            BT["all_tools = TOOLS_MCP + skill_tools\n━━━━━━━━━━━━━━━━━━━━━━━━\n_build_skill_tools()\n  lê skills/*.json (ativas)\n  para cada skill gera:\n    name: skill__slug\n    description: when_to_use + instructions\n    params: { pedido: string }\n→ LLM vê todas as tools numa lista única"]:::orchestrator
+        end
+
+        subgraph STEP4["④ 1ª Chamada Groq — Decisão"]
+            G1CALL["Groq  ·  llama-3.3-70b-versatile\n━━━━━━━━━━━━━━━━━━━━━━━━\ntool_choice = auto\nmessages + all_tools\n→ retorna tool_calls OU texto direto"]:::groq
+        end
+
+        subgraph STEP5["⑤ Roteamento de Tool Calls"]
+            direction TB
+            ROUTE{"LLM chamou\nalguma tool?"}:::decision
+
+            subgraph MCP_PATH["Caminho MCP"]
+                direction TB
+                TH2["_sanitize_tool_args()\nnormaliza tipos · injeta caminho\ndo último arquivo carregado"]:::mcp_node
+                TH1["_run_tool_call()\n→ TOOL_MAP[nome](**args)\nintercepta exportar_dataframe\n→ salva em /uploads/"]:::mcp_node
+                TH2 --> TH1
+            end
+
+            subgraph SKILL_PATH["Caminho Skill"]
+                direction TB
+                TH3["_resolve_skill_by_tool_name()\nmapeia skill__slug → dict da skill"]:::skill_node
+                TH4["_run_skill_tool_call(skill, pedido)"]:::skill_node
+                TH3 --> TH4
+            end
+
+            TOOL_MSG["messages.append(\n  role: 'tool'\n  tool_call_id: id\n  content: resultado JSON\n)\n→ contexto atualizado para 2ª chamada"]:::history
+
+            ROUTE -- "tool MCP" --> MCP_PATH --> TOOL_MSG
+            ROUTE -- "skill__slug" --> SKILL_PATH --> TOOL_MSG
+        end
+
+        subgraph STEP6["⑥ 2ª Chamada Groq — Resposta Final"]
+            G2CALL["Groq  ·  llama-3.3-70b-versatile\n━━━━━━━━━━━━━━━━━━━━━━━━\nSystem prompt mínimo (sem tools listadas)\nmessages_final com todos os resultados\n→ formula resposta em português"]:::groq
+        end
+
+        subgraph FALLBACK["⑦ Fallback — Erro tool_use_failed (400)"]
+            direction TB
+            FB1["_extract_tool_calls_from_text()\nparseia padrão <function=nome>{...}\nno texto de erro da API Groq"]:::fallback
+            FB2["_repair_json()\n3 estratégias:\n  1. json.loads direto\n  2. regex: {$chave} → {chave}\n  3. extração manual key:value"]:::fallback
+            FB3["Mesmo roteamento:\n  skill__slug → SKILL_PATH\n  nome MCP   → MCP_PATH"]:::fallback
+            FB1 --> FB2 --> FB3
+        end
+
+        STEP1 --> STEP2 --> STEP3 --> STEP4
+        STEP4 -- "tool_calls" --> STEP5
+        STEP5 --> STEP6
+        STEP4 -- "texto direto\n(sem tool)" --> STEP6
+        STEP4 -- "erro 400\ntool_use_failed" --> FALLBACK --> STEP6
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 5 — AGENTE DE SKILLS (geração e execução de código)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph SKILL_AGENT["  ⚡  AGENTE DE SKILLS  ·  _run_skill_tool_call()"]
+        direction TB
+
+        subgraph SK_GEN["Passo A — Geração de Código"]
+            SG1["_generate_skill_code(skill, pedido)\n━━━━━━━━━━━━━━━━━━━━━━━━\n📄 carrega  skill_code_generator.md\ninjeta placeholders:\n  {DATA_CONTEXT}       ← schema + 3 linhas do cache\n  {SKILL_NAME}         ← skill.name\n  {SKILL_INSTRUCTIONS} ← skill.instructions\n  {EXAMPLE_BLOCK}      ← skill.code (template)\n  {USER_MESSAGE}       ← pedido do usuário"]:::skill_node
+            SG2["Groq  ·  llama-3.3-70b-versatile\ntemp=0.1  ·  max_tokens=2000\n━━━━━━━━━━━━━━━━━━━━━━━━\nRetorna APENAS código Python puro\nSem markdown · sem import · sem print\nsem plt.show · usa variável resultado"]:::groq
+            SG1 --> SG2
+        end
+
+        subgraph SK_EXEC["Passo B — Execução Segura"]
+            SE1["_execute_skill_code(code)\n━━━━━━━━━━━━━━━━━━━━━━━━\nContexto injetado no exec():\n  dados    → dict de DataFrames do _CACHE\n  pd       → pandas\n  np       → numpy\n  plt      → matplotlib.pyplot\n  json, datetime, re"]:::skill_node
+            SE2["Captura de saída:\n  variável resultado → serializa JSON\n  plt figure → base64 PNG\n  stdout capturado e descartado\n→ retorna (texto, img_b64, record)"]:::skill_node
+            SE1 --> SE2
+        end
+
+        SG2 --> SE1
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 6 — AGENTE MCP (tools reais de dados)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph MCP_AGENT["  🔧  AGENTE MCP  ·  src/mcp_reclamacao/server.py  ·  FastMCP"]
+        direction TB
+
+        subgraph MCP_CACHE_BOX["Cache em Memória (sessão do servidor)"]
+            MC["_CACHE              dict[caminho → registros]\n_CACHE_FILTRADO     dict[caminho → registros]\n_CACHE_META         info sobre cada arquivo carregado\n_CACHE_FILTRADO_META info sobre cada filtro aplicado\n━━━━━━━━━━━━━━━━━━━━━━━━\nShared entre todas as tools\nPersiste enquanto o processo roda"]:::cache
+        end
+
+        subgraph MCP_TOOLS_BOX["9 Tools MCP"]
+            direction TB
+            T1["📂 carregar_arquivo(caminho)\nCSV/XLSX → pd.read_csv/excel\n→ salva em _CACHE\n→ schema + preview 3 linhas"]:::mcp_node
+            T2["🔍 filtrar_registros(caminho, filtros_json)\noperadores: ==, !=, contains,\n>, <, in, not_in\n→ salva em _CACHE_FILTRADO"]:::mcp_node
+            T3["🔤 normalizar_nlp(caminho, coluna)\nlowercase + sem acento + sem pontuação\n→ cria coluna _limpo no _CACHE"]:::mcp_node
+            T4["📝 lematizar_nlp(caminho, coluna)\nspaCy pt_core_news_sm\n→ cria coluna _lemma no _CACHE"]:::mcp_node
+            T5["🔎 filtrar_por_palavras(caminho, coluna, palavras)\nregex join palavras-chave\n→ filtra → _CACHE_FILTRADO"]:::mcp_node
+            T6["💾 exportar_dataframe(caminho, destino)\ndf completo ou filtrado → CSV UTF-8-SIG\n→ salva em /uploads/ → URL download"]:::mcp_node
+            T7["📈 analisar_serie_temporal(...)\nresample D/MS/YS\ncount | sum | mean\n→ série para gráfico"]:::mcp_node
+            T8["🖼️ ocr_extrair_texto(caminho_imagem)\nimagem/PDF → texto extraído"]:::mcp_node
+            T9["📋 listar_contexto_sessao()\narquivos carregados + colunas\n+ última tool usada + nº registros\n→ injetado no system prompt"]:::mcp_node
+        end
+
+        MC --> T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 7 — CONFIGURAÇÃO CENTRAL
+    %% ══════════════════════════════════════════════════════════════
+    subgraph CONFIG["  📋  CONFIGURAÇÃO  ·  apps/chat/agent_config.py"]
+        direction LR
+        AC1["🤖 Modelos\nDEFAULT_MODEL\n= llama-3.3-70b-versatile\nMODEL_OPTIONS:\n  versatile · instant"]:::config
+        AC2["📄 Prompt Path\nORCHESTRATOR_PROMPT_PATH\n= src/mcp_reclamacao/prompts/\n  orquestrador_reclamacao.md"]:::config
+        AC3["🔧 TOOLS (9 definições)\nUsado em:\n  _build_dynamic_system_prompt\n    → nomes injetados em {MCP_TOOLS}\n  all_tools → exposto ao LLM"]:::config
+        AC4["👥 AGENTS list\n[{ id, name, model,\n   tools, status,\n   system_prompt: path }]"]:::config
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 8 — PROMPTS
+    %% ══════════════════════════════════════════════════════════════
+    subgraph PROMPTS["  📄  PROMPTS  ·  src/mcp_reclamacao/prompts/"]
+        direction TB
+        PR1["🎯 orquestrador_reclamacao.md\n━━━━━━━━━━━━━━━━━━━━━━━━\nSystem prompt do agente principal\nPlaceholders injetados em runtime:\n  {MCP_TOOLS}      ← nomes das 9 tools MCP\n  {SKILLS_SECTION} ← skills ativas do usuário\nRegras: confirmar antes · português\nnunca inventar tools\nlistar_contexto_sessao antes de operar dados"]:::prompt
+        PR2["⚡ skill_code_generator.md\n━━━━━━━━━━━━━━━━━━━━━━━━\nPrompt para geração de código Python\nProibições: import · print · plt.show\nObrigações: variável resultado\nPlaceholders:\n  {DATA_CONTEXT}       {SKILL_NAME}\n  {SKILL_INSTRUCTIONS} {USER_MESSAGE}\n  {EXAMPLE_BLOCK}"]:::prompt
+        PR3["📊 analisador_reclamacao.md\nAuditor regulatório\n(futuro)"]:::prompt_dim
+        PR4["🗃️ data_agent_reclamacao.md\nEspecialista extração/OCR\n(futuro)"]:::prompt_dim
+        PR5["🔤 nlp_agent_reclamacao.md\nArquiteto NLP\n(futuro)"]:::prompt_dim
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 9 — ARMAZENAMENTO EM DISCO
+    %% ══════════════════════════════════════════════════════════════
+    subgraph STORAGE["  💾  ARMAZENAMENTO  ·  Disco"]
+        direction LR
+        SK_JSON["skills/\n  <id>.json\n━━━━━━━━━━━━━━━━\nid · name · slug\nwhen_to_use\ninstructions\ncode (template)\nactive · timestamps"]:::storage
+        UPLOADS_IN["uploads/ (entrada)\n━━━━━━━━━━━━━━━━\nCSV, XLSX\nImagens, PDFs\nEnviados via /api/upload/"]:::storage
+        UPLOADS_OUT["uploads/ (saída)\n━━━━━━━━━━━━━━━━\nCSVs exportados\npela tool exportar_dataframe\nDisponíveis em /api/download/"]:::storage
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CONEXÕES ENTRE CAMADAS
+    %% ══════════════════════════════════════════════════════════════
+
+    %% Browser → Django
+    MSG_IN -- "POST /api/chat/" --> EP1
+    SK_FORM -- "POST /api/skills/save/" --> EP5
+    SK_LIST -- "GET /api/skills/" --> EP4
+    UPLOAD_BTN["📎 Upload\nPOST /api/upload/"]:::input -- "POST /api/upload/" --> EP2
+
+    %% Django → Handlers
+    EP1 --> ORCHESTRATOR
+    EP2 --> UPLOADS_IN
+    EP4 --> SK_JSON
+    EP5 --> SKILL_CRUD
+    EP6 --> SK_DEL
+    EP3 --> UPLOADS_OUT
+
+    %% CRUD → Storage
+    CSV5 --> SK_JSON
+
+    %% Skills → Orquestrador
+    SK_JSON -- "lida por _skills_list()" --> SLR1
+    SLR2 -- "injeta {SKILLS_SECTION}" --> DP
+    SLR2 -- "monta skill tools" --> BT
+
+    %% Config & Prompts → Orquestrador
+    AC2 -- "aponta para" --> PR1
+    AC3 -- "define TOOLS" --> BT
+    PR1 -- "template lido por\n_build_dynamic_system_prompt" --> DP
+
+    %% Orquestrador → Groq (1ª chamada)
+    G1CALL -- "tool_calls / texto / erro" --> ROUTE
+    ROUTE -- "texto direto" --> STEP6
+
+    %% MCP Path → server.py
+    TH1 --> MCP_AGENT
+    T1 -- "lê arquivo de" --> UPLOADS_IN
+    T6 -- "exporta para" --> UPLOADS_OUT
+
+    %% Skill Path → Skill Agent
+    TH4 --> SKILL_AGENT
+    SG1 -- "lê template" --> PR2
+    SG2 -- "gera código" --> SE1
+    SE1 -- "lê dados de" --> MC
+
+    %% Groq (2ª chamada) → resposta
+    G2CALL -- "resposta em português" --> MSG_OUT
+    UPLOADS_OUT -- "GET /api/download/" --> MSG_OUT
+
+    %% Histórico preservado
+    HIST_LIST -.->|"contexto anterior"| STEP2
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  ESTILOS
+    %% ══════════════════════════════════════════════════════════════
+    classDef user        fill:#f38ba8,stroke:#f38ba8,color:#1e1e2e,font-weight:bold
+    classDef input       fill:#89b4fa,stroke:#89b4fa,color:#1e1e2e,font-weight:bold
+    classDef output      fill:#a6e3a1,stroke:#a6e3a1,color:#1e1e2e,font-weight:bold
+    classDef skill       fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e,font-weight:bold
+    classDef skill_node  fill:#b4befe,stroke:#cba6f7,color:#1e1e2e
+    classDef sidebar     fill:#45475a,stroke:#6c7086,color:#cdd6f4
+    classDef endpoint    fill:#fab387,stroke:#fab387,color:#1e1e2e,font-weight:bold
+    classDef orchestrator fill:#89dceb,stroke:#89dceb,color:#1e1e2e
+    classDef groq        fill:#f9e2af,stroke:#f9e2af,color:#1e1e2e,font-weight:bold
+    classDef history     fill:#313244,stroke:#6c7086,color:#cdd6f4
+    classDef decision    fill:#fe640b,stroke:#fe640b,color:#1e1e2e,font-weight:bold
+    classDef mcp_node    fill:#94e2d5,stroke:#94e2d5,color:#1e1e2e
+    classDef fallback    fill:#eba0ac,stroke:#f38ba8,color:#1e1e2e
+    classDef cache       fill:#313244,stroke:#89b4fa,color:#cdd6f4
+    classDef config      fill:#a6e3a1,stroke:#a6e3a1,color:#1e1e2e
+    classDef prompt      fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e
+    classDef prompt_dim  fill:#45475a,stroke:#6c7086,color:#bac2de
+    classDef storage     fill:#313244,stroke:#fab387,color:#cdd6f4

@@ -1,0 +1,11 @@
+{
+  "id": "9d7dfff01664",
+  "name": "preço do bitcoin",
+  "slug": "pre_o_do_bitcoin",
+  "when_to_use": "quando pedirem o valor do bitcoin",
+  "instructions": "para capturar o preço do bitcoin, basta pegar o valor que está nessa api:\nhttps://www.mercadobitcoin.net/api/BTC/ticker/",
+  "code": "",
+  "active": true,
+  "created_at": "2026-05-09T04:09:52.654749+00:00",
+  "updated_at": "2026-05-09T04:09:52.654749+00:00"
+}

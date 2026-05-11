@@ -22,6 +22,7 @@ if _mcp_path not in sys.path:
 from groq import Groq
 from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
 from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PROMPT_PATH, TOOLS
+from .models import ChatSession, Message, Skill
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 
@@ -356,21 +357,13 @@ def chat_view(request):
 _ALLOWED_EXTENSIONS = {".csv", ".xlsx", ".xls", ".jpg", ".jpeg", ".png", ".pdf"}
 _IMAGE_EXTENSIONS   = {".jpg", ".jpeg", ".png", ".pdf"}
 _UPLOAD_DIR = settings.BASE_DIR / "uploads"
-_SKILLS_DIR = settings.BASE_DIR / "skills"
 
 
 # ── Helpers de Skills ─────────────────────────────────────────────────────────
 
 def _skills_list() -> list[dict]:
-    """Retorna todas as skills salvas em disco."""
-    _SKILLS_DIR.mkdir(parents=True, exist_ok=True)
-    skills = []
-    for f in sorted(_SKILLS_DIR.glob("*.json")):
-        try:
-            skills.append(json.loads(f.read_text(encoding="utf-8")))
-        except Exception:
-            pass
-    return skills
+    """Retorna todas as skills salvas no banco de dados."""
+    return [s.to_dict() for s in Skill.objects.all()]
 
 
 def _match_skills(user_message: str) -> tuple[list[dict], str]:
@@ -686,6 +679,12 @@ def _execute_skill_code(code: str) -> tuple[str, str | None]:
         except ImportError:
             pass
 
+    # Atalhos para datetime: dt.now() funciona diretamente (datetime.datetime class)
+    import datetime as _dt_mod
+    ctx["dt"] = _dt_mod.datetime          # dt.now(), dt.strptime(), etc.
+    ctx["date"] = _dt_mod.date            # date.today()
+    ctx["timedelta"] = _dt_mod.timedelta  # timedelta(days=1)
+
     # DataFrames acessíveis diretamente pelo nome do arquivo
     ctx.update(dados)
 
@@ -768,6 +767,8 @@ def chat_api(request):
         history = data.get("history", [])
         requested_model = (data.get("model") or "").strip()
         selected_model = requested_model if requested_model in MODEL_OPTIONS else DEFAULT_MODEL
+        session_id = (data.get("session_id") or "").strip()
+        session_title = (data.get("session_title") or user_message[:40] or "Chat").strip()
         last_loaded_path = _find_last_loaded_path(history)
 
         if not user_message:
@@ -798,7 +799,7 @@ def chat_api(request):
                         )
                     linhas.append(linha)
                 ctx_text = "CONTEXTO DA SESSÃO - Arquivos carregados em memória:\n" + "\n".join(linhas)
-                messages[0]["content"] = SYSTEM_PROMPT + "\n\n" + ctx_text
+                messages[0]["content"] = system_prompt + "\n\n" + ctx_text
         except Exception:
             pass  # Se o cache estiver vazio ou ocorrer erro, segue sem contexto
 
@@ -893,15 +894,11 @@ def chat_api(request):
                 messages=messages_fallback,
             )
             answer = response_final.choices[0].message.content
-
-            return JsonResponse({
-                "answer": answer,
-                "tools_called": tools_called,
-                "exported_file": exported_file,
-                "activated_skills": [r["name"] for r in skill_executions],
-                "skill_output_image": skill_output_image,
-                "skill_executions": skill_executions,
-            })
+            return _chat_save_and_respond(
+                session_id, session_title, selected_model,
+                user_message, answer, tools_called, exported_file,
+                skill_executions, skill_output_image,
+            )
 
         if msg.tool_calls:
             # Constrói dict limpo do assistant — model_dump() inclui campos extras do SDK
@@ -987,14 +984,11 @@ def chat_api(request):
 
                 if not executed:
                     answer = msg.content
-                    return JsonResponse({
-                        "answer": answer,
-                        "tools_called": tools_called,
-                        "exported_file": exported_file,
-                        "activated_skills": [r["name"] for r in skill_executions],
-                        "skill_output_image": skill_output_image,
-                        "skill_executions": skill_executions,
-                    })
+                    return _chat_save_and_respond(
+                        session_id, session_title, selected_model,
+                        user_message, answer, tools_called, exported_file,
+                        skill_executions, skill_output_image,
+                    )
 
                 nome = executed[0][0]
                 resultado = "\n".join(f"[{n}] {r}" for n, r in executed)
@@ -1052,17 +1046,64 @@ def chat_api(request):
                 else:
                     answer = msg.content
 
-        return JsonResponse({
-            "answer": answer,
-            "tools_called": tools_called,
-            "exported_file": exported_file,
-            "activated_skills": [r["name"] for r in skill_executions],
-            "skill_output_image": skill_output_image,
-            "skill_executions": skill_executions,
-        })
+        return _chat_save_and_respond(
+            session_id, session_title, selected_model,
+            user_message, answer, tools_called, exported_file,
+            skill_executions, skill_output_image,
+        )
 
     except Exception as exc:
         return JsonResponse({"error": str(exc)}, status=500)
+
+
+def _chat_save_and_respond(
+    session_id: str,
+    session_title: str,
+    model: str,
+    user_message: str,
+    answer: str,
+    tools_called: list,
+    exported_file,
+    skill_executions: list,
+    skill_output_image: str | None,
+) -> JsonResponse:
+    """Salva a interação no banco e retorna o JsonResponse padrão do chat_api."""
+    # Cria ou recupera a sessão
+    if session_id:
+        session, _ = ChatSession.objects.get_or_create(
+            id=session_id,
+            defaults={"title": session_title, "model": model},
+        )
+        # Atualiza título/modelo se mudou
+        if session.title != session_title or session.model != model:
+            session.title = session_title
+            session.model = model
+            session.save(update_fields=["title", "model", "updated_at"])
+    else:
+        session = ChatSession.objects.create(
+            id=uuid.uuid4().hex,
+            title=session_title,
+            model=model,
+        )
+
+    # Salva a mensagem do usuário e a resposta do assistente
+    Message.objects.create(session=session, role="user", content=user_message)
+    Message.objects.create(
+        session=session,
+        role="assistant",
+        content=answer or "",
+        tools_called=tools_called or [],
+    )
+
+    return JsonResponse({
+        "answer": answer,
+        "session_id": session.id,
+        "tools_called": tools_called,
+        "exported_file": exported_file,
+        "activated_skills": [r["name"] for r in skill_executions],
+        "skill_output_image": skill_output_image,
+        "skill_executions": skill_executions,
+    })
 
 
 def settings_view(request):
@@ -1124,7 +1165,7 @@ def skill_list_api(request):
 @csrf_exempt
 @require_POST
 def skill_save_api(request):
-    """Cria ou atualiza uma skill. Body JSON: {name, keywords, instructions, active?, id?}."""
+    """Cria ou atualiza uma skill. Body JSON: {name, when_to_use, instructions, active?, id?, code?}."""
     try:
         data = json.loads(request.body)
     except Exception:
@@ -1142,30 +1183,23 @@ def skill_save_api(request):
         return JsonResponse({"error": "Campo 'when_to_use' obrigatório."}, status=400)
 
     skill_id = (data.get("id") or "").strip() or uuid.uuid4().hex[:12]
-    # Valida que o id não contém caracteres perigosos para nome de arquivo
     if not re.match(r'^[a-zA-Z0-9_-]+$', skill_id):
         return JsonResponse({"error": "id inválido."}, status=400)
 
-    # Gera slug para uso com /comando
     slug = re.sub(r'[^a-z0-9]+', '_', name.lower()).strip('_')
 
-    skill = {
-        "id": skill_id,
-        "name": name,
-        "slug": slug,
-        "when_to_use": when_to_use,
-        "instructions": instructions,
-        "code": (data.get("code") or "").strip(),
-        "active": bool(data.get("active", True)),
-        "created_at": data.get("created_at") or datetime.now(timezone.utc).isoformat(),
-        "updated_at": datetime.now(timezone.utc).isoformat(),
-    }
-
-    _SKILLS_DIR.mkdir(parents=True, exist_ok=True)
-    ((_SKILLS_DIR / f"{skill_id}.json")).write_text(
-        json.dumps(skill, ensure_ascii=False, indent=2), encoding="utf-8"
+    skill, _ = Skill.objects.update_or_create(
+        id=skill_id,
+        defaults={
+            "name": name,
+            "slug": slug,
+            "when_to_use": when_to_use,
+            "instructions": instructions,
+            "code": (data.get("code") or "").strip(),
+            "active": bool(data.get("active", True)),
+        },
     )
-    return JsonResponse({"skill": skill}, json_dumps_params={"ensure_ascii": False})
+    return JsonResponse({"skill": skill.to_dict()}, json_dumps_params={"ensure_ascii": False})
 
 
 @csrf_exempt
@@ -1181,9 +1215,50 @@ def skill_delete_api(request):
     if not skill_id or not re.match(r'^[a-zA-Z0-9_-]+$', skill_id):
         return JsonResponse({"error": "id inválido."}, status=400)
 
-    path = _SKILLS_DIR / f"{skill_id}.json"
-    if not path.exists():
+    deleted, _ = Skill.objects.filter(id=skill_id).delete()
+    if not deleted:
         return JsonResponse({"error": "Skill não encontrada."}, status=404)
 
-    path.unlink()
+    return JsonResponse({"ok": True})
+
+
+# ── Sessions API ──────────────────────────────────────────────────────────────
+
+@require_GET
+def session_list_api(request):
+    """Lista todas as sessões salvas (sem mensagens)."""
+    sessions = [s.to_dict() for s in ChatSession.objects.all()]
+    return JsonResponse({"sessions": sessions}, json_dumps_params={"ensure_ascii": False})
+
+
+@require_GET
+def session_detail_api(request):
+    """Retorna uma sessão com todas as mensagens. Query param: ?id=<session_id>"""
+    session_id = request.GET.get("id", "").strip()
+    if not session_id:
+        return JsonResponse({"error": "Parâmetro 'id' obrigatório."}, status=400)
+    try:
+        session = ChatSession.objects.get(id=session_id)
+    except ChatSession.DoesNotExist:
+        return JsonResponse({"error": "Sessão não encontrada."}, status=404)
+    return JsonResponse(session.to_dict(include_messages=True), json_dumps_params={"ensure_ascii": False})
+
+
+@csrf_exempt
+@require_POST
+def session_delete_api(request):
+    """Remove uma sessão e todas as suas mensagens. Body JSON: {id}."""
+    try:
+        data = json.loads(request.body)
+    except Exception:
+        return JsonResponse({"error": "JSON inválido."}, status=400)
+
+    session_id = (data.get("id") or "").strip()
+    if not session_id:
+        return JsonResponse({"error": "Campo 'id' obrigatório."}, status=400)
+
+    deleted, _ = ChatSession.objects.filter(id=session_id).delete()
+    if not deleted:
+        return JsonResponse({"error": "Sessão não encontrada."}, status=404)
+
     return JsonResponse({"ok": True})

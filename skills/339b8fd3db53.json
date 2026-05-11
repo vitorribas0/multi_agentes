@@ -1,0 +1,11 @@
+{
+  "id": "339b8fd3db53",
+  "name": "buscar_cep",
+  "slug": "buscar_cep",
+  "when_to_use": "quando o usário pedir o enderço de uma caso com base no cep",
+  "instructions": "você vai realizar a requisção da api https://viacep.com.br/ws/cep/json/ pra trazer o enderço de um determinaod cep que o usario pedi, um exemplo de preecnheimento, o usuário pediu o endereço do cep 06160380\nai você pesquisa assim:\nhttps://viacep.com.br/ws/06160380/json/",
+  "code": "",
+  "active": true,
+  "created_at": "2026-05-09T03:11:05.183172+00:00",
+  "updated_at": "2026-05-09T03:11:05.183172+00:00"
+}

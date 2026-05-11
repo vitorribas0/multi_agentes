@@ -1,0 +1,245 @@
+---
+config:
+  theme: base
+  themeVariables:
+    primaryColor: "#1e1e2e"
+    primaryTextColor: "#cdd6f4"
+    primaryBorderColor: "#89b4fa"
+    lineColor: "#89b4fa"
+    secondaryColor: "#181825"
+    tertiaryColor: "#313244"
+    background: "#1e1e2e"
+    mainBkg: "#1e1e2e"
+    nodeBorder: "#89b4fa"
+    clusterBkg: "#181825"
+    clusterBorder: "#45475a"
+    titleColor: "#cba6f7"
+    edgeLabelBackground: "#313244"
+    fontFamily: "monospace"
+---
+flowchart TB
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 1 — USUÁRIO / BROWSER
+    %% ══════════════════════════════════════════════════════════════
+    subgraph BROWSER["  🌐  BROWSER  ·  index.html"]
+        direction LR
+        USER(["👤 Usuário\ndigita mensagem"]):::user
+
+        subgraph CHAT_UI["Chat UI"]
+            direction TB
+            MSG_IN["📨 Mensagem enviada\nFetch POST /api/chat/\nbody: { message, history, model }"]:::input
+            MSG_OUT["📩 Resposta exibida\nMarkdown + highlight.js\nrender de imagens base64"]:::output
+        end
+
+        subgraph SKILL_MODAL["⚡ Modal de Skills"]
+            direction TB
+            SK_FORM["Formulário\nnome · slug · quando usar\ninstruções · código template"]:::skill
+            SK_LIST["Lista de skills salvas\n(GET /api/skills/)\nEditar · Ativar · Deletar"]:::skill
+        end
+
+        subgraph SIDEBAR["🗂️ Sidebar"]
+            direction TB
+            HIST_LIST["Histórico de conversas\n(localStorage)\nCarrega contexto anterior"]:::sidebar
+            TOOL_LIST["Catálogo de tools MCP\n(GET /api/tool-detail/)"]:::sidebar
+        end
+
+        CARDS["🎴 Cards de execução\n🟢 Tool MCP · args + resultado\n🟣 Skill · código gerado + output"]:::output
+
+        USER --> MSG_IN
+        MSG_OUT --> USER
+        MSG_IN -.->|"renderiza"| CARDS
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 2 — DJANGO ROTEAMENTO
+    %% ══════════════════════════════════════════════════════════════
+    subgraph DJANGO["  🔗  DJANGO  ·  config/urls.py  →  apps/chat/urls.py"]
+        direction LR
+        EP1["POST /api/chat/\nchat_api()"]:::endpoint
+        EP2["POST /api/upload/\nupload_file()"]:::endpoint
+        EP3["GET  /api/download/\ndownload_file()"]:::endpoint
+        EP4["GET  /api/skills/\nskill_list_api()"]:::endpoint
+        EP5["POST /api/skills/save/\nskill_save_api()"]:::endpoint
+        EP6["POST /api/skills/delete/\nskill_delete_api()"]:::endpoint
+        EP7["GET  /api/tool-detail/\ntool_detail_api()"]:::endpoint
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 3 — ORQUESTRADOR  (views.py)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph ORCHESTRATOR["  🧠  ORQUESTRADOR  ·  apps/chat/views.py  ·  chat_api()"]
+        direction TB
+
+        subgraph STEP1["① Montar System Prompt Dinâmico"]
+            DP["_build_dynamic_system_prompt()\n━━━━━━━━━━━━━━━━━━━━━━━━\n📄 lê  orquestrador_reclamacao.md\n🔧 injeta {MCP_TOOLS} ← nomes derivados de TOOLS\n⚡ injeta {SKILLS_SECTION} ← skills JSON ativas"]:::orchestrator
+        end
+
+        subgraph STEP2["② Histórico de Mensagens"]
+            HIST["messages = [ system ] + history + [ user ]\n━━━━━━━━━━━━━━━━━━━━━━━━\nCada turno preserva:\n  role: user | assistant | tool\n  content: texto ou resultado de tool\nPassado inteiro na 1ª chamada Groq"]:::history
+        end
+
+        subgraph STEP3["③ Registrar Tools Disponíveis"]
+            BT["all_tools = TOOLS_MCP + skill_tools\n━━━━━━━━━━━━━━━━━━━━━━━━\n_build_skill_tools()\n  lê skills/*.json  (ativas)\n  gera tool def com nome skill__slug\n  injeta descrição + parâmetro pedido"]:::orchestrator
+        end
+
+        subgraph STEP4["④ 1ª Chamada Groq — Decisão"]
+            G1["Groq API  ·  llama-3.3-70b-versatile\n━━━━━━━━━━━━━━━━━━━━━━━━\ntool_choice = auto\nmessages + all_tools\n→ retorna tool_calls OU texto direto"]:::groq
+        end
+
+        subgraph STEP5["⑤ Roteamento de Tool Calls"]
+            direction LR
+            ROUTE{"LLM chamou\nalguma tool?"}:::decision
+            MCP_BRANCH["Tool MCP\n_sanitize_tool_args()\n_run_tool_call()\n→ TOOL_MAP[nome](**args)\n→ retorna resultado JSON"]:::mcp_node
+            SKILL_BRANCH["Skill Tool\n_resolve_skill_by_tool_name()\n→ encontra skill pelo slug\n_run_skill_tool_call(skill, pedido)"]:::skill_node
+            TOOL_RESULT["messages.append(\n  role: tool\n  content: resultado\n  tool_call_id: id\n)"]:::history
+            ROUTE -- "MCP" --> MCP_BRANCH --> TOOL_RESULT
+            ROUTE -- "Skill" --> SKILL_BRANCH --> TOOL_RESULT
+        end
+
+        subgraph STEP6["⑥ 2ª Chamada Groq — Resposta Final"]
+            G2["Groq API  ·  llama-3.3-70b-versatile\n━━━━━━━━━━━━━━━━━━━━━━━━\nSystem prompt mínimo (sem tools listadas)\nmessages_final com todos os resultados\n→ retorna resposta em português"]:::groq
+        end
+
+        subgraph FALLBACK["⑦ Fallback — Erro tool_use_failed"]
+            FB1["_extract_tool_calls_from_text()\n  parseia <function=nome>{...}"]:::fallback
+            FB2["_repair_json()\n  corrige {$chave: valor}\n  remove trailing commas\n  trata single quotes"]:::fallback
+            FB3["Mesmo roteamento:\n  skill vs MCP → TOOL_MAP"]:::fallback
+            FB1 --> FB2 --> FB3
+        end
+
+        STEP1 --> STEP2 --> STEP3 --> STEP4
+        STEP4 -- "tool_calls" --> STEP5
+        STEP5 --> STEP6
+        STEP4 -- "erro 400\ntool_use_failed" --> FALLBACK --> STEP6
+        STEP4 -- "texto direto" --> STEP6
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 4 — AGENTE DE SKILLS (execução de código)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph SKILL_AGENT["  ⚡  AGENTE DE SKILLS  ·  views.py  — execução dinâmica"]
+        direction TB
+
+        subgraph SK_GEN["Geração de Código"]
+            SG1["_generate_skill_code(skill, pedido)\n━━━━━━━━━━━━━━━━━━━━━━━━\n📄 carrega  skill_code_generator.md\ninjeta placeholders:\n  {DATA_CONTEXT}    ← schema + 3 linhas\n  {SKILL_NAME}      ← nome da skill\n  {SKILL_INSTRUCTIONS} ← instruções\n  {EXAMPLE_BLOCK}   ← template opcional\n  {USER_MESSAGE}    ← pedido do usuário"]:::skill_node
+            SG2["Groq API  ·  llama-3.3-70b-versatile\ntemp=0.1  ·  max_tokens=2000\nRetorna código Python PURO\n(sem markdown, sem import)"]:::groq
+            SG1 --> SG2
+        end
+
+        subgraph SK_EXEC["Execução Segura"]
+            SE1["_execute_skill_code(code)\n━━━━━━━━━━━━━━━━━━━━━━━━\nContexto injetado via exec():\n  dados   → dict de DataFrames do _CACHE\n  pd      → pandas\n  np      → numpy\n  plt     → matplotlib\n  json, datetime, re\n━━━━━━━━━━━━━━━━━━━━━━━━\nCaptura:\n  variável resultado → JSON\n  plt figure → base64 PNG"]:::skill_node
+            SE2["Resultado enviado de volta\ncomo role:tool no histórico\n→ LLM formula resposta com os dados"]:::history
+            SE1 --> SE2
+        end
+
+        SG2 --> SE1
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 5 — AGENTE MCP (tools reais de dados)
+    %% ══════════════════════════════════════════════════════════════
+    subgraph MCP_AGENT["  🔧  AGENTE MCP  ·  src/mcp_reclamacao/server.py  ·  FastMCP"]
+        direction TB
+
+        subgraph MCP_CACHE_BOX["Cache em Memória"]
+            MC["_CACHE  dict[caminho → registros]\n_CACHE_FILTRADO  dict[caminho → registros]\n_CACHE_META  ·  _CACHE_FILTRADO_META\n━━━━━━━━━━━━━━━━━━━━━━━━\nPersiste durante a sessão do servidor\nCompartilhado entre todas as tools"]:::cache
+        end
+
+        subgraph MCP_TOOLS_BOX["9 Tools MCP"]
+            direction LR
+            T1["📂 carregar_arquivo\nCSV/XLSX → DataFrame\n→ _CACHE"]:::mcp_node
+            T2["🔍 filtrar_registros\nfiltros JSON (==,!=,contains)\n→ _CACHE_FILTRADO"]:::mcp_node
+            T3["🔤 normalizar_nlp\nlowercase + sem acento\n→ coluna _limpo"]:::mcp_node
+            T4["📝 lematizar_nlp\nspaCy pt_core_news_sm\n→ coluna _lemma"]:::mcp_node
+            T5["🔎 filtrar_por_palavras\nregex join palavras\n→ _CACHE_FILTRADO"]:::mcp_node
+            T6["💾 exportar_dataframe\nCSV → /uploads/\n→ URL download"]:::mcp_node
+            T7["📈 analisar_serie_temporal\nresample D/MS/YS\ncount|sum|mean"]:::mcp_node
+            T8["🖼️ ocr_extrair_texto\nimagem/PDF → texto"]:::mcp_node
+            T9["📋 listar_contexto_sessao\narquivos + colunas + última tool\n→ usado no system prompt"]:::mcp_node
+        end
+
+        MC --> T1 & T2 & T3 & T4 & T5 & T6 & T7 & T8 & T9
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CAMADA 6 — CONFIGURAÇÃO & PROMPTS
+    %% ══════════════════════════════════════════════════════════════
+    subgraph CONFIG["  📋  CONFIGURAÇÃO  ·  apps/chat/agent_config.py"]
+        direction LR
+        AC1["Modelos\nDEFAULT_MODEL\n= llama-3.3-70b-versatile\nMODEL_OPTIONS:\n  versatile\n  instant"]:::config
+        AC2["Prompt Path\nORCHESTRATOR_PROMPT_PATH\n→ src/mcp_reclamacao/prompts/\n  orquestrador_reclamacao.md"]:::config
+        AC3["TOOLS (9 defs)\nCarregado em all_tools\nUso: montar system prompt\ne expor ao LLM como functions"]:::config
+    end
+
+    subgraph PROMPTS["  📄  PROMPTS  ·  src/mcp_reclamacao/prompts/"]
+        direction TB
+        PR1["🎯 orquestrador_reclamacao.md\n━━━━━━━━━━━━━━━━━━━━━━━━\nSistema do agente principal\nPlaceholders injetados em runtime:\n  {MCP_TOOLS}      ← nomes das tools\n  {SKILLS_SECTION} ← skills ativas\nRegras: confirmar antes · português\nnunca inventar tools · usar listar_contexto primeiro"]:::prompt
+        PR2["⚡ skill_code_generator.md\n━━━━━━━━━━━━━━━━━━━━━━━━\nPrompt para geração de código Python\nRestrições: sem import · sem print\nsem plt.show · usar variável resultado\nPlaceholders:\n  {DATA_CONTEXT} {SKILL_NAME}\n  {SKILL_INSTRUCTIONS} {USER_MESSAGE}"]:::prompt
+        PR3["📊 analisador_reclamacao.md\nAuditor regulatório\n(futuro uso)"]:::prompt_dim
+        PR4["🗃️ data_agent_reclamacao.md\nEspecialista em extração/OCR\n(futuro uso)"]:::prompt_dim
+        PR5["🔤 nlp_agent_reclamacao.md\nArquiteto NLP\n(futuro uso)"]:::prompt_dim
+    end
+
+    subgraph STORAGE["  💾  ARMAZENAMENTO"]
+        direction LR
+        SK_JSON["skills/\n  <id>.json\n━━━━━━━━\nid · name · slug\nwhen_to_use\ninstructions\ncode (template)\nactive · timestamps"]:::storage
+        UPLOADS["uploads/\n  arquivo.csv\n  arquivo.xlsx\n━━━━━━━━\nArquivos enviados\npelo usuário +\nexportações MCP"]:::storage
+    end
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  CONEXÕES ENTRE CAMADAS
+    %% ══════════════════════════════════════════════════════════════
+
+    MSG_IN -- "POST /api/chat/" --> EP1
+    SK_FORM -- "POST /api/skills/save/" --> EP5
+    SK_LIST -- "GET /api/skills/" --> EP4
+    UPLOAD_BTN -- "POST /api/upload/" --> EP2
+
+    EP1 --> ORCHESTRATOR
+    EP4 & EP5 & EP6 --> SK_JSON
+    EP2 --> UPLOADS
+
+    STEP1 -- "lê template" --> PR1
+    STEP3 -- "lê skills ativas" --> SK_JSON
+    AC2 -- "aponta para" --> PR1
+    AC3 -- "define" --> STEP3
+
+    SKILL_BRANCH --> SKILL_AGENT
+    SG1 -- "lê template" --> PR2
+    SG2 -- "chama LLM" --> GROQ_ICON(["☁️ Groq API"]):::groq
+    SE1 -- "lê dados de" --> MC
+
+    MCP_BRANCH --> MCP_AGENT
+    T1 -- "lê de" --> UPLOADS
+    T6 -- "exporta para" --> UPLOADS
+
+    STEP4 -- "1ª chamada" --> GROQ_ICON
+    G2 -- "2ª chamada" --> GROQ_ICON
+    GROQ_ICON -- "resposta final" --> MSG_OUT
+
+    CONFIG --> ORCHESTRATOR
+
+    UPLOADS -- "GET /api/download/" --> MSG_OUT
+
+    %% ══════════════════════════════════════════════════════════════
+    %%  ESTILOS
+    %% ══════════════════════════════════════════════════════════════
+    classDef user        fill:#f38ba8,stroke:#f38ba8,color:#1e1e2e,font-weight:bold
+    classDef input       fill:#89b4fa,stroke:#89b4fa,color:#1e1e2e,font-weight:bold
+    classDef output      fill:#a6e3a1,stroke:#a6e3a1,color:#1e1e2e,font-weight:bold
+    classDef skill       fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e,font-weight:bold
+    classDef skill_node  fill:#b4befe,stroke:#cba6f7,color:#1e1e2e
+    classDef sidebar     fill:#45475a,stroke:#6c7086,color:#cdd6f4
+    classDef endpoint    fill:#fab387,stroke:#fab387,color:#1e1e2e,font-weight:bold
+    classDef orchestrator fill:#89dceb,stroke:#89dceb,color:#1e1e2e
+    classDef groq        fill:#f9e2af,stroke:#f9e2af,color:#1e1e2e,font-weight:bold
+    classDef history     fill:#313244,stroke:#6c7086,color:#cdd6f4
+    classDef decision    fill:#fe640b,stroke:#fe640b,color:#1e1e2e,font-weight:bold
+    classDef mcp_node    fill:#94e2d5,stroke:#94e2d5,color:#1e1e2e
+    classDef fallback    fill:#eba0ac,stroke:#f38ba8,color:#1e1e2e
+    classDef cache       fill:#313244,stroke:#89b4fa,color:#cdd6f4
+    classDef config      fill:#a6e3a1,stroke:#a6e3a1,color:#1e1e2e
+    classDef prompt      fill:#cba6f7,stroke:#cba6f7,color:#1e1e2e
+    classDef prompt_dim  fill:#45475a,stroke:#6c7086,color:#bac2de
+    classDef storage     fill:#313244,stroke:#fab387,color:#cdd6f4

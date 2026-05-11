@@ -14,4 +14,7 @@ urlpatterns = [
     path("api/skills/", views.skill_list_api, name="skill_list_api"),
     path("api/skills/save/", views.skill_save_api, name="skill_save_api"),
     path("api/skills/delete/", views.skill_delete_api, name="skill_delete_api"),
+    path("api/sessions/", views.session_list_api, name="session_list_api"),
+    path("api/sessions/detail/", views.session_detail_api, name="session_detail_api"),
+    path("api/sessions/delete/", views.session_delete_api, name="session_delete_api"),
 ]

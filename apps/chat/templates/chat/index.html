@@ -1639,6 +1639,8 @@
           message: text,
           model: getSelectedModel(),
           history: conversationHistory.slice(0, -1),  // sem a última (já incluída)
+          session_id: currentSessionId || '',
+          session_title: chatTitle.textContent || (text || 'Chat').slice(0, 40),
         }),
       });
 
@@ -1704,7 +1706,10 @@
           messagesArea.appendChild(img);
         }
         appendMessage('assistant', data.answer, data.tools_called || [], null, data.exported_file || null);
-        saveSession();
+        if (data.session_id) {
+          currentSessionId = data.session_id;
+        }
+        renderHistory();
       }
     } catch (err) {
       typingEl.remove();
@@ -2093,61 +2098,59 @@
 
   // ── Salvar/Restaurar sessão ────────────────────────────────
   function saveSession() {
-    if (conversationHistory.length === 0) return;
-    const title = chatTitle.textContent;
-    const id = Date.now();
-    currentSessionId = id;
-
-    // Evita duplicar: guarda apenas a última versão desta conversa
-    const stored = JSON.parse(sessionStorage.getItem('mcp_sessions') || '[]');
-    // Remove sessão com mesmo título se existir
-    const filtered = stored.filter(s => s.title !== title);
-    filtered.unshift({ id, title, history: [...conversationHistory] });
-    sessionStorage.setItem('mcp_sessions', JSON.stringify(filtered.slice(0, 20)));
-    renderHistory();
+    // Mantido como no-op: o backend salva automaticamente via chat_api
   }
 
-  function renderHistory() {
-    const stored = JSON.parse(sessionStorage.getItem('mcp_sessions') || '[]');
-    historyList.innerHTML = '';
-    stored.forEach(s => {
-      const item = document.createElement('div');
-      item.className = 'history-item';
-      item.innerHTML = `
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        <span class="history-item-title">${s.title}</span>
-        <button class="history-delete-btn" type="button" title="Excluir chat" aria-label="Excluir chat">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="3 6 5 6 21 6"/>
-            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            <line x1="10" y1="11" x2="10" y2="17"/>
-            <line x1="14" y1="11" x2="14" y2="17"/>
+  async function renderHistory() {
+    try {
+      const res = await fetch('/api/sessions/');
+      const data = await res.json();
+      const stored = data.sessions || [];
+      historyList.innerHTML = '';
+      stored.forEach(s => {
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-        </button>`;
-      item.title = s.title;
+          <span class="history-item-title">${s.title}</span>
+          <button class="history-delete-btn" type="button" title="Excluir chat" aria-label="Excluir chat">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+              <line x1="10" y1="11" x2="10" y2="17"/>
+              <line x1="14" y1="11" x2="14" y2="17"/>
+            </svg>
+          </button>`;
+        item.title = s.title;
 
-      if (currentSessionId === s.id) {
-        item.classList.add('active');
-      }
+        if (currentSessionId === s.id) {
+          item.classList.add('active');
+        }
 
-      const delBtn = item.querySelector('.history-delete-btn');
-      delBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        deleteSession(s.id);
+        const delBtn = item.querySelector('.history-delete-btn');
+        delBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          deleteSession(s.id);
+        });
+
+        item.addEventListener('click', () => restoreSession(s.id, s.title));
+        historyList.appendChild(item);
       });
-
-      item.addEventListener('click', () => restoreSession(s));
-      historyList.appendChild(item);
-    });
+    } catch (e) {
+      // Se API falhar, apenas limpa a lista
+      historyList.innerHTML = '';
+    }
   }
 
-  function deleteSession(sessionId) {
-    const stored = JSON.parse(sessionStorage.getItem('mcp_sessions') || '[]');
-    const next = stored.filter(s => s.id !== sessionId);
-    sessionStorage.setItem('mcp_sessions', JSON.stringify(next));
+  async function deleteSession(sessionId) {
+    await fetch('/api/sessions/delete/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: sessionId }),
+    });
 
     if (currentSessionId === sessionId) {
       conversationHistory = [];
@@ -2160,22 +2163,26 @@
     renderHistory();
   }
 
-  function restoreSession(session) {
-    // Limpa mensagens
-    messagesArea.innerHTML = '';
-    currentSessionId = session.id;
-    conversationHistory = [...session.history];
-    chatTitle.textContent = session.title;
+  async function restoreSession(sessionId, title) {
+    try {
+      const res = await fetch(`/api/sessions/detail/?id=${encodeURIComponent(sessionId)}`);
+      const data = await res.json();
 
-    // Reexibe as mensagens
-    for (let i = 0; i < session.history.length; i++) {
-      const msg = session.history[i];
-      if (msg.role === 'user' || msg.role === 'assistant') {
-        appendMessage(msg.role, msg.content, msg.toolsCalled || []);
+      messagesArea.innerHTML = '';
+      currentSessionId = sessionId;
+      conversationHistory = data.history || [];
+      chatTitle.textContent = title;
+
+      for (const msg of conversationHistory) {
+        if (msg.role === 'user' || msg.role === 'assistant') {
+          appendMessage(msg.role, msg.content, msg.toolsCalled || []);
+        }
       }
-    }
 
-    renderHistory();
+      renderHistory();
+    } catch (e) {
+      appendMessage('assistant', '❌ Erro ao carregar sessão.', []);
+    }
   }
 
   // ── Novo chat ──────────────────────────────────────────────
@@ -2388,6 +2395,9 @@
   function escHtml(str) {
     return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
+
+  // ── Inicialização ──────────────────────────────────────────
+  renderHistory();
 </script>
 
 </body>
