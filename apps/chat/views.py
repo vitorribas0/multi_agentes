@@ -523,13 +523,19 @@ def _run_skill_tool_call(skill: dict, pedido: str) -> tuple[str, str | None, dic
     logger = logging.getLogger(__name__)
 
     generated_code = _generate_skill_code(skill, pedido)
-    if not generated_code:
-        msg = "Não foi possível gerar o código para esta skill."
-        logger.warning("_run_skill_tool_call: código vazio para skill '%s'", skill["name"])
+    if not generated_code or generated_code.startswith("__ERROR__:"):
+        reason = generated_code.replace("__ERROR__:", "") if generated_code else "resposta vazia do gerador"
+        msg = f"Erro ao gerar código da skill: {reason}"
+        logger.warning("_run_skill_tool_call: falha na skill '%s': %s", skill["name"], reason)
         return msg, None, {
             "name": skill["name"], "slug": skill.get("slug", ""),
             "code": "", "output": msg,
         }
+
+    # Garante que o código atribui `resultado` — se não, injeta como fallback
+    if "resultado" not in generated_code:
+        logger.warning("_run_skill_tool_call: código gerado sem 'resultado', adicionando wrap")
+        generated_code = generated_code + "\nresultado = str(locals().get('resultado', 'Executado com sucesso.'))"
 
     output_text, output_img = _execute_skill_code(generated_code)
     record = {
@@ -633,8 +639,29 @@ def _generate_skill_code(skill: dict, user_message: str) -> str:
             ).strip()
         return code
     except Exception as exc:
+        exc_str = str(exc)
+        # Fallback para modelo menor em caso de rate limit
+        if "rate_limit" in exc_str or "429" in exc_str:
+            logger.warning("_generate_skill_code: rate limit no modelo principal, tentando fallback")
+            try:
+                resp = _client.chat.completions.create(
+                    model="llama-3.1-8b-instant",
+                    messages=[{"role": "user", "content": full_prompt}],
+                    temperature=0.1,
+                    max_tokens=2000,
+                )
+                code = resp.choices[0].message.content.strip()
+                if "```" in code:
+                    code = "\n".join(
+                        line for line in code.splitlines()
+                        if not line.strip().startswith("```")
+                    ).strip()
+                return code
+            except Exception as exc2:
+                logger.warning("_generate_skill_code fallback error: %s", exc2)
+                return f"__ERROR__:{exc2}"
         logger.warning("_generate_skill_code error: %s", exc)
-        return ""
+        return f"__ERROR__:{exc}"
 
 
 def _execute_skill_code(code: str) -> tuple[str, str | None]:
@@ -673,7 +700,8 @@ def _execute_skill_code(code: str) -> tuple[str, str | None]:
 
     # Libs comuns disponíveis no contexto
     for alias, mod in [("pd", "pandas"), ("np", "numpy"), ("plt", "matplotlib.pyplot"),
-                       ("json", "json"), ("datetime", "datetime"), ("re", "re")]:
+                       ("json", "json"), ("datetime", "datetime"), ("re", "re"),
+                       ("requests", "requests")]:
         try:
             ctx[alias] = importlib.import_module(mod)
         except ImportError:
@@ -951,17 +979,37 @@ def chat_api(request):
                 })
 
             # 2ª chamada: formula a resposta com base nos resultados das tools/skills.
-            # System prompt minimalista: evita que o modelo liste tools ou adicione meta-comentários.
-            messages_final = [
-                {
-                    "role": "system",
-                    "content": (
-                        "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
-                        "formule uma resposta direta, clara e em português para o usuário. "
-                        "NÃO mencione nomes de tools, funções internas ou restrições do sistema."
-                    ),
-                }
-            ] + [m for m in messages if m["role"] != "system"]
+            # Quando apenas skills foram executadas, usa prompt simplificado com resultados diretos
+            # para evitar que modelos menores falhem ao interpretar o formato role:tool.
+            only_skills = bool(skill_executions) and len(skill_executions) == len(tools_called)
+            if only_skills:
+                skill_results_text = "\n".join(
+                    f"- {se['name']}: {se.get('output', '(sem saída)')}"
+                    for se in skill_executions
+                )
+                messages_final = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Você é um assistente útil. Responda sempre em português.\n\n"
+                            f"As seguintes skills foram executadas e retornaram:\n{skill_results_text}\n\n"
+                            "Use esses resultados para responder diretamente ao usuário de forma clara e objetiva. "
+                            "Não mencione nomes técnicos de tools ou funções internas."
+                        ),
+                    },
+                    {"role": "user", "content": user_message},
+                ]
+            else:
+                messages_final = [
+                    {
+                        "role": "system",
+                        "content": (
+                            "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
+                            "formule uma resposta direta, clara e em português para o usuário. "
+                            "NÃO mencione nomes de tools, funções internas ou restrições do sistema."
+                        ),
+                    }
+                ] + [m for m in messages if m["role"] != "system"]
             response_final = _client.chat.completions.create(
                 model=selected_model,
                 messages=messages_final,

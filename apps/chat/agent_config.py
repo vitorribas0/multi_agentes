@@ -4,7 +4,7 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 # Modelo padrão usado pelo agente principal
-DEFAULT_MODEL = "llama-3.3-70b-versatile"
+DEFAULT_MODEL = "llama-3.1-8b-instant"
 DEFAULT_PROVIDER = "Groq"
 
 # Modelos disponíveis para seleção na UI de configurações

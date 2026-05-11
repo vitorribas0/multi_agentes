@@ -29,32 +29,56 @@ O código será executado em um ambiente Python com as seguintes variáveis **j�
 1. **Os DataFrames já estão em memória** — acesse com `dados["nome_do_arquivo"]`
 2. **NUNCA** use `pd.read_csv()`, `pd.read_excel()`, `open()` ou qualquer leitura de arquivo
 3. **NUNCA** use `plt.show()` — os gráficos são capturados automaticamente pelo sistema
-4. **NUNCA** use `import` — todas as libs já estão disponíveis no contexto
-5. **NUNCA** use `print()` — use APENAS a variável `resultado` para saída de texto
-6. Para **saída de texto**: atribua uma string à variável `resultado`
-7. Para **saída visual**: crie gráficos com `plt` — serão capturados automaticamente
-8. Responda **SOMENTE com o código Python** — sem ```python, sem comentários desnecessários, sem explicações
-9. O código deve sempre conter as importações necessárias, mesmo que as libs já estejam disponíveis — isso é para garantir que o código seja funcional e independente
+4. **NUNCA** use `print()` — use APENAS a variável `resultado` para saída de texto
+5. **OBRIGATÓRIO**: a última linha (ou uma das últimas) DEVE atribuir uma string à variável `resultado`
+6. Para **saída visual**: crie gráficos com `plt` — serão capturados automaticamente
+7. Responda **SOMENTE com o código Python** — sem ```python, sem comentários, sem explicações
+8. **Todas as libs da tabela acima já estão disponíveis** — não declare `import` para elas. Para `requests`, você **pode** usar `import requests` pois está disponível no ambiente.
+
+---
+
+## EXEMPLOS CORRETOS
+
+**Exemplo 1 — data e hora atual:**
+```
+agora = dt.now()
+resultado = f"Data: {agora.strftime('%d/%m/%Y')} | Hora: {agora.strftime('%H:%M:%S')}"
+```
+
+**Exemplo 2 — consulta HTTP:**
+```
+import requests
+resp = requests.get("https://api.exemplo.com/dados").json()
+valor = resp.get("preco", "N/A")
+resultado = f"Preço atual: R$ {valor}"
+```
+
+**Exemplo 3 — análise de dados:**
+```
+df = dados["vendas"]
+total = df["valor"].sum()
+resultado = f"Total de vendas: R$ {total:,.2f}"
+```
 
 ---
 
 ## ESTRUTURA ESPERADA DO CÓDIGO
 
 ```
-# 1. Selecionar o DataFrame correto
-df = dados["nome_do_arquivo"]
-
-# 2. Processar / analisar os dados
+# 1. [Opcional] Buscar dados externos ou calcular
 ...
 
-# 3. [Se necessário] Gerar gráfico
+# 2. [Opcional] Processar dados do cache
+df = dados["nome_do_arquivo"]
+...
+
+# 3. [Opcional] Gerar gráfico
 plt.figure(figsize=(10, 5))
 ...
-plt.title("...")
 plt.tight_layout()
 
-# 4. Definir resultado textual
-resultado = "..."
+# 4. OBRIGATÓRIO — definir resultado como string
+resultado = "texto descritivo com o resultado"
 ```
 
 ---
