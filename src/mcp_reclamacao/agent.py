@@ -13,6 +13,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from groq import Groq
+# from openai import OpenAI  # COMENTADO - trocar de volta se necessário
 
 from server import carregar_arquivo, filtrar_registros, exportar_dataframe, get_registros_cache
 
@@ -24,6 +25,7 @@ load_dotenv(Path(__file__).parents[2] / ".env")
 
 _PROMPTS_DIR = Path(__file__).parent / "prompts"
 _MODEL = "llama-3.3-70b-versatile"
+# _MODEL = "gpt-4o"  # COMENTADO - trocar de volta se necessário
 _MAX_ITERATIONS = 20
 
 # ---------------------------------------------------------------------------
@@ -135,6 +137,7 @@ class AgenteAuditoria:
 
     def __init__(self, verbose: bool = True) -> None:
         self._client = Groq(api_key=os.environ["GROQ_API_KEY"])
+        # self._client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])  # COMENTADO - trocar de volta se necessário
         self._system_prompt = self._carregar_prompt("auditoria.md")
         self._verbose = verbose
 

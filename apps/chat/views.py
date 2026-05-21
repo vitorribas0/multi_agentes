@@ -20,11 +20,13 @@ if _mcp_path not in sys.path:
     sys.path.insert(0, _mcp_path)
 
 from groq import Groq
+# from openai import OpenAI  # COMENTADO - trocar de volta se necessário
 from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
 from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PROMPT_PATH, TOOLS
 from .models import ChatSession, Message, Skill
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
+# _client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))  # COMENTADO - trocar de volta se necessário
 
 TOOL_MAP = {
     "carregar_arquivo": carregar_arquivo,
@@ -406,6 +408,7 @@ def _match_skills(user_message: str) -> tuple[list[dict], str]:
         try:
             resp = _client.chat.completions.create(
                 model="llama-3.1-8b-instant",
+                # model="gpt-4o-mini",  # COMENTADO - trocar de volta se necessário
                 messages=[
                     {
                         "role": "system",
@@ -626,6 +629,7 @@ def _generate_skill_code(skill: dict, user_message: str) -> str:
     try:
         resp = _client.chat.completions.create(
             model="llama-3.3-70b-versatile",
+            # model="gpt-4o",  # COMENTADO - trocar de volta se necessário
             messages=[{"role": "user", "content": full_prompt}],
             temperature=0.1,
             max_tokens=2000,
@@ -646,6 +650,7 @@ def _generate_skill_code(skill: dict, user_message: str) -> str:
             try:
                 resp = _client.chat.completions.create(
                     model="llama-3.1-8b-instant",
+                    # model="gpt-4o-mini",  # COMENTADO - trocar de volta se necessário
                     messages=[{"role": "user", "content": full_prompt}],
                     temperature=0.1,
                     max_tokens=2000,
@@ -1006,7 +1011,11 @@ def chat_api(request):
                         "content": (
                             "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
                             "formule uma resposta direta, clara e em português para o usuário. "
-                            "NÃO mencione nomes de tools, funções internas ou restrições do sistema."
+                            "NÃO mencione nomes de tools, funções internas ou restrições do sistema.\n\n"
+                            "IMPORTANTE - Extração de Texto (OCR):\n"
+                            "Se uma ferramenta extraiu texto de uma imagem (JSON com 'texto_extraido'), "
+                            "você DEVE formatar e exibir esse texto de forma clara e legível para o usuário. "
+                            "Não mostre o JSON bruto. Reproduza o texto extraído em um formato fácil de ler."
                         ),
                     }
                 ] + [m for m in messages if m["role"] != "system"]

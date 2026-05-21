@@ -13,6 +13,16 @@ MODEL_OPTIONS = [
     "llama-3.1-8b-instant",
 ]
 
+# ===== OPENAI (comentado - trocar de volta se necessário) =====
+# DEFAULT_MODEL = "gpt-4o-mini"
+# DEFAULT_PROVIDER = "OpenAI"
+# MODEL_OPTIONS = [
+#     "gpt-4o",
+#     "gpt-4o-mini",
+#     "gpt-4-turbo",
+# ]
+# ============================================================
+
 # System prompt carregado do arquivo .md (sem hardcode)
 # O conteúdo é lido em views.py por _build_dynamic_system_prompt()
 import pathlib

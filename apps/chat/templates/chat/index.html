@@ -389,12 +389,29 @@
 
     /* Mensagens */
     .message-row {
-      max-width: 760px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 6px 24px;
+      padding: 8px 24px;
       display: flex;
-      gap: 14px;
+      gap: 12px;
       animation: fadeSlideIn 0.2s ease forwards;
+      align-items: flex-end;
+    }
+
+    .message-row.user {
+      justify-content: flex-end;
+    }
+
+    .message-row.user .msg-content-wrap {
+      order: 1;
+    }
+
+    .message-row.user .msg-avatar {
+      order: 2;
+    }
+
+    .message-row.assistant {
+      justify-content: flex-start;
     }
 
     @keyframes fadeSlideIn {
@@ -403,38 +420,58 @@
     }
 
     .msg-avatar {
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 14px;
+      font-size: 16px;
       flex-shrink: 0;
-      margin-top: 2px;
+      margin-top: 0;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     }
 
     .msg-avatar.user {
-      background: #5436DA;
-      font-size: 13px;
-      font-weight: 600;
+      background: linear-gradient(135deg, #5436DA, #7c3aed);
       color: #fff;
+      font-size: 14px;
     }
 
     .msg-avatar.assistant {
       background: linear-gradient(135deg, var(--accent), #0d6efd);
+      color: #fff;
     }
 
     .msg-content-wrap {
       flex: 1;
       min-width: 0;
+      background: var(--bg-card);
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .message-row.user .msg-content-wrap {
+      background: linear-gradient(135deg, #5436DA, #7c3aed);
+      border: none;
+      max-width: 65%;
+    }
+
+    .message-row.user .msg-author {
+      display: none;
     }
 
     .msg-author {
       font-size: 13px;
       font-weight: 600;
       color: var(--text-primary);
-      margin-bottom: 4px;
+      margin-bottom: 8px;
+    }
+
+    .message-row.user .msg-text {
+      color: #ffffff;
     }
 
     .msg-text {
@@ -973,10 +1010,11 @@
       display: block;
       max-width: 320px;
       max-height: 240px;
-      border-radius: 10px;
-      margin-bottom: 8px;
-      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 10px;
+      border: none;
       object-fit: contain;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     .download-btn {
@@ -1067,7 +1105,7 @@
       <span class="chat-header-title" id="chat-title">Novo chat</span>
       <div class="model-badge">
         <span class="dot"></span>
-        <span id="active-model-label">llama-3.3-70b-versatile</span>
+        <span id="active-model-label">gpt-4o-mini</span>
       </div>
     </header>
 
@@ -1552,7 +1590,7 @@
   let pendingFileOrigName = null;
 
   function getSelectedModel() {
-    return localStorage.getItem('mcp_selected_model') || 'llama-3.3-70b-versatile';
+    return localStorage.getItem('mcp_selected_model') || 'gpt-4o-mini';
   }
 
   function refreshModelBadge() {
@@ -1676,12 +1714,16 @@
           pendingImageName    = data.name;
           imgPreviewName.textContent = `🖼️ ${data.name}`;
           updateSendBtn();
-          // Sugere automaticamente invocar OCR se o campo estiver vazio
-          if (!msgInput.value.trim()) {
+          // Sugere automaticamente invocar OCR
+          const currentText = msgInput.value.trim();
+          if (!currentText) {
             msgInput.value = `Extraia o texto da imagem: ${data.path}`;
-            msgInput.style.height = 'auto';
-            msgInput.style.height = Math.min(msgInput.scrollHeight, 200) + 'px';
+          } else {
+            // Se houver texto, adiciona uma quebra de linha e a sugestão de OCR
+            msgInput.value = currentText + `\n\nExtraía o texto da imagem: ${data.path}`;
           }
+          msgInput.style.height = 'auto';
+          msgInput.style.height = Math.min(msgInput.scrollHeight, 200) + 'px';
         })
         .catch(() => { alert('Erro ao enviar a imagem.'); clearFile(); });
     } else {
@@ -2088,9 +2130,8 @@
 
   function appendMessage(role, content, toolsCalled = [], imageDataUrl = null, exportedFile = null) {
     const row = document.createElement('div');
-    row.className = 'message-row';
-
     const isUser = role === 'user';
+    row.className = 'message-row ' + (isUser ? 'user' : 'assistant');
 
     // Avatar
     const avatar = document.createElement('div');
