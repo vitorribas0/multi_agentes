@@ -1,4 +1,5 @@
 import json
+import logging
 import mimetypes
 import os
 import re
@@ -24,6 +25,8 @@ from groq import Groq
 from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
 from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PROMPT_PATH, TOOLS
 from .models import ChatSession, Message, Skill
+
+logger = logging.getLogger(__name__)
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 # _client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))  # COMENTADO - trocar de volta se necessário
@@ -222,6 +225,29 @@ def _extract_failed_tool_from_error(error_text: str) -> tuple[str, dict] | None:
             return m.group(1), parsed
 
     return None
+
+
+def _extract_ocr_text_from_result(tool_name: str, resultado: str) -> str:
+    """Extrai o texto extraído do JSON retornado pela tool OCR.
+    
+    Se for ocr_extrair_texto com JSON contendo 'texto_extraido', retorna apenas o texto.
+    Caso contrário, retorna o resultado como-is.
+    """
+    try:
+        if tool_name != "ocr_extrair_texto":
+            return str(resultado)
+        
+        resultado_str = str(resultado)
+        data = json.loads(resultado_str)
+        if data.get("sucesso") and "texto_extraido" in data:
+            texto = data["texto_extraido"].strip()
+            return texto
+    except (json.JSONDecodeError, AttributeError, TypeError, ValueError):
+        pass
+    except Exception:
+        pass
+    
+    return str(resultado)
 
 
 def _extract_tool_calls_from_text(error_text: str) -> list[tuple[str, dict]]:
@@ -864,6 +890,7 @@ def chat_api(request):
 
         tools_called = []
         exported_file = None  # preenchido se exportar_dataframe for chamado
+        ocr_text_extracted = None  # armazena texto extraído por OCR
         msg = None
 
         # 1ª chamada: o modelo decide se usa tool/skill ou responde direto
@@ -934,6 +961,7 @@ def chat_api(request):
             )
 
         if msg.tool_calls:
+            logger.info(f"[api_chat] Detectados {len(msg.tool_calls)} tool_calls")
             # Constrói dict limpo do assistant — model_dump() inclui campos extras do SDK
             # que o Groq rejeita ou usa de forma errada na 2ª chamada.
             messages.append({
@@ -977,11 +1005,17 @@ def chat_api(request):
                 if exported_file_delta:
                     exported_file = exported_file_delta
                 tools_called.append({"tool": nome, "args": args, "result": resultado})
+                # Extrai texto extraído do JSON de OCR para exibição clara ao modelo
+                content_para_modelo = _extract_ocr_text_from_result(nome, resultado)
                 messages.append({
                     "role": "tool",
                     "tool_call_id": tc.id,
-                    "content": str(resultado),
+                    "content": content_para_modelo,
                 })
+                
+                # Armazena texto extraído de OCR
+                if nome == "ocr_extrair_texto" and content_para_modelo:
+                    ocr_text_extracted = content_para_modelo
 
             # 2ª chamada: formula a resposta com base nos resultados das tools/skills.
             # Quando apenas skills foram executadas, usa prompt simplificado com resultados diretos
@@ -1005,25 +1039,30 @@ def chat_api(request):
                     {"role": "user", "content": user_message},
                 ]
             else:
+                system_content = (
+                    "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
+                    "formule uma resposta direta, clara e em português para o usuário. "
+                    "NÃO mencione nomes de tools, funções internas ou restrições do sistema."
+                )
+                
+                # Se OCR foi executada, adiciona instrução para mostrar o texto
+                if ocr_text_extracted:
+                    system_content += (
+                        f"\n\n[IMPORTANTE] Você extraiu o seguinte texto de uma imagem:\n"
+                        f"{ocr_text_extracted}\n\n"
+                        f"RESPONDA MOSTRANDO ESTE TEXTO CLARAMENTE para o usuário."
+                    )
+                
                 messages_final = [
-                    {
-                        "role": "system",
-                        "content": (
-                            "Você é um assistente útil. Com base nos resultados das ferramentas já executadas, "
-                            "formule uma resposta direta, clara e em português para o usuário. "
-                            "NÃO mencione nomes de tools, funções internas ou restrições do sistema.\n\n"
-                            "IMPORTANTE - Extração de Texto (OCR):\n"
-                            "Se uma ferramenta extraiu texto de uma imagem (JSON com 'texto_extraido'), "
-                            "você DEVE formatar e exibir esse texto de forma clara e legível para o usuário. "
-                            "Não mostre o JSON bruto. Reproduza o texto extraído em um formato fácil de ler."
-                        ),
-                    }
+                    {"role": "system", "content": system_content}
                 ] + [m for m in messages if m["role"] != "system"]
+            logger.info(f"[api_chat] Chamando modelo com {len(messages_final)} mensagens. Último role: {messages_final[-1]['role'] if messages_final else 'N/A'}")
             response_final = _client.chat.completions.create(
                 model=selected_model,
                 messages=messages_final,
             )
             answer = response_final.choices[0].message.content
+            logger.info(f"[2ª chamada após tools] Resposta gerada com sucesso. Length: {len(answer) if answer else 0}")
         else:
             # Fallback: alguns modelos devolvem chamada de tool em texto em vez de tool_call.
             parsed_inline_calls = _extract_tool_calls_from_text(msg.content or "")
@@ -1048,7 +1087,12 @@ def chat_api(request):
                     )
 
                 nome = executed[0][0]
-                resultado = "\n".join(f"[{n}] {r}" for n, r in executed)
+                # Extrai texto extraído de OCR para cada resultado
+                resultado_parts = []
+                for n, r in executed:
+                    content = _extract_ocr_text_from_result(n, r)
+                    resultado_parts.append(f"[{n}] {content}")
+                resultado = "\n".join(resultado_parts)
 
                 messages_inline = messages + [
                     {
@@ -1065,6 +1109,7 @@ def chat_api(request):
                     messages=messages_inline,
                 )
                 answer = response_final.choices[0].message.content
+                logger.info(f"[api_chat] Fallback inline: resposta gerada. Length: {len(answer) if answer else 0}")
             else:
                 # Fallback adicional: modelos às vezes "imprimem" o histórico [tool:...] args={...}
                 parsed_hist_calls = _extract_history_style_tool_calls(msg.content or "")
@@ -1082,7 +1127,12 @@ def chat_api(request):
 
                     if executed:
                         nome = executed[0][0]
-                        resultado = "\n".join(f"[{n}] {r}" for n, r in executed)
+                        # Extrai texto extraído de OCR para cada resultado
+                        resultado_parts = []
+                        for n, r in executed:
+                            content = _extract_ocr_text_from_result(n, r)
+                            resultado_parts.append(f"[{n}] {content}")
+                        resultado = "\n".join(resultado_parts)
                         messages_hist = messages + [
                             {
                                 "role": "assistant",
@@ -1098,11 +1148,13 @@ def chat_api(request):
                             messages=messages_hist,
                         )
                         answer = response_final.choices[0].message.content
+                        logger.info(f"[api_chat] Fallback history: resposta gerada. Length: {len(answer) if answer else 0}")
                     else:
                         answer = msg.content
                 else:
                     answer = msg.content
 
+        logger.info(f"[api_chat] Retornando resposta. tools_called={len(tools_called)}, answer_len={len(answer) if answer else 0}")
         return _chat_save_and_respond(
             session_id, session_title, selected_model,
             user_message, answer, tools_called, exported_file,
@@ -1110,6 +1162,8 @@ def chat_api(request):
         )
 
     except Exception as exc:
+        import traceback
+        logger.error(f"[api_chat] Erro não tratado: {exc}\n{traceback.format_exc()}")
         return JsonResponse({"error": str(exc)}, status=500)
 
 
