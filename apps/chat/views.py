@@ -22,7 +22,7 @@ if _mcp_path not in sys.path:
 
 from groq import Groq
 # from openai import OpenAI  # COMENTADO - trocar de volta se necessário
-from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto
+from server import analisar_serie_temporal, carregar_arquivo, exportar_dataframe, filtrar_por_palavras, filtrar_registros, lematizar_nlp, listar_contexto_sessao, normalizar_nlp, ocr_extrair_texto, agrupar_registros
 from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PROMPT_PATH, TOOLS
 from .models import ChatSession, Message, Skill
 
@@ -41,7 +41,29 @@ TOOL_MAP = {
     "analisar_serie_temporal": analisar_serie_temporal,
     "ocr_extrair_texto": ocr_extrair_texto,
     "listar_contexto_sessao": listar_contexto_sessao,
+    "agrupar_registros": agrupar_registros,
 }
+
+
+def _formatar_resultado_tool(nome_tool: str, resultado: str) -> dict:
+    """Formata resultados de tools para exibição mais amigável."""
+    try:
+        if not isinstance(resultado, str):
+            return {"resultado": resultado, "formatado": False}
+
+        dados = json.loads(resultado)
+
+        # Formatar especialmente agrupamentos
+        if nome_tool == "agrupar_registros" and dados.get("sucesso"):
+            return {
+                "resultado": dados,
+                "formatado": True,
+                "resumo_apresentacao": dados.get("resumo_legivel", "")
+            }
+
+        return {"resultado": dados, "formatado": False}
+    except (json.JSONDecodeError, Exception):
+        return {"resultado": resultado, "formatado": False}
 
 
 def _tool_flow_summary(tool_name: str) -> list[str]:

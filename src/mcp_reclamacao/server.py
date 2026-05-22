@@ -578,13 +578,26 @@ def agrupar_registros(
     _CACHE_FILTRADO[path_real] = resultado.to_dict(orient="records")
     _registrar_meta(path_real, "agrupar_registros", list(resultado.columns), filtrado=True)
 
+    # Preparar resumo legível para apresentação
+    resumo_itens = []
+    for idx, row in resultado.iterrows():
+        if idx >= 10:  # Mostrar apenas top 10
+            break
+        item_str = " | ".join([f"{col}: {row[col]}" for col in resultado.columns])
+        resumo_itens.append(item_str)
+
+    resumo_legivel = "\n".join(resumo_itens)
+    if len(resultado) > 10:
+        resumo_legivel += f"\n... e mais {len(resultado) - 10} grupos"
+
     # Montar resposta
     resposta = {
         "sucesso": True,
         "total_grupos": len(resultado),
         "metricas_calculadas": metricas,
-        "dados": resultado.to_dict(orient="records")[:20],  # Preview dos 20 primeiros grupos
-        "resumo": f"Agrupamento concluído: {len(resultado)} grupos encontrados"
+        "dados": resultado.to_dict(orient="records")[:20],
+        "resumo": f"Agrupamento concluído: {len(resultado)} grupos encontrados",
+        "resumo_legivel": resumo_legivel,
     }
 
     if len(colunas_agrupamento) == 1:
