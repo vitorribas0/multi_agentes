@@ -453,16 +453,149 @@ def analisar_serie_temporal(
     )
 
 
-    return json.dumps(
-        {
-            "total_original": total_original,
-            "total_filtrado": len(df),
-            "colunas": list(df.columns),
-            "preview_3_linhas": df.head(3).to_dict(orient="records"),
-        },
-        ensure_ascii=False,
-        default=str,
+@mcp.tool(
+    description=(
+        "Agrupa registros por uma ou mais colunas e calcula estatísticas. "
+        "Suporta: count, sum, mean, median, std, min, max, p25, p75, p90, p95, p99. "
+        "Resultado fica em cache para posterior exportação."
     )
+)
+def agrupar_registros(
+    caminho: str,
+    colunas_agrupamento: list[str] | str,
+    metricas: list[str] = None,
+    coluna_valor: str | None = None,
+    lidar_nulos: str = "drop",
+    usar_cache_filtrado: bool = False,
+) -> str:
+    """Agrupa dados por dimensões categóricas com múltiplas métricas."""
+    import pandas as pd
+
+    # Normalizar input
+    if isinstance(colunas_agrupamento, str):
+        colunas_agrupamento = [colunas_agrupamento]
+
+    if metricas is None:
+        metricas = ["count", "mean"] if coluna_valor else ["count"]
+
+    # Recupera dados
+    dados, path_real = _get_from_cache(caminho, usar_cache_filtrado)
+    if dados is None:
+        return json.dumps({"erro": f"Dados não encontrados para: {caminho}"}, ensure_ascii=False)
+
+    df = pd.DataFrame(dados)
+
+    # Validações
+    if len(colunas_agrupamento) > 3:
+        return json.dumps({"erro": "Máximo 3 colunas para agrupamento"})
+
+    # Resolver colunas de agrupamento
+    cols_reais = []
+    for col in colunas_agrupamento:
+        col_real, sugestoes = _resolver_coluna(df, col)
+        if not col_real:
+            return json.dumps({
+                "erro": f"Coluna '{col}' não encontrada",
+                "sugestoes": sugestoes,
+                "colunas_disponiveis": list(df.columns)
+            }, ensure_ascii=False)
+        cols_reais.append(col_real)
+
+    # Resolver coluna de valor se necessário
+    col_valor_real = None
+    if coluna_valor:
+        col_valor_real, sugestoes = _resolver_coluna(df, coluna_valor)
+        if not col_valor_real:
+            return json.dumps({
+                "erro": f"Coluna de valor '{coluna_valor}' não encontrada",
+                "sugestoes": sugestoes
+            }, ensure_ascii=False)
+        # Validar que é numérica
+        df[col_valor_real] = pd.to_numeric(df[col_valor_real], errors="coerce")
+
+    # Validar que métricas com valor têm coluna_valor
+    metricas_com_valor = {"sum", "mean", "median", "std", "min", "max"} | {m for m in metricas if m.startswith("p")}
+    if any(m in metricas for m in metricas_com_valor) and not col_valor_real:
+        return json.dumps({
+            "erro": f"Métricas {list(metricas_com_valor)} requerem 'coluna_valor' numérica"
+        }, ensure_ascii=False)
+
+    # Tratar NaN
+    df_work = df.copy()
+    removidas = 0
+
+    if lidar_nulos == "drop":
+        colunas_check = cols_reais + ([col_valor_real] if col_valor_real else [])
+        removidas = len(df_work) - len(df_work.dropna(subset=colunas_check))
+        df_work = df_work.dropna(subset=colunas_check)
+    elif lidar_nulos == "fill":
+        for col in cols_reais + ([col_valor_real] if col_valor_real else []):
+            if df_work[col].dtype == 'object':
+                df_work[col] = df_work[col].fillna("Vazio")
+            else:
+                df_work[col] = df_work[col].fillna(0)
+    elif lidar_nulos == "group":
+        for col in cols_reais:
+            if df_work[col].dtype == 'object':
+                df_work[col] = df_work[col].fillna("(Vazio)")
+
+    # Executar agrupamento
+    try:
+        # Preparar dicionário de agregação
+        agg_dict = {}
+
+        for metrica in metricas:
+            if metrica == "count":
+                pass
+            elif metrica.startswith("p") and metrica[1:].isdigit():
+                percentil = int(metrica[1:]) / 100.0
+                agg_dict[metrica] = (col_valor_real, lambda x, p=percentil: x.quantile(p))
+            elif metrica in ["mean", "sum", "std", "min", "max", "median"]:
+                agg_dict[metrica] = (col_valor_real, metrica)
+
+        # Executar agrupamento
+        if agg_dict:
+            # Há agregações além/ou incluindo count
+            resultado = df_work.groupby(cols_reais, as_index=False).agg(**agg_dict)
+            if "count" in metricas:
+                resultado["count"] = df_work.groupby(cols_reais).size().values
+        else:
+            # Apenas count
+            resultado = df_work.groupby(cols_reais).size().reset_index(name="count")
+
+        # Formatar resultado
+        resultado = resultado.fillna(0)
+
+        # Arredondar apenas colunas numéricas
+        for col in resultado.columns:
+            if resultado[col].dtype in ['float64', 'float32']:
+                resultado[col] = resultado[col].round(4)
+
+    except Exception as e:
+        return json.dumps({"erro": f"Erro ao agrupar: {str(e)}"}, ensure_ascii=False)
+
+    # Armazenar em cache
+    _CACHE_FILTRADO[path_real] = resultado.to_dict(orient="records")
+    _registrar_meta(path_real, "agrupar_registros", list(resultado.columns), filtrado=True)
+
+    # Montar resposta
+    resposta = {
+        "sucesso": True,
+        "total_grupos": len(resultado),
+        "metricas_calculadas": metricas,
+        "dados": resultado.to_dict(orient="records")[:20],  # Preview dos 20 primeiros grupos
+        "resumo": f"Agrupamento concluído: {len(resultado)} grupos encontrados"
+    }
+
+    if len(colunas_agrupamento) == 1:
+        resposta["coluna_agrupamento"] = cols_reais[0]
+    else:
+        resposta["colunas_agrupamento"] = cols_reais
+
+    if removidas > 0:
+        resposta["aviso"] = f"{removidas} linhas com NaN foram removidas"
+
+    return json.dumps(resposta, ensure_ascii=False, default=str)
 
 
 @mcp.tool(

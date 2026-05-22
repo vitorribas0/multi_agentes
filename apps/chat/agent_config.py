@@ -221,6 +221,47 @@ TOOLS = [
             },
         },
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "agrupar_registros",
+            "description": (
+                "Agrupa registros por uma ou mais colunas categóricas e calcula métricas estatísticas. "
+                "Suporta média, mediana, contagem, soma, desvio padrão, min/max e percentis (p25, p75, p90, p95, p99). "
+                "Resultado fica em cache e pode ser exportado. "
+                "Use para análises tipo: 'quantas reclamações por status?', 'valor médio por categoria?'"
+            ),
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "caminho": {"type": "string", "description": "Caminho do arquivo já carregado"},
+                    "colunas_agrupamento": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Uma ou mais colunas para agrupar (máx 3)"
+                    },
+                    "metricas": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Métricas: count, sum, mean, median, std, min, max, p25, p75, p90, p95, p99",
+                    },
+                    "coluna_valor": {
+                        "type": "string",
+                        "description": "Coluna numérica para calcular sum, mean, std, etc (obrigatória para essas métricas)"
+                    },
+                    "lidar_nulos": {
+                        "type": "string",
+                        "description": "drop (remove linhas com NaN - padrão), fill (substitui por 0/'Vazio'), group (cria grupo '(Vazio)')",
+                    },
+                    "usar_cache_filtrado": {
+                        "type": "boolean",
+                        "description": "Se true, agrupa dados filtrados; se false, usa dados originais",
+                    },
+                },
+                "required": ["caminho", "colunas_agrupamento"],
+            },
+        },
+    },
 ]
 
 # Metadados dos agentes (usado na tela de configurações)
