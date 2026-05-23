@@ -4,7 +4,7 @@
     "orquestrador": {
       "name": "Orquestrador",
       "provider": "openai",
-      "model": "gpt-4o-mini",
+      "model": "gpt-4o",
       "prompt_file": "orquestrador_reclamacao.md",
       "tools": [
         "carregar_arquivo",
@@ -22,7 +22,7 @@
     "data_agent": {
       "name": "Data Agent",
       "provider": "openai",
-      "model": "gpt-4o-mini",
+      "model": "gpt-4o",
       "prompt_file": "data_agent_reclamacao.md",
       "tools": [
         "carregar_arquivo",
@@ -32,7 +32,7 @@
     "nlp_agent": {
       "name": "NLP Agent",
       "provider": "openai",
-      "model": "gpt-4o-mini",
+      "model": "gpt-4o",
       "prompt_file": "nlp_agent_reclamacao.md",
       "tools": [
         "normalizar_nlp",
@@ -43,7 +43,7 @@
     "auditoria_lotes": {
       "name": "Auditoria em lotes",
       "provider": "openai",
-      "model": "gpt-4o-mini",
+      "model": "gpt-4o",
       "prompt_file": "analisador_reclamacao.md",
       "tools": [
         "carregar_arquivo",
