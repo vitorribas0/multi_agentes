@@ -419,9 +419,21 @@ def filtrar_registros(caminho: str, filtros_json: str) -> str:
     total_original = len(df)
 
     for f in filtros:
-        coluna = f.get("coluna") or f.get("nome")
-        operador = f.get("operador") or f.get("comparacao")
+        coluna = (
+            f.get("coluna")
+            or f.get("nome")
+            or f.get("column")
+            or f.get("campo")
+        )
+        operador = (
+            f.get("operador")
+            or f.get("comparacao")
+            or f.get("operator")
+            or f.get("op")
+        )
         valor = f.get("valor")
+        if valor is None:
+            valor = f.get("value")
 
         # Normaliza variações comuns enviadas pelo modelo/UI
         op_norm = str(operador or "").strip().lower()
@@ -442,7 +454,12 @@ def filtrar_registros(caminho: str, filtros_json: str) -> str:
         }
         operador = op_map.get(op_norm, operador)
 
-        coluna_real, sugestoes = _resolver_coluna(df, str(coluna or ""))
+        # Modelos menores às vezes inventam prefixo "_" em colunas textuais
+        coluna_informada = str(coluna or "").strip()
+        if coluna_informada.startswith("_"):
+            coluna_informada = coluna_informada.lstrip("_")
+
+        coluna_real, sugestoes = _resolver_coluna(df, coluna_informada)
         if not coluna_real:
             return json.dumps(
                 {

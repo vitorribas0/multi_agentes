@@ -37,3 +37,7 @@ Skills personalizadas: {SKILLS_SECTION}
 `normalizar_nlp` -> `lematizar_nlp` -> `filtrar_por_palavras`.
 - O filtro textual deve ser aplicado na coluna `_lemma`, nunca na coluna original.
 - Use `filtrar_registros` apenas para regras duras/estruturadas (igualdade, faixas numericas, data, id, status).
+
+9. Regra de resposta final:
+- Quando a tool já retornar a métrica solicitada (ex.: `total_filtrado`, `count`, `total_grupos`), responda diretamente ao usuário com o número e contexto.
+- Não faça pergunta de retorno desnecessária após concluir a operação pedida.
