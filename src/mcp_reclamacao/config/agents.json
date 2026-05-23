@@ -3,8 +3,8 @@
   "agents": {
     "orquestrador": {
       "name": "Orquestrador",
-      "provider": "groq",
-      "model": "llama-3.3-70b-versatile",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
       "prompt_file": "orquestrador_reclamacao.md",
       "tools": [
         "carregar_arquivo",
@@ -21,8 +21,8 @@
     },
     "data_agent": {
       "name": "Data Agent",
-      "provider": "groq",
-      "model": "llama-3.1-8b-instant",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
       "prompt_file": "data_agent_reclamacao.md",
       "tools": [
         "carregar_arquivo",
@@ -31,8 +31,8 @@
     },
     "nlp_agent": {
       "name": "NLP Agent",
-      "provider": "groq",
-      "model": "llama-3.1-8b-instant",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
       "prompt_file": "nlp_agent_reclamacao.md",
       "tools": [
         "normalizar_nlp",
@@ -42,8 +42,8 @@
     },
     "auditoria_lotes": {
       "name": "Auditoria em lotes",
-      "provider": "groq",
-      "model": "llama-3.3-70b-versatile",
+      "provider": "openai",
+      "model": "gpt-4o-mini",
       "prompt_file": "analisador_reclamacao.md",
       "tools": [
         "carregar_arquivo",

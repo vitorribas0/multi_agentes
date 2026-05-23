@@ -1,5 +1,5 @@
 {
-  "default_provider": "groq",
+  "default_provider": "openai",
   "providers": {
     "groq": {
       "env_key": "GROQ_API_KEY",
