@@ -172,6 +172,84 @@ def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
     if tool_name == "filtrar_registros" and isinstance(args.get("filtros_json"), list):
         args["filtros_json"] = json.dumps(args["filtros_json"], ensure_ascii=False)
 
+    # Trava de pipeline semantico:
+    # se o modelo chamou filtrar_registros para busca textual por termos/palavras,
+    # forca automaticamente: normalizar_nlp -> lematizar_nlp -> filtrar_por_palavras.
+    if tool_name == "filtrar_registros":
+        filtros = []
+        try:
+            raw = args.get("filtros_json")
+            if isinstance(raw, str):
+                filtros = json.loads(raw)
+            elif isinstance(raw, list):
+                filtros = raw
+        except Exception:
+            filtros = []
+
+        semantic_keywords = {"contains", "contem", "contém"}
+        semantic = False
+        palavras: list[str] = []
+        coluna_texto = None
+
+        for f in filtros or []:
+            if not isinstance(f, dict):
+                continue
+            operador = str(
+                f.get("operador")
+                or f.get("operator")
+                or f.get("comparacao")
+                or ""
+            ).strip().lower()
+            coluna = str(
+                f.get("coluna")
+                or f.get("column")
+                or f.get("nome")
+                or ""
+            ).strip()
+            termo = (
+                f.get("termo")
+                or f.get("valor")
+                or f.get("value")
+            )
+
+            if operador in semantic_keywords:
+                semantic = True
+                if isinstance(termo, str) and termo.strip():
+                    palavras.append(termo.strip())
+                if coluna:
+                    coluna_texto = coluna
+
+        if semantic:
+            caminho = args.get("caminho", "")
+            base_col = str(coluna_texto or "transcricao").strip().lstrip("_")
+            for sufixo in ("_lemma", "_limpo"):
+                if base_col.endswith(sufixo):
+                    base_col = base_col[: -len(sufixo)]
+            if not base_col:
+                base_col = "transcricao"
+
+            # Executa pipeline obrigatório antes do filtro semântico
+            try:
+                TOOL_MAP["normalizar_nlp"](caminho=caminho, coluna=base_col)
+                TOOL_MAP["lematizar_nlp"](caminho=caminho, coluna=base_col)
+            except Exception:
+                pass
+
+            palavras_unicas = []
+            for p in palavras or []:
+                if p and p not in palavras_unicas:
+                    palavras_unicas.append(p)
+            if not palavras_unicas:
+                palavras_unicas = ["conflito"]
+
+            novo_args = {
+                "caminho": caminho,
+                "coluna": f"{base_col}_lemma",
+                "palavras": palavras_unicas,
+            }
+            resultado = TOOL_MAP["filtrar_por_palavras"](**novo_args)
+            return novo_args, resultado, exported_file
+
     resultado = TOOL_MAP[tool_name](**args)
 
     # Captura info do arquivo exportado
