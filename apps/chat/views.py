@@ -27,6 +27,7 @@ from .agent_config import AGENTS, DEFAULT_MODEL, MODEL_OPTIONS, ORCHESTRATOR_PRO
 from .models import ChatSession, Message, Skill
 
 logger = logging.getLogger(__name__)
+_CURRENT_CHAT_SESSION_ID = "default"
 
 _client = Groq(api_key=os.environ.get("GROQ_API_KEY", ""))
 # _client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY", ""))  # COMENTADO - trocar de volta se necessário
@@ -149,6 +150,8 @@ def tool_detail_api(request):
 
 def _run_tool_call(tool_name: str, args: dict) -> tuple[dict, str, dict | None]:
     """Executa uma tool localmente e retorna args normalizados, resultado e metadado de download."""
+    from server import set_active_session  # noqa: PLC0415
+    set_active_session(_CURRENT_CHAT_SESSION_ID)
     if not isinstance(args, dict):
         args = {}
     exported_file = None
@@ -272,6 +275,20 @@ def _extract_ocr_text_from_result(tool_name: str, resultado: str) -> str:
     return str(resultado)
 
 
+def _parse_ocr_result(resultado: str) -> dict:
+    """Normaliza retorno do OCR para fluxo deterministico no chat."""
+    try:
+        data = json.loads(str(resultado))
+    except Exception:
+        return {"ok": False, "erro": "Resultado OCR invalido.", "texto": ""}
+
+    if data.get("erro"):
+        return {"ok": False, "erro": str(data.get("erro")), "texto": ""}
+
+    texto = str(data.get("texto_extraido") or "").strip()
+    return {"ok": True, "erro": "", "texto": texto}
+
+
 def _extract_tool_calls_from_text(error_text: str) -> list[tuple[str, dict]]:
     """Extrai múltiplas chamadas no formato <function=nome>{...} ou .function=nome>{...}."""
     calls: list[tuple[str, dict]] = []
@@ -381,6 +398,14 @@ def _sanitize_tool_args(tool_name: str, args: dict, fallback_caminho: str | None
         caminho_key = "caminho_imagem" if tool_name == "ocr_extrair_texto" else "caminho"
         if not clean.get(caminho_key) and fallback_caminho:
             clean[caminho_key] = fallback_caminho
+        elif caminho_key in clean and fallback_caminho and isinstance(clean.get(caminho_key), str):
+            # Se o modelo enviar nome de pasta/projeto em vez de arquivo, reaproveita o ultimo arquivo valido.
+            caminho_informado = clean[caminho_key].strip().strip("'\"")
+            nome = Path(caminho_informado).name
+            sem_extensao = "." not in nome
+            parece_pasta = ("/" not in caminho_informado and "\\" not in caminho_informado and sem_extensao)
+            if tool_name != "ocr_extrair_texto" and parece_pasta:
+                clean[caminho_key] = fallback_caminho
 
     if tool_name == "analisar_serie_temporal":
         usar_filtrado = clean.get("usar_cache_filtrado")
@@ -394,6 +419,32 @@ def _sanitize_tool_args(tool_name: str, args: dict, fallback_caminho: str | None
         metrica = clean.get("metrica")
         if isinstance(metrica, str):
             clean["metrica"] = metrica.strip().lower()
+
+    if tool_name == "filtrar_registros":
+        # Corrige casos em que o modelo envia chaves malformadas como "fil:transcricao": "conflito"
+        # e não monta "filtros_json" no formato esperado.
+        if "filtros_json" not in clean:
+            filtros_auto = []
+            for k, v in list(clean.items()):
+                k_str = str(k).strip()
+                if ":" in k_str:
+                    prefixo, coluna = k_str.split(":", 1)
+                    if prefixo.lower() in {"fil", "filtro", "filter"} and coluna.strip():
+                        filtros_auto.append(
+                            {
+                                "coluna": coluna.strip(),
+                                "operador": "contains",
+                                "valor": v,
+                            }
+                        )
+                        clean.pop(k, None)
+
+            if filtros_auto:
+                clean["filtros_json"] = filtros_auto
+
+        # Se vier como dict único, normaliza para lista
+        if isinstance(clean.get("filtros_json"), dict):
+            clean["filtros_json"] = [clean["filtros_json"]]
 
     return clean
 
@@ -601,10 +652,12 @@ def _run_skill_tool_call(skill: dict, pedido: str) -> tuple[str, str | None, dic
 def _get_data_context() -> dict:
     """Retorna schema completo dos DataFrames no cache para uso no prompt de geração de código."""
     try:
-        from server import _CACHE  # noqa: PLC0415
+        from server import get_cache_snapshot, set_active_session  # noqa: PLC0415
         import pandas as pd  # noqa: PLC0415
+        set_active_session(_CURRENT_CHAT_SESSION_ID)
+        cache = get_cache_snapshot()
         info = {}
-        for caminho, registros in (_CACHE or {}).items():
+        for caminho, registros in (cache or {}).items():
             if registros:
                 nome = Path(caminho).stem
                 df = pd.DataFrame(registros)
@@ -737,10 +790,12 @@ def _execute_skill_code(code: str) -> tuple[str, str | None]:
 
     # Monta contexto com os DataFrames do cache MCP
     try:
-        from server import _CACHE
+        from server import get_cache_snapshot, set_active_session
         import pandas as pd
+        set_active_session(_CURRENT_CHAT_SESSION_ID)
+        cache = get_cache_snapshot()
         dados: dict = {}
-        for caminho, registros in (_CACHE or {}).items():
+        for caminho, registros in (cache or {}).items():
             if registros:
                 nome = Path(caminho).stem
                 df = pd.DataFrame(registros)
@@ -849,6 +904,10 @@ def chat_api(request):
         requested_model = (data.get("model") or "").strip()
         selected_model = requested_model if requested_model in MODEL_OPTIONS else DEFAULT_MODEL
         session_id = (data.get("session_id") or "").strip()
+        if not session_id:
+            session_id = uuid.uuid4().hex
+        global _CURRENT_CHAT_SESSION_ID
+        _CURRENT_CHAT_SESSION_ID = session_id or "default"
         session_title = (data.get("session_title") or user_message[:40] or "Chat").strip()
         last_loaded_path = _find_last_loaded_path(history)
 
@@ -913,6 +972,7 @@ def chat_api(request):
         tools_called = []
         exported_file = None  # preenchido se exportar_dataframe for chamado
         ocr_text_extracted = None  # armazena texto extraído por OCR
+        ocr_status = None  # {"ok": bool, "erro": str, "texto": str}
         msg = None
 
         # 1ª chamada: o modelo decide se usa tool/skill ou responde direto
@@ -1035,9 +1095,30 @@ def chat_api(request):
                     "content": content_para_modelo,
                 })
                 
-                # Armazena texto extraído de OCR
-                if nome == "ocr_extrair_texto" and content_para_modelo:
-                    ocr_text_extracted = content_para_modelo
+                # Armazena status OCR mesmo quando o texto vier vazio
+                if nome == "ocr_extrair_texto":
+                    ocr_status = _parse_ocr_result(resultado)
+                    ocr_text_extracted = ocr_status.get("texto", "")
+
+            # Se só OCR foi executado, evita alucinação e responde de forma determinística
+            ocr_calls = [t for t in tools_called if t.get("tool") == "ocr_extrair_texto"]
+            if ocr_calls and len(ocr_calls) == len(tools_called):
+                if ocr_status and ocr_status.get("ok") and ocr_status.get("texto"):
+                    answer = "Texto extraído da imagem:\n\n" + ocr_status["texto"]
+                elif ocr_status and ocr_status.get("ok"):
+                    answer = (
+                        "Não foi possível extrair texto legível da imagem.\n"
+                        "Tente enviar uma imagem com maior contraste, mais nítida ou com recorte mais próximo do texto."
+                    )
+                else:
+                    detalhe = (ocr_status or {}).get("erro") or "Falha ao processar OCR."
+                    answer = f"Falha ao extrair texto da imagem: {detalhe}"
+
+                return _chat_save_and_respond(
+                    session_id, session_title, selected_model,
+                    user_message, answer, tools_called, exported_file,
+                    skill_executions, skill_output_image,
+                )
 
             # 2ª chamada: formula a resposta com base nos resultados das tools/skills.
             # Quando apenas skills foram executadas, usa prompt simplificado com resultados diretos
@@ -1108,6 +1189,24 @@ def chat_api(request):
                         skill_executions, skill_output_image,
                     )
 
+                only_ocr = all(n == "ocr_extrair_texto" for n, _ in executed)
+                if only_ocr:
+                    status = _parse_ocr_result(executed[-1][1])
+                    if status.get("ok") and status.get("texto"):
+                        answer = "Texto extraído da imagem:\n\n" + status["texto"]
+                    elif status.get("ok"):
+                        answer = (
+                            "Não foi possível extrair texto legível da imagem.\n"
+                            "Tente enviar uma imagem com maior contraste, mais nítida ou com recorte mais próximo do texto."
+                        )
+                    else:
+                        answer = f"Falha ao extrair texto da imagem: {status.get('erro') or 'Erro desconhecido.'}"
+                    return _chat_save_and_respond(
+                        session_id, session_title, selected_model,
+                        user_message, answer, tools_called, exported_file,
+                        skill_executions, skill_output_image,
+                    )
+
                 nome = executed[0][0]
                 # Extrai texto extraído de OCR para cada resultado
                 resultado_parts = []
@@ -1148,6 +1247,24 @@ def chat_api(request):
                         executed.append((nome, resultado))
 
                     if executed:
+                        only_ocr = all(n == "ocr_extrair_texto" for n, _ in executed)
+                        if only_ocr:
+                            status = _parse_ocr_result(executed[-1][1])
+                            if status.get("ok") and status.get("texto"):
+                                answer = "Texto extraído da imagem:\n\n" + status["texto"]
+                            elif status.get("ok"):
+                                answer = (
+                                    "Não foi possível extrair texto legível da imagem.\n"
+                                    "Tente enviar uma imagem com maior contraste, mais nítida ou com recorte mais próximo do texto."
+                                )
+                            else:
+                                answer = f"Falha ao extrair texto da imagem: {status.get('erro') or 'Erro desconhecido.'}"
+                            return _chat_save_and_respond(
+                                session_id, session_title, selected_model,
+                                user_message, answer, tools_called, exported_file,
+                                skill_executions, skill_output_image,
+                            )
+
                         nome = executed[0][0]
                         # Extrai texto extraído de OCR para cada resultado
                         resultado_parts = []

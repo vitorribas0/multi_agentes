@@ -1,0 +1,220 @@
+{
+  "tools": [
+    {
+      "name": "carregar_arquivo",
+      "description": "Carrega um arquivo CSV ou Excel e retorna schema e preview.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string",
+            "description": "Caminho do arquivo CSV ou Excel"
+          }
+        },
+        "required": [
+          "caminho"
+        ]
+      }
+    },
+    {
+      "name": "filtrar_registros",
+      "description": "Filtra o dataframe em cache com uma lista de filtros.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "filtros_json": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "required": [
+          "caminho",
+          "filtros_json"
+        ]
+      }
+    },
+    {
+      "name": "normalizar_nlp",
+      "description": "Normaliza texto para lowercase sem acento e sem pontuacao.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "coluna": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caminho",
+          "coluna"
+        ]
+      }
+    },
+    {
+      "name": "lematizar_nlp",
+      "description": "Lematiza texto usando spaCy pt_core_news_sm.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "coluna": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caminho",
+          "coluna"
+        ]
+      }
+    },
+    {
+      "name": "filtrar_por_palavras",
+      "description": "Filtra registros que contenham palavras-chave.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "coluna": {
+            "type": "string"
+          },
+          "palavras": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "caminho",
+          "coluna",
+          "palavras"
+        ]
+      }
+    },
+    {
+      "name": "analisar_serie_temporal",
+      "description": "Faz analise temporal por frequencia e metrica.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "coluna_data": {
+            "type": "string"
+          },
+          "frequencia": {
+            "type": "string"
+          },
+          "metrica": {
+            "type": "string"
+          },
+          "coluna_valor": {
+            "type": "string"
+          },
+          "usar_cache_filtrado": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "caminho",
+          "coluna_data"
+        ]
+      }
+    },
+    {
+      "name": "agrupar_registros",
+      "description": "Agrupa registros e calcula metricas estatisticas.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "colunas_agrupamento": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "metricas": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coluna_valor": {
+            "type": "string"
+          },
+          "lidar_nulos": {
+            "type": "string"
+          },
+          "usar_cache_filtrado": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "caminho",
+          "colunas_agrupamento"
+        ]
+      }
+    },
+    {
+      "name": "ocr_extrair_texto",
+      "description": "Extrai texto de imagem ou PDF via OCR.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho_imagem": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "caminho_imagem"
+        ]
+      }
+    },
+    {
+      "name": "listar_contexto_sessao",
+      "description": "Lista arquivos e contextos de cache da sessao atual.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "exportar_dataframe",
+      "description": "Exporta o dataframe em cache para CSV.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "caminho": {
+            "type": "string"
+          },
+          "caminho_saida": {
+            "type": "string"
+          },
+          "usar_filtrado": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "caminho",
+          "caminho_saida"
+        ]
+      }
+    }
+  ]
+}

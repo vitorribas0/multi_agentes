@@ -1,23 +1,74 @@
 import json
 from pathlib import Path
+from contextvars import ContextVar
 from fastmcp import FastMCP
+try:
+    from .core.dataset_registry import (
+        get_active_dataset_id,
+        list_session_datasets,
+        load_dataset,
+        resolve_dataset,
+        save_dataset,
+    )
+except ImportError:
+    from core.dataset_registry import (  # type: ignore
+        get_active_dataset_id,
+        list_session_datasets,
+        load_dataset,
+        resolve_dataset,
+        save_dataset,
+    )
 
 mcp = FastMCP(
     "mcp_reclamacao",
     instructions="Servidor MCP para analise de reclamacoes. Fornece tools para carregar, filtrar e exportar dados de CSV ou Excel.",
 )
 
-# Cache interno: armazena os registros completos por caminho de arquivo
-# O LLM nao tem acesso direto a este cache - so o agente acessa via get_registros_cache()
-_CACHE: dict[str, list[dict]] = {}
+# Cache por sessao: 1 chat = 1 contexto de dados isolado
+_SESSION_ID: ContextVar[str] = ContextVar("mcp_session_id", default="default")
+_CACHE_BY_SESSION: dict[str, dict[str, list[dict]]] = {}
+_CACHE_FILTRADO_BY_SESSION: dict[str, dict[str, list[dict]]] = {}
+_CACHE_META_BY_SESSION: dict[str, dict[str, dict]] = {}
+_CACHE_FILTRADO_META_BY_SESSION: dict[str, dict[str, dict]] = {}
 
-# Cache do dataframe filtrado (sobrescrito a cada filtro aplicado)
-_CACHE_FILTRADO: dict[str, list[dict]] = {}
 
-# Metadados do cache: rastreia qual tool escreveu cada entrada e quando
-# Estrutura: { caminho: {"tool": str, "colunas": [...], "ts": str} }
-_CACHE_META: dict[str, dict] = {}
-_CACHE_FILTRADO_META: dict[str, dict] = {}
+def set_active_session(session_id: str | None) -> None:
+    _SESSION_ID.set((session_id or "default").strip() or "default")
+
+
+def get_active_session_id() -> str:
+    return _SESSION_ID.get()
+
+
+def _cache() -> dict[str, list[dict]]:
+    sid = get_active_session_id()
+    return _CACHE_BY_SESSION.setdefault(sid, {})
+
+
+def _cache_filtrado() -> dict[str, list[dict]]:
+    sid = get_active_session_id()
+    return _CACHE_FILTRADO_BY_SESSION.setdefault(sid, {})
+
+
+def _cache_meta() -> dict[str, dict]:
+    sid = get_active_session_id()
+    return _CACHE_META_BY_SESSION.setdefault(sid, {})
+
+
+def _cache_filtrado_meta() -> dict[str, dict]:
+    sid = get_active_session_id()
+    return _CACHE_FILTRADO_META_BY_SESSION.setdefault(sid, {})
+
+
+def get_cache_snapshot() -> dict[str, list[dict]]:
+    # Compatibilidade: snapshot do "cache" da sessao, agora vindo do dataset registry.
+    sid = get_active_session_id()
+    out: dict[str, list[dict]] = {}
+    for ds in list_session_datasets(sid):
+        df = load_dataset(ds["dataset_id"])
+        if df is not None:
+            out[ds["source_ref"]] = df.to_dict(orient="records")
+    return out
 
 
 def _registrar_meta(caminho: str, tool: str, colunas: list, filtrado: bool = False) -> None:
@@ -25,9 +76,9 @@ def _registrar_meta(caminho: str, tool: str, colunas: list, filtrado: bool = Fal
     from datetime import datetime
     entry = {"tool": tool, "colunas": colunas, "ts": datetime.now().strftime("%H:%M:%S")}
     if filtrado:
-        _CACHE_FILTRADO_META[caminho] = entry
+        _cache_filtrado_meta()[caminho] = entry
     else:
-        _CACHE_META[caminho] = entry
+        _cache_meta()[caminho] = entry
 
 
 def _slug_coluna(nome: str) -> str:
@@ -99,12 +150,13 @@ def carregar_arquivo(caminho: str) -> str:
     else:
         df = pd.read_csv(caminho, encoding="utf-8", on_bad_lines="skip")
 
-    # Guarda tudo no cache para processamento posterior
-    _CACHE[caminho] = df.to_dict(orient="records")
+    sid = get_active_session_id()
+    dataset_id = save_dataset(sid, df, caminho, is_filtered=False)
     _registrar_meta(caminho, "carregar_arquivo", list(df.columns))
 
     return json.dumps(
         {
+            "dataset_id": dataset_id,
             "total_registros": len(df),
             "colunas": list(df.columns),
             "preview_3_linhas": df.head(3).to_dict(orient="records"),
@@ -115,14 +167,21 @@ def carregar_arquivo(caminho: str) -> str:
 
 
 def _get_from_cache(caminho: str, usar_filtrado: bool = False) -> tuple[list[dict] | None, str]:
-    """Recupera dados do cache tratando variações de caminho (barras/aspas)."""
-    import os
-    base = _CACHE_FILTRADO if usar_filtrado else _CACHE
-    norm = os.path.normpath(caminho.strip("'\"")).replace("\\", "/")
-    
-    for k, v in base.items():
-        if os.path.normpath(k).replace("\\", "/") == norm:
-            return v, k
+    """Recupera dados da sessao via Dataset Registry por dataset_id/caminho/nome."""
+    sid = get_active_session_id()
+    dataset_id, source_ref = resolve_dataset(sid, caminho or "", prefer_filtered=usar_filtrado)
+    if not dataset_id:
+        return None, ""
+    df = load_dataset(dataset_id)
+    if df is None:
+        return None, ""
+    return df.to_dict(orient="records"), source_ref
+
+
+def _get_dataset_id_from_ref(caminho: str, usar_filtrado: bool = False) -> str | None:
+    sid = get_active_session_id()
+    dataset_id, _source_ref = resolve_dataset(sid, caminho or "", prefer_filtered=usar_filtrado)
+    return dataset_id
     return None, ""
 
 
@@ -159,7 +218,9 @@ def normalizar_nlp(caminho: str, coluna: str) -> str:
 
     nova_coluna = f"{coluna_real}_limpo"
     df[nova_coluna] = df[coluna_real].apply(clean)
-    _CACHE[caminho] = df.to_dict(orient="records")
+    sid = get_active_session_id()
+    parent_id = _get_dataset_id_from_ref(path_real, usar_filtrado=False)
+    save_dataset(sid, df, path_real, is_filtered=False, parent_dataset_id=parent_id)
     _registrar_meta(caminho, "normalizar_nlp", list(df.columns))
     return json.dumps({"sucesso": True, "coluna_origem": coluna_real, "nova_coluna": nova_coluna}, ensure_ascii=False)
 
@@ -187,8 +248,10 @@ def filtrar_por_palavras(caminho: str, coluna: str, palavras: list[str]) -> str:
     padrao = "|".join(palavras)
     df_filtrado = df[df[coluna_real].astype(str).str.contains(padrao, case=False, na=False)]
     
-    _CACHE_FILTRADO[caminho] = df_filtrado.to_dict(orient="records")
-    _registrar_meta(caminho, "filtrar_por_palavras", list(df_filtrado.columns), filtrado=True)
+    sid = get_active_session_id()
+    parent_id = _get_dataset_id_from_ref(path_real, usar_filtrado=False)
+    save_dataset(sid, df_filtrado, path_real, is_filtered=True, parent_dataset_id=parent_id)
+    _registrar_meta(path_real, "filtrar_por_palavras", list(df_filtrado.columns), filtrado=True)
     return json.dumps(
         {
             "coluna_usada": coluna_real,
@@ -250,8 +313,10 @@ def lematizar_nlp(caminho: str, coluna: str) -> str:
     nova_coluna = f"{coluna_base_real}_lemma"
     df[nova_coluna] = df[coluna_alvo].apply(lemmatize)
     
-    _CACHE[caminho] = df.to_dict(orient="records")
-    _registrar_meta(caminho, "lematizar_nlp", list(df.columns))
+    sid = get_active_session_id()
+    parent_id = _get_dataset_id_from_ref(path_real, usar_filtrado=False)
+    save_dataset(sid, df, path_real, is_filtered=False, parent_dataset_id=parent_id)
+    _registrar_meta(path_real, "lematizar_nlp", list(df.columns))
     return json.dumps(
         {
             "sucesso": True,
@@ -266,12 +331,14 @@ def lematizar_nlp(caminho: str, coluna: str) -> str:
 def get_registros_cache(caminho: str) -> list[dict]:
     """Funcao Python pura (nao e tool). Retorna os registros completos do cache.
     Usada pelo agente para iterar em lotes sem passar tudo pelo contexto do LLM."""
-    return _CACHE.get(caminho, [])
+    dados, _path = _get_from_cache(caminho, usar_filtrado=False)
+    return dados or []
 
 
 def get_registros_filtrado(caminho: str) -> list[dict]:
     """Funcao Python pura (nao e tool). Retorna os registros do cache filtrado."""
-    return _CACHE_FILTRADO.get(caminho, [])
+    dados, _path = _get_from_cache(caminho, usar_filtrado=True)
+    return dados or []
 
 
 @mcp.tool(
@@ -283,37 +350,42 @@ def get_registros_filtrado(caminho: str) -> list[dict]:
 )
 def listar_contexto_sessao() -> str:
     """Retorna o estado atual do cache: arquivos carregados, colunas e qual tool gerou cada estado."""
-    from pathlib import Path as _Path
-
-    if not _CACHE:
-        return json.dumps({"status": "vazio", "mensagem": "Nenhum arquivo carregado. Use carregar_arquivo primeiro."}, ensure_ascii=False)
+    sid = get_active_session_id()
+    datasets = list_session_datasets(sid)
+    if not datasets:
+        return json.dumps(
+            {"status": "vazio", "mensagem": "Nenhum dataset na sessao. Use carregar_arquivo primeiro."},
+            ensure_ascii=False,
+        )
 
     itens = []
-    for caminho, registros in _CACHE.items():
-        meta = _CACHE_META.get(caminho, {})
-        meta_filtrado = _CACHE_FILTRADO_META.get(caminho, {})
-        colunas = list(registros[0].keys()) if registros else []
-
-        item = {
-            "arquivo": _Path(caminho).name,
-            "caminho": caminho,
-            "total_registros": len(registros),
-            "colunas": colunas,
-            "ultima_tool_principal": meta.get("tool", "carregar_arquivo"),
-            "ultima_atualizacao": meta.get("ts", "-"),
-        }
-
-        if caminho in _CACHE_FILTRADO:
-            filtrado = _CACHE_FILTRADO[caminho]
-            item["cache_filtrado"] = {
-                "total_registros_filtrados": len(filtrado),
-                "ultima_tool_filtro": meta_filtrado.get("tool", "-"),
-                "ultima_atualizacao": meta_filtrado.get("ts", "-"),
+    for ds in datasets:
+        df = load_dataset(ds["dataset_id"])
+        colunas = list(df.columns) if df is not None else []
+        itens.append(
+            {
+                "dataset_id": ds["dataset_id"],
+                "arquivo": ds["source_name"],
+                "caminho": ds["source_ref"],
+                "total_registros": ds["row_count"],
+                "colunas": colunas,
+                "is_filtrado": bool(ds["is_filtered"]),
+                "parent_dataset_id": ds["parent_dataset_id"],
+                "criado_em": ds["created_at"],
             }
+        )
 
-        itens.append(item)
-
-    return json.dumps({"arquivos_em_cache": itens, "total_arquivos": len(itens)}, ensure_ascii=False, default=str)
+    return json.dumps(
+        {
+            "session_id": sid,
+            "datasets": itens,
+            "total_datasets": len(itens),
+            "dataset_ativo": get_active_dataset_id(sid, filtered=False),
+            "dataset_filtrado_ativo": get_active_dataset_id(sid, filtered=True),
+        },
+        ensure_ascii=False,
+        default=str,
+    )
 
 
 @mcp.tool(
@@ -329,52 +401,87 @@ def filtrar_registros(caminho: str, filtros_json: str) -> str:
     """Aplica filtros ao dataframe em cache e armazena o resultado filtrado."""
     import pandas as pd
 
-    if caminho not in _CACHE:
-        return json.dumps({"erro": f"Arquivo nao carregado no cache: {caminho}. Use carregar_arquivo primeiro."})
+    dados_cache, path_real = _get_from_cache(caminho, usar_filtrado=False)
+    if dados_cache is None:
+        return json.dumps(
+            {
+                "erro": f"Arquivo nao carregado no cache: {caminho}. Use carregar_arquivo primeiro.",
+                "dica": "Use o caminho completo retornado por carregar_arquivo ou chame listar_contexto_sessao.",
+            }
+        )
 
     try:
         filtros = json.loads(filtros_json)
     except json.JSONDecodeError as exc:
         return json.dumps({"erro": f"filtros_json invalido: {exc}"})
 
-    df = pd.DataFrame(_CACHE[caminho])
+    df = pd.DataFrame(dados_cache)
     total_original = len(df)
 
     for f in filtros:
-        coluna = f.get("coluna")
-        operador = f.get("operador")
+        coluna = f.get("coluna") or f.get("nome")
+        operador = f.get("operador") or f.get("comparacao")
         valor = f.get("valor")
 
-        if coluna not in df.columns:
-            return json.dumps({"erro": f"Coluna '{coluna}' nao existe. Colunas disponíveis: {list(df.columns)}"})
+        # Normaliza variações comuns enviadas pelo modelo/UI
+        op_norm = str(operador or "").strip().lower()
+        op_map = {
+            "contém": "contains",
+            "contem": "contains",
+            "igual": "==",
+            "diferente": "!=",
+            "maior": ">",
+            "menor": "<",
+            "maior_ou_igual": ">=",
+            "menor_ou_igual": "<=",
+            "inicia_com": "startswith",
+            "termina_com": "endswith",
+            "nulo": "isnull",
+            "nao_nulo": "notnull",
+            "não_nulo": "notnull",
+        }
+        operador = op_map.get(op_norm, operador)
+
+        coluna_real, sugestoes = _resolver_coluna(df, str(coluna or ""))
+        if not coluna_real:
+            return json.dumps(
+                {
+                    "erro": f"Coluna '{coluna}' nao existe.",
+                    "sugestoes": sugestoes,
+                    "colunas_disponiveis": list(df.columns),
+                },
+                ensure_ascii=False,
+            )
 
         if operador == "==":
-            df = df[df[coluna] == valor]
+            df = df[df[coluna_real] == valor]
         elif operador == "!=":
-            df = df[df[coluna] != valor]
+            df = df[df[coluna_real] != valor]
         elif operador == ">":
-            df = df[df[coluna] > valor]
+            df = df[df[coluna_real] > valor]
         elif operador == "<":
-            df = df[df[coluna] < valor]
+            df = df[df[coluna_real] < valor]
         elif operador == ">=":
-            df = df[df[coluna] >= valor]
+            df = df[df[coluna_real] >= valor]
         elif operador == "<=":
-            df = df[df[coluna] <= valor]
+            df = df[df[coluna_real] <= valor]
         elif operador == "contains":
-            df = df[df[coluna].astype(str).str.contains(str(valor), case=False, na=False)]
+            df = df[df[coluna_real].astype(str).str.contains(str(valor), case=False, na=False)]
         elif operador == "startswith":
-            df = df[df[coluna].astype(str).str.startswith(str(valor), na=False)]
+            df = df[df[coluna_real].astype(str).str.startswith(str(valor), na=False)]
         elif operador == "endswith":
-            df = df[df[coluna].astype(str).str.endswith(str(valor), na=False)]
+            df = df[df[coluna_real].astype(str).str.endswith(str(valor), na=False)]
         elif operador == "isnull":
-            df = df[df[coluna].isnull()]
+            df = df[df[coluna_real].isnull()]
         elif operador == "notnull":
-            df = df[df[coluna].notnull()]
+            df = df[df[coluna_real].notnull()]
         else:
             return json.dumps({"erro": f"Operador '{operador}' nao suportado."})
 
-    _CACHE_FILTRADO[caminho] = df.to_dict(orient="records")
-    _registrar_meta(caminho, "filtrar_registros", list(df.columns), filtrado=True)
+    sid = get_active_session_id()
+    parent_id = _get_dataset_id_from_ref(path_real, usar_filtrado=False)
+    save_dataset(sid, df, path_real, is_filtered=True, parent_dataset_id=parent_id)
+    _registrar_meta(path_real, "filtrar_registros", list(df.columns), filtrado=True)
     return json.dumps(
         {
             "total_original": total_original,
@@ -481,7 +588,16 @@ def agrupar_registros(
     # Recupera dados
     dados, path_real = _get_from_cache(caminho, usar_cache_filtrado)
     if dados is None:
-        return json.dumps({"erro": f"Dados não encontrados para: {caminho}"}, ensure_ascii=False)
+        return json.dumps(
+            {
+                "erro": f"Dados não encontrados para: {caminho}",
+                "dica": (
+                    "Use o caminho completo retornado por carregar_arquivo "
+                    "ou chame listar_contexto_sessao para ver os caminhos válidos em cache."
+                ),
+            },
+            ensure_ascii=False,
+        )
 
     df = pd.DataFrame(dados)
 
@@ -575,7 +691,9 @@ def agrupar_registros(
         return json.dumps({"erro": f"Erro ao agrupar: {str(e)}"}, ensure_ascii=False)
 
     # Armazenar em cache
-    _CACHE_FILTRADO[path_real] = resultado.to_dict(orient="records")
+    sid = get_active_session_id()
+    parent_id = _get_dataset_id_from_ref(path_real, usar_filtrado=usar_cache_filtrado)
+    save_dataset(sid, resultado, path_real, is_filtered=True, parent_dataset_id=parent_id)
     _registrar_meta(path_real, "agrupar_registros", list(resultado.columns), filtrado=True)
 
     # Preparar resumo legível para apresentação

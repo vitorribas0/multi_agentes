@@ -1,0 +1,13 @@
+{
+  "default_provider": "groq",
+  "providers": {
+    "groq": {
+      "env_key": "GROQ_API_KEY",
+      "default_model": "llama-3.1-8b-instant"
+    },
+    "openai": {
+      "env_key": "OPENAI_API_KEY",
+      "default_model": "gpt-4o-mini"
+    }
+  }
+}
